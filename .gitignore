@@ -1,0 +1,3 @@
+*.py[cod]
+/.tox/
+__pycache__/
