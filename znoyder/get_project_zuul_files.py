@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import os
+
 from argparse import ArgumentParser
 from shutil import rmtree
-import os
 from subprocess import check_call, CalledProcessError
 from sys import exit
 
@@ -65,7 +66,7 @@ def main() -> None:
         arguments.branch_name,
         arguments.destination_folder
     )
-    delete_not_specified_files_in_folder(arguments.destination_folder, ['.zuul.yaml', 'zuul.d'])
+    delete_not_specified_files_in_folder(arguments.destination_folder, ['.zuul.yaml', 'zuul.d', 'zuul.yaml'])
 
 
 if __name__ == "__main__":
