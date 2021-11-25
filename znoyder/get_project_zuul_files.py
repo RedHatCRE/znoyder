@@ -47,10 +47,10 @@ def execute_command(command: list) -> None:
         check_call(command)
     except CalledProcessError as e:
         print("Error. Details: ", e)
-        exit(128)
+        exit(e.returncode)
 
 
-def delete_not_specified_files_in_folder(destination_folder: str, files: list) -> None:
+def delete_not_specified_files_in_folder(destination_folder: str, files: list = []) -> None:
     for file in os.listdir(destination_folder):
         file_path = os.path.join(destination_folder, file)
         if file in files:
