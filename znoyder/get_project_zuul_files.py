@@ -62,7 +62,7 @@ def __createFolder(folder_name: str) -> None:
     Path(folder_name).mkdir(parents=True, exist_ok=True)
 
 
-def download_file(url: str, destination_folder: str):
+def download_file(url: str, destination_folder: str) -> None:
     __createFolder(destination_folder)
     file_name = url.split('/')[-1]
     try:
@@ -75,12 +75,13 @@ def download_file(url: str, destination_folder: str):
         exit(1)
 
 
-def get_raw_url_files_in_repository(project_name: str, data_required: str, branch: str = 'master'):
+def get_raw_url_files_in_repository(project_name: str, data_required: str, branch: str = 'master') -> list:
     response = requests.get(
         url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.', branch=branch)
     )
     if response.status_code != 200:
-        print("Error getting URLs files from folder in remote repository")
+        response_data = json.loads(response.text)
+        print(f"Error getting URLs files from folder in remote repository. Errors: {response_data['errors']}, Message: {response_data['message']}")
         exit(1)
     url_files = []
     for folder_file_information in json.loads(response.text):
@@ -94,7 +95,7 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str, branc
     return url_files
 
 
-def download_files_parallel(urls: list, destination_folder: str):
+def download_files_parallel(urls: list, destination_folder: str) -> None:
     pool = Pool(cpu_count())
     download_function = partial(download_file, destination_folder=destination_folder)
     pool.map(download_function, urls)
