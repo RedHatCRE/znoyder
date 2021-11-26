@@ -94,7 +94,7 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str, branc
     return url_files
 
 
-def download_urls_parallel(urls: list, destination_folder: str):
+def download_files_parallel(urls: list, destination_folder: str):
     pool = Pool(cpu_count())
     download_function = partial(download_file, destination_folder=destination_folder)
     pool.map(download_function, urls)
@@ -109,7 +109,7 @@ def main() -> None:
         'files': ['zuul.yaml', '.zuul.yaml']
     }
     urls = get_raw_url_files_in_repository(arguments.project_name, data_required, arguments.branch_name)
-    download_urls_parallel(urls, arguments.destination_folder)
+    download_files_parallel(urls, arguments.destination_folder)
 
 
 if __name__ == "__main__":
