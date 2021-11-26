@@ -16,14 +16,18 @@
 #    under the License.
 
 
-import os
+import json
+import requests
 
 from argparse import ArgumentParser
-from shutil import rmtree
-from subprocess import check_call, CalledProcessError
+from functools import partial
+from multiprocessing import Pool, cpu_count
+from pathlib import Path
 from sys import exit
 
-URL_BASE_PROJECT = "https://opendev.org/openstack/{project_name}.git"
+
+URL_BASE_API = "https://opendev.org/api/v1/repos/openstack"
+LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}"
 
 
 def process_arguments() -> tuple:
@@ -54,35 +58,59 @@ def process_arguments() -> tuple:
     return arguments
 
 
-def clone_project(url: str, branch: str, destination_folder: str) -> None:
-    command = ['git', 'clone', '--depth', '1', url, '--branch', branch, destination_folder]
-    execute_command(command)
+def __createFolder(folder_name: str) -> None:
+    Path(folder_name).mkdir(parents=True, exist_ok=True)
 
 
-def execute_command(command: list) -> None:
+def download_file(url: str, destination_folder: str):
+    __createFolder(destination_folder)
+    file_name = url.split('/')[-1]
     try:
-        check_call(command)
-    except CalledProcessError as e:
-        print("Error. Details: ", e)
-        exit(e.returncode)
+        data = requests.get(url)
+        with open(f"{destination_folder}/{file_name}", 'wb') as file:
+            print(f"Downloading file {file_name}")
+            file.write(data.content)
+
+    except Exception as e:
+        print(f"Error downloading file {file_name}. Details: {repr(e)}")
+        exit(1)
 
 
-def delete_not_specified_files_in_folder(destination_folder: str, files: list = []) -> None:
-    for file in os.listdir(destination_folder):
-        file_path = os.path.join(destination_folder, file)
-        if file in files:
-            continue
-        rmtree(file_path) if (os.path.isdir(file_path)) else os.remove(file_path)
+def get_raw_url_files_in_repository(project_name: str, data_required: str):
+    response = requests.get(
+        url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.')
+    )
+    if response.status_code != 200:
+        print("Error getting URLs files from folder in remote repository")
+        exit(1)
+    url_files = []
+    for folder_file_information in json.loads(response.text):
+        file_name = folder_file_information['name']
+        if file_name in data_required['files']:
+            url_files.append(folder_file_information['download_url'])
+        if file_name in data_required['folder']:
+            response = requests.get(url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name))
+            for folder_file_information in json.loads(response.text):
+                url_files.append(folder_file_information['download_url'])
+    return url_files
+
+
+def download_urls_parallel(urls: list, destination_folder: str):
+    pool = Pool(cpu_count())
+    download_function = partial(download_file, destination_folder=destination_folder)
+    pool.map(download_function, urls)
+    pool.close()
+    pool.join()
 
 
 def main() -> None:
     arguments = process_arguments()
-    clone_project(
-        URL_BASE_PROJECT.format(project_name=arguments.project_name),
-        arguments.branch_name,
-        arguments.destination_folder
-    )
-    delete_not_specified_files_in_folder(arguments.destination_folder, ['.zuul.yaml', 'zuul.d', 'zuul.yaml'])
+    data_required = {
+        'folder': ['zuul.d'],
+        'files': ['zuul.yaml', '.zuul.yaml']
+    }
+    urls = get_raw_url_files_in_repository(arguments.project_name, data_required)
+    download_urls_parallel(urls, arguments.destination_folder)
 
 
 if __name__ == "__main__":
