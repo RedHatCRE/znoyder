@@ -26,12 +26,16 @@ from pathlib import Path
 from sys import exit
 
 
-URL_BASE_API = "https://opendev.org/api/v1/repos/openstack"
-FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}?ref={branch}"
+URL_API = "https://opendev.org/api/v1/repos/openstack"
+DIR_CONTENT_ENDPOINT = URL_API + "/{project}/contents/{folder}?ref={branch}"
 
 
 def process_arguments() -> tuple:
-    """ Return the branch, destination folder and project name of the processed arguments"""
+    """
+    Return the branch,
+    destination folder
+    and project name of the processed arguments
+    """
     parser = ArgumentParser()
     parser.add_argument(
         '-p', '--project',
@@ -71,9 +75,17 @@ def download_file(url: str, destination_folder: str) -> None:
         exit(1)
 
 
-def get_raw_url_files_in_repository(project_name: str, data_required: str, branch: str = 'master') -> list:
+def get_raw_url_files_in_repository(
+    project_name: str,
+    data_required: str,
+    branch: str = 'master'
+) -> list:
     response = requests.get(
-        url=FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.', branch=branch)
+        url=DIR_CONTENT_ENDPOINT.format(
+            project=project_name,
+            folder='.',
+            branch=branch
+        )
     )
     if response.status_code != 200:
         print("Error getting URLs files from folder in remote repository")
@@ -84,7 +96,13 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str, branc
         if file_name in data_required['files']:
             url_files.append(folder_file_information['download_url'])
         if file_name in data_required['folder']:
-            response = requests.get(url=FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name, branch=branch))
+            response = requests.get(
+                url=DIR_CONTENT_ENDPOINT.format(
+                    project=project_name,
+                    folder=file_name,
+                    branch=branch
+                )
+            )
             for folder_file_information in json.loads(response.text):
                 url_files.append(folder_file_information['download_url'])
     return url_files
@@ -92,7 +110,10 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str, branc
 
 def download_files_parallel(urls: list, destination_folder: str) -> None:
     pool = Pool(cpu_count())
-    download_function = partial(download_file, destination_folder=destination_folder)
+    download_function = partial(
+        download_file,
+        destination_folder=destination_folder
+    )
     pool.map(download_function, urls)
     pool.close()
     pool.join()
@@ -104,7 +125,11 @@ def main() -> None:
         'folder': ['zuul.d', '.zuul.d'],
         'files': ['zuul.yaml', '.zuul.yaml']
     }
-    urls = get_raw_url_files_in_repository(arguments.project, data_required, arguments.branch)
+    urls = get_raw_url_files_in_repository(
+        arguments.project,
+        data_required,
+        arguments.branch
+    )
     download_files_parallel(urls, arguments.destination)
 
 
