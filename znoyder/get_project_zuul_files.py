@@ -27,43 +27,39 @@ from sys import exit
 
 
 URL_BASE_API = "https://opendev.org/api/v1/repos/openstack"
-LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}?ref={branch}"
+FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}?ref={branch}"
 
 
 def process_arguments() -> tuple:
     """ Return the branch, destination folder and project name of the processed arguments"""
     parser = ArgumentParser()
     parser.add_argument(
-        '-p', '--projectname',
-        dest='project_name',
+        '-p', '--project',
+        dest='project',
         help="Insert the project name",
-        metavar="PROJECT_NAME",
+        metavar="PROJECT",
         required=True
     )
     parser.add_argument(
-        '-b', '--branchname',
-        dest='branch_name',
+        '-b', '--branch',
+        dest='branch',
         help="Select branch to work",
-        metavar="BRANCH_NAME",
+        metavar="BRANCH",
         required=True
     )
     parser.add_argument(
-        '-d', '--destinationfolder',
-        dest='destination_folder',
+        '-d', '--destination',
+        dest='destination',
         help="Insert the destination folder",
-        metavar="DESTINATION_FOLDER",
+        metavar="DESTINATION",
         required=True
     )
     arguments = parser.parse_args()
     return arguments
 
 
-def __createFolder(folder_name: str) -> None:
-    Path(folder_name).mkdir(parents=True, exist_ok=True)
-
-
 def download_file(url: str, destination_folder: str) -> None:
-    __createFolder(destination_folder)
+    Path(destination_folder).mkdir(parents=True, exist_ok=True)
     file_name = url.split('/')[-1]
     try:
         data = requests.get(url)
@@ -77,11 +73,10 @@ def download_file(url: str, destination_folder: str) -> None:
 
 def get_raw_url_files_in_repository(project_name: str, data_required: str, branch: str = 'master') -> list:
     response = requests.get(
-        url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.', branch=branch)
+        url=FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.', branch=branch)
     )
     if response.status_code != 200:
-        response_data = json.loads(response.text)
-        print(f"Error getting URLs files from folder in remote repository. Errors: {response_data['errors']}, Message: {response_data['message']}")
+        print("Error getting URLs files from folder in remote repository")
         exit(1)
     url_files = []
     for folder_file_information in json.loads(response.text):
@@ -89,7 +84,7 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str, branc
         if file_name in data_required['files']:
             url_files.append(folder_file_information['download_url'])
         if file_name in data_required['folder']:
-            response = requests.get(url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name, branch=branch))
+            response = requests.get(url=FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name, branch=branch))
             for folder_file_information in json.loads(response.text):
                 url_files.append(folder_file_information['download_url'])
     return url_files
@@ -106,11 +101,11 @@ def download_files_parallel(urls: list, destination_folder: str) -> None:
 def main() -> None:
     arguments = process_arguments()
     data_required = {
-        'folder': ['zuul.d'],
+        'folder': ['zuul.d', '.zuul.d'],
         'files': ['zuul.yaml', '.zuul.yaml']
     }
-    urls = get_raw_url_files_in_repository(arguments.project_name, data_required, arguments.branch_name)
-    download_files_parallel(urls, arguments.destination_folder)
+    urls = get_raw_url_files_in_repository(arguments.project, data_required, arguments.branch)
+    download_files_parallel(urls, arguments.destination)
 
 
 if __name__ == "__main__":
