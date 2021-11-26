@@ -42,3 +42,8 @@ For further details, the standard `--help` shall guide you.
 ```
 znoyder --help
 ```
+
+
+# Tests
+
+Call `tox` to run the default test suite in this repository.
