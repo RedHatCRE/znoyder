@@ -12,7 +12,8 @@ meaning (*finder*).
 # Usage examples
 
 After installing, the `znoyder` command is available to use.
-For testing purposes, you may rely on `tox -e run --` command as well.
+For testing purposes, you may rely on `tox -e run --` command
+or provided `run.sh` shell script as well.
 
 Simply running `znoyder` with any valid subcommand will result in displaying
 the default fields of corresponding data.
