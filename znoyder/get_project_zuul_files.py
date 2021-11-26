@@ -70,7 +70,6 @@ def download_file(url: str, destination_folder: str):
         with open(f"{destination_folder}/{file_name}", 'wb') as file:
             print(f"Downloading file {file_name}")
             file.write(data.content)
-
     except Exception as e:
         print(f"Error downloading file {file_name}. Details: {repr(e)}")
         exit(1)
