@@ -27,7 +27,7 @@ from sys import exit
 
 
 URL_BASE_API = "https://opendev.org/api/v1/repos/openstack"
-LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}"
+LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT = URL_BASE_API + "/{project_name}/contents/{folder}?ref={branch}"
 
 
 def process_arguments() -> tuple:
@@ -75,9 +75,9 @@ def download_file(url: str, destination_folder: str):
         exit(1)
 
 
-def get_raw_url_files_in_repository(project_name: str, data_required: str):
+def get_raw_url_files_in_repository(project_name: str, data_required: str, branch: str = 'master'):
     response = requests.get(
-        url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.')
+        url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder='.', branch=branch)
     )
     if response.status_code != 200:
         print("Error getting URLs files from folder in remote repository")
@@ -88,7 +88,7 @@ def get_raw_url_files_in_repository(project_name: str, data_required: str):
         if file_name in data_required['files']:
             url_files.append(folder_file_information['download_url'])
         if file_name in data_required['folder']:
-            response = requests.get(url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name))
+            response = requests.get(url=LIST_SPECIFIC_FOLDER_CONTENT_ENDPOINT.format(project_name=project_name, folder=file_name, branch=branch))
             for folder_file_information in json.loads(response.text):
                 url_files.append(folder_file_information['download_url'])
     return url_files
@@ -108,7 +108,7 @@ def main() -> None:
         'folder': ['zuul.d'],
         'files': ['zuul.yaml', '.zuul.yaml']
     }
-    urls = get_raw_url_files_in_repository(arguments.project_name, data_required)
+    urls = get_raw_url_files_in_repository(arguments.project_name, data_required, arguments.branch_name)
     download_urls_parallel(urls, arguments.destination_folder)
 
 
