@@ -77,7 +77,7 @@ def download_file(url: str, destination_folder: str) -> None:
 
 def get_raw_url_files_in_repository(
     project_name: str,
-    data_required: str,
+    data_required: dict,
     branch: str = 'master'
 ) -> list:
     response = requests.get(
