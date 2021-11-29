@@ -88,7 +88,7 @@ def get_raw_url_files_in_repository(
         )
     )
     if response.status_code != 200:
-        print("Error getting URLs files from folder in remote repository")
+        print(f"Error getting URLs files from folder in remote repository. Details: {repr(json.loads(response.text)['errors'])}")
         exit(1)
     url_files = []
     for folder_file_information in json.loads(response.text):
