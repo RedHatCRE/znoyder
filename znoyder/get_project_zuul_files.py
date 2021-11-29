@@ -91,11 +91,12 @@ def get_raw_url_files_in_repository(
         print("Error getting URLs files from folder in remote repository."
               f"Details: {repr(json.loads(response.text)['errors'])}")
         exit(1)
-    url_files = []
+    url_files = {}
     for folder_file_information in json.loads(response.text):
         file_name = folder_file_information['name']
         if file_name in data_required['files']:
-            url_files.append(folder_file_information['download_url'])
+            url_files.setdefault(project_name, []).append(
+                                folder_file_information['download_url'])
         if file_name in data_required['folder']:
             response = requests.get(
                 url=DIR_CONTENT_ENDPOINT.format(
@@ -105,7 +106,8 @@ def get_raw_url_files_in_repository(
                 )
             )
             for folder_file_information in json.loads(response.text):
-                url_files.append(folder_file_information['download_url'])
+                url_files.setdefault(f"{project_name}/{file_name}", []).append(
+                                    folder_file_information['download_url'])
     return url_files
 
 
@@ -126,12 +128,14 @@ def main() -> None:
         'folder': ['zuul.d', '.zuul.d'],
         'files': ['zuul.yaml', '.zuul.yaml']
     }
-    urls = get_raw_url_files_in_repository(
+    project_urls = get_raw_url_files_in_repository(
         arguments.project,
         data_required,
         arguments.branch
     )
-    download_files_parallel(urls, arguments.destination)
+    for project_folder in project_urls:
+        download_files_parallel(project_urls[project_folder],
+                                f"{arguments.destination}/{project_folder}")
 
 
 if __name__ == "__main__":
