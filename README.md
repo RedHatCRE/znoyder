@@ -9,7 +9,7 @@ The name `znoyder` is a play of Silesian word *znojdywacz* and its English
 meaning (*finder*).
 
 
-# Usage examples
+# Usage examples - znoyder
 
 After installing, the `znoyder` command is available to use.
 For testing purposes, you may rely on `tox -e run --` command
@@ -43,6 +43,26 @@ For further details, the standard `--help` shall guide you.
 znoyder --help
 ```
 
+# Usage examples - shperer
+After installing, the `shperer` command is available to use.
+
+Before running `shperer` CLI a set of projects should be available in the
+local path.
+
+To get list of jobs and templates defined for a particular project for a
+particular zuul trigger simply type
+
+```
+shperer -d /path/to/neutron/ -b /path/to/templates/openstack-zuul-jobs -t check,gate
+```
+
+There exist the `-v` verbose option.
+
+For further details, the standard `--help` shall guide you.
+
+```
+shperer --help
+```
 
 # Tests
 
