@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+#
 # Copyright 2021 Red Hat, Inc.
 # All Rights Reserved.
 #
@@ -14,20 +14,23 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+#
 
 import os
 import re
-from shperer.lib import logger
-from shperer.lib.exceptions import PathError
+
+from zuuler.lib.exceptions import PathError
+from zuuler.lib import logger
+
 
 LOG = logger.LOG
 
-ZUUL_CONFIGS = ['zuul.yaml', '.zuul.yaml', 'zuul.d']
-ZUUL_CONFIG_DIRS = ['zuul.d']
+ZUUL_CONFIGS = ['zuul.yaml', '.zuul.yaml', 'zuul.d', '.zuul.d']
+ZUUL_CONFIG_DIRS = ['zuul.d', '.zuul.d']
 
 
 def get_config_paths(local_path) -> list:
-    """Returns the list of all absolute paths to zuul configuration
+    '''Returns the list of all absolute paths to zuul configuration
        files from the given project directory
 
     Raises:
@@ -38,23 +41,23 @@ def get_config_paths(local_path) -> list:
 
     Returns:
         (:obj:`list`): paths to zuul configuration files
-    """
+    '''
 
     LOG.debug('Finding zuul config files in: %s' % local_path)
 
     zuul_config_files = []
 
     if not os.path.exists(local_path):
-        raise PathError("Provided path does not exists: %s" % local_path)
+        raise PathError('Provided path does not exists: %s' % local_path)
 
     if not os.access(local_path, os.R_OK):
-        raise PathError("Provided path is not readable: %s" % local_path)
+        raise PathError('Provided path is not readable: %s' % local_path)
 
     if not os.path.isabs(local_path):
-        raise PathError("Provided path is not absolute one: %s" % local_path)
+        raise PathError('Provided path is not absolute one: %s' % local_path)
 
     if not os.path.isdir(local_path):
-        raise PathError("Provided path is not directory: %s" % local_path)
+        raise PathError('Provided path is not directory: %s' % local_path)
 
     zuul_file_regex = re.compile('|'.join(ZUUL_CONFIGS))
 

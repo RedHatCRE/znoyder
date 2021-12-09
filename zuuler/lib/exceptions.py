@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+#
 # Copyright 2021 Red Hat, Inc.
 # All Rights Reserved.
 #
@@ -14,22 +14,24 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
-from shperer.lib import logger
+#
 
 import textwrap
+
+from zuuler.lib import logger
+
 
 LOG = logger.LOG
 
 
-class ShpererCliException(Exception):
-    """Base Shperer  Cli Exception
+class ZuulerCliException(Exception):
+    '''Base Zuuler Cli Exception
     To use this class, inherit from it and define a
     a 'msg_fmt' property. That msg_fmt will get printf'd
     with the keyword arguments provided to the constructor.
-    """
+    '''
 
-    msg_fmt = "An unknown exception occurred."
+    msg_fmt = 'An unknown exception occurred.'
 
     def __init__(self, message=None, **kwargs):
         self.kwargs = kwargs
@@ -41,47 +43,47 @@ class ShpererCliException(Exception):
                 # arguments in kwargs doesn't match variables in msg_fmt
                 import six
                 for name, value in six.iteritems(kwargs):
-                    LOG.error("%s: %s" % (name, value))
+                    LOG.error('%s: %s' % (name, value))
                 self.message = self.msg_fmt
 
 
-class PathError(ShpererCliException):
+class PathError(ZuulerCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class JobTypeError(ShpererCliException):
+class JobTypeError(ZuulerCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class TriggerTypeError(ShpererCliException):
+class TriggerTypeError(ZuulerCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class YAMLDuplicateKeyError(ShpererCliException):
+class YAMLDuplicateKeyError(ZuulerCliException):
     def __init__(self, key, node, context, start_mark):
-        intro = textwrap.fill(textwrap.dedent("""\
+        intro = textwrap.fill(textwrap.dedent('''\
         Zuul encountered a syntax error while parsing its configuration in the
-        repo {repo} on branch {branch}.  The error was:""".format(
+        repo {repo} on branch {branch}.  The error was:'''.format(
             repo=context.project_name,
             branch=context.branch,
         )))
 
-        e = textwrap.fill(textwrap.dedent("""\
-        The key "{key}" appears more than once; duplicate keys are not
+        e = textwrap.fill(textwrap.dedent('''\
+        The key '{key}' appears more than once; duplicate keys are not
         permitted.
-        """.format(
+        '''.format(
             key=key,
         )))
 
-        m = textwrap.dedent("""\
+        m = textwrap.dedent('''\
         {intro}
         {error}
         The error appears in the following stanza:
         {content}
-        {start_mark}""")
+        {start_mark}''')
 
         m = m.format(intro=intro,
                      error=indent(str(e)),

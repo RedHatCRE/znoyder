@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+#
 # Copyright 2021 Red Hat, Inc.
 # All Rights Reserved.
 #
@@ -14,17 +14,20 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
+#
 # Classes and functions borrowed from https://opendev.org/zuul/zuul
+#
 
 import collections
 import io
 import yaml
 
-from shperer.lib import logger
-from shperer.lib import util
-from shperer.lib.exceptions import JobTypeError, TriggerTypeError
-from shperer.lib.exceptions import YAMLDuplicateKeyError
+from zuuler.lib import logger
+from zuuler.lib import utils
+from zuuler.lib.exceptions import JobTypeError
+from zuuler.lib.exceptions import TriggerTypeError
+from zuuler.lib.exceptions import YAMLDuplicateKeyError
+
 
 LOG = logger.LOG
 
@@ -195,7 +198,7 @@ class ZuulProject(object):
     def get_project_config_files(self) -> list:
         if self.config_paths:
             return self.config_paths
-        self.config_paths = util.get_config_paths(self.project_path)
+        self.config_paths = utils.get_config_paths(self.project_path)
         return self.config_paths
 
     def get_list_of_jobs(self, job_trigger_types=[]) -> list:

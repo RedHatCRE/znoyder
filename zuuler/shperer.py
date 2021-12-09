@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+#
 # Copyright 2021 Red Hat, Inc.
 # All Rights Reserved.
 #
@@ -14,6 +14,7 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+#
 
 import argparse
 import datetime
@@ -21,11 +22,12 @@ import logging
 import os
 import sys
 
-from shperer.lib import logger
-from shperer.lib import zuul
-from shperer.lib.exceptions import PathError
+from zuuler.lib import logger
+from zuuler.lib import zuul
+from zuuler.lib.exceptions import PathError
 
-DESC = 'CLI to find ZUUL jobs, templates and associate them with projects'
+
+APP_DESCRIPTION = 'Find ZUUL jobs, templates and associate them with projects.'
 
 LOG = logger.LOG
 
@@ -39,12 +41,11 @@ def as_list(item):
 
 
 class ShpererShell(object):
-
     def get_base_parser(self) -> argparse.ArgumentParser:
         formatter = argparse.ArgumentDefaultsHelpFormatter
 
         parser = argparse.ArgumentParser(prog='shperer',
-                                         description=DESC,
+                                         description=APP_DESCRIPTION,
                                          formatter_class=formatter,
                                          add_help=False)
 
@@ -84,7 +85,7 @@ class ShpererShell(object):
 
     def main(self, argv):
         parser_args = self.parse_args(argv)
-        LOG.debug("%s" % parser_args)
+        LOG.debug('%s' % parser_args)
         LOG.debug('Project dir: %s' % parser_args.dir)
         LOG.debug('Template dirs: %s' % parser_args.base)
         LOG.debug('Trigger types: %s' % parser_args.trigger)
@@ -106,27 +107,27 @@ class ShpererShell(object):
         zuul_jobs = project.get_list_of_jobs(trigger_types)
 
         for job in zuul_jobs:
-            print("%s: %s" % (job.job_trigger_type, job))
+            print('%s: %s' % (job.job_trigger_type, job))
 
         project_templates = project.get_list_of_used_templates()
         for template in project_templates:
             for job in template.get_jobs(trigger_types):
-                print("%s: %s in template %s" %
+                print('%s: %s in template %s' %
                       (job.job_trigger_type, job, template))
 
 
 def main(args=None):
-
     start_time = datetime.datetime.now()
 
     try:
         if args is None:
             args = sys.argv[1:]
-
         ShpererShell().main(args)
+
     except PathError as ex:
         LOG.error(ex.message)
         sys.exit(1)
+
     finally:
         finish_time = datetime.datetime.now()
         LOG.debug('Finished shperer: %s' %
@@ -135,5 +136,5 @@ def main(args=None):
                   str(finish_time - start_time))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-
-# Borrowed from InfraRed project
-
+#!/usr/bin/env python3
+#
 # Copyright 2021 Red Hat, Inc.
 # All Rights Reserved.
 #
@@ -16,6 +14,9 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+#
+# Borrowed from InfraRed project
+#
 
 import logging
 import sys
@@ -23,8 +24,9 @@ import traceback
 
 import colorlog
 
+
 logger_formatter = colorlog.ColoredFormatter(
-    "%(log_color)s%(levelname)-8s%(message)s",
+    '%(log_color)s%(levelname)-8s%(message)s',
     log_colors=dict(
         DEBUG='blue',
         INFO='green',
@@ -34,7 +36,7 @@ logger_formatter = colorlog.ColoredFormatter(
     )
 )
 
-LOGGER_NAME = "shpererLogger"
+LOGGER_NAME = 'zuulerLogger'
 DEFAULT_LOG_LEVEL = logging.INFO
 
 LOG = logging.getLogger(LOGGER_NAME)
@@ -51,22 +53,22 @@ sh.setFormatter(logger_formatter)
 LOG.addHandler(sh)
 
 
-def shperer_excepthook(exc_type, exc_value, exc_traceback):
-    """exception hook that sends ShpererCliException to log and other
+def zuuler_excepthook(exc_type, exc_value, exc_traceback):
+    '''exception hook that sends ZuulerCliException to log and other
     exceptions to stderr (default excepthook)
-    """
-    from shperer.lib.exceptions import ShpererCliException
+    '''
+    from zuuler.lib.exceptions import ZuulerCliException
 
     # sends full exception with trace to log
-    if not isinstance(exc_value, ShpererCliException):
+    if not isinstance(exc_value, ZuulerCliException):
         return sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
     if LOG.getEffectiveLevel() <= logging.DEBUG:
-        formated_exception = "".join(
+        formated_exception = ''.join(
             traceback.format_exception(exc_type, exc_value, exc_traceback))
         LOG.error(formated_exception + exc_value.message)
     else:
         LOG.error(exc_value.message)
 
 
-sys.excepthook = shperer_excepthook
+sys.excepthook = zuuler_excepthook
