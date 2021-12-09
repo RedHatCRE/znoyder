@@ -137,6 +137,7 @@ def main():
     args = process_arguments()
 
     info = di.DistroInfo(info_files=INFO_FILE,
+                         cache_ttl=24*60*60,  # 1 day in seconds
                          remote_git_info=RDOINFO_GIT_URL).get_info()
 
     if args.command == 'components':
