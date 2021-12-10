@@ -40,6 +40,7 @@ def process_arguments():
     packages.add_argument('--component', dest='component')
     packages.add_argument('--name', dest='name')
     packages.add_argument('--tag', dest='tag')
+    packages.add_argument('--upstream', dest='upstream')
     packages.add_argument('--output', dest='output',
                           default='osp-name,osp-distgit,osp-patches',
                           help='comma-separated list of fields to return')
@@ -97,6 +98,9 @@ def process_packages(info, args):
     if args.tag:
         packages = [package for package in packages
                     if args.tag in package.get('tags')]
+    if args.upstream:
+        packages = [package for package in packages
+                    if args.upstream in package.get('upstream')]
 
     if args.debug:
         pp = PrettyPrinter()
