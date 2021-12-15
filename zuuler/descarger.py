@@ -17,114 +17,117 @@
 #
 
 from argparse import ArgumentParser
+from argparse import Namespace
 from functools import partial
 import json
 from multiprocessing import cpu_count
 from multiprocessing import Pool
+import os.path
 from pathlib import Path
 from sys import exit
 
 import requests
 
 
-API_URL = 'https://opendev.org/api/v1/repos/openstack'
-DIR_CONTENT_ENDPOINT = API_URL + '/{project}/contents/{folder}?ref={branch}'
+GITHUB_API_URL = 'https://api.github.com/'
+GITHUB_REPO_ENDPOINT = 'repos/{project}/'
+GITHUB_CONTENT_ENDPOINT = 'contents/{path}?ref={gitref}'
+
+OPENDEV_API_URL = 'https://opendev.org/api/v1/'
+OPENDEV_REPO_ENDPOINT = 'repos/{project}/'
+OPENDEV_CONTENT_ENDPOINT = 'contents/{path}?ref={gitref}'
 
 
-def process_arguments() -> tuple:
-    '''Return the branch, destination folder and project name from arguments'''
-
-    parser = ArgumentParser()
-    parser.add_argument(
-        '-p', '--project',
-        dest='project',
-        help='Insert the project name',
-        metavar='PROJECT',
-        required=True
-    )
-    parser.add_argument(
-        '-b', '--branch',
-        dest='branch',
-        help='Select branch to work',
-        metavar='BRANCH',
-        required=True
-    )
-    parser.add_argument(
-        '-d', '--destination',
-        dest='destination',
-        help='Insert the destination folder',
-        metavar='DESTINATION',
-        required=True
-    )
-
-    arguments = parser.parse_args()
-    return arguments
-
-
-def download_file(url: str, destination_folder: str) -> None:
-    Path(destination_folder).mkdir(parents=True, exist_ok=True)
-    file_name = url.split('/')[-1]
-
-    try:
-        data = requests.get(url)
-        with open(f'{destination_folder}/{file_name}', 'wb') as file:
-            print(f'Downloading file {file_name}')
-            file.write(data.content)
-
-    except Exception as e:
-        print(f'Error downloading file {file_name}. Details: {repr(e)}')
-        exit(1)
-
-
-def get_raw_url_files_in_repository(project_name: str,
+def get_raw_url_files_in_repository(repository: str,
                                     data_required: dict,
-                                    branch: str = 'master') -> list:
-    response = requests.get(
-        url=DIR_CONTENT_ENDPOINT.format(
-            project=project_name,
-            folder='.',
-            branch=branch
+                                    branch: str = 'master',
+                                    errors_fatal: bool = True) -> dict:
+    if 'opendev.org' in repository:
+        ENDPOINT = (
+            OPENDEV_API_URL + OPENDEV_REPO_ENDPOINT + OPENDEV_CONTENT_ENDPOINT
         )
-    )
+    elif 'github.com' in repository:
+        ENDPOINT = (
+            GITHUB_API_URL + GITHUB_REPO_ENDPOINT + GITHUB_CONTENT_ENDPOINT
+        )
+    else:
+        print('Unsupported repository')
+        if errors_fatal:
+            exit(1)
+        else:
+            return {}
 
+    project_name = '/'.join(repository.split('/')[-2:])
+    response = requests.get(url=ENDPOINT.format(project=project_name,
+                                                path='.',
+                                                gitref=branch))
+
+    print('Requested:', response.url)
     if response.status_code != 200:
-        print('Error getting URLs files from folder in remote repository.')
-        print(f'Details: {repr(json.loads(response.text)["errors"])}')
-        exit(1)
+        print('Error getting URLs files from directory in remote repository.')
+        details = json.loads(response.text).get('errors',
+                                                json.loads(response.text))
+        print(f'Details: {repr(details)}')
+        if errors_fatal:
+            exit(1)
+        else:
+            return {}
 
     url_files = {}
 
-    for folder_file_information in json.loads(response.text):
-        file_name = folder_file_information['name']
+    for directory_file_information in json.loads(response.text):
+        file_name = directory_file_information['name']
 
         if file_name in data_required['files']:
             url_files.setdefault(project_name, []).append(
-                folder_file_information['download_url']
+                directory_file_information['download_url']
             )
 
-        if file_name in data_required['folder']:
-            response = requests.get(
-                url=DIR_CONTENT_ENDPOINT.format(
-                    project=project_name,
-                    folder=file_name,
-                    branch=branch
-                )
-            )
+        if file_name in data_required['directories']:
+            response = requests.get(url=ENDPOINT.format(project=project_name,
+                                                        path=file_name,
+                                                        gitref=branch))
 
-            for folder_file_information in json.loads(response.text):
+            for directory_file_information in json.loads(response.text):
+                if directory_file_information['type'] != 'file':
+                    continue
+
                 url_files.setdefault(f'{project_name}/{file_name}', []).append(
-                    folder_file_information['download_url']
+                    directory_file_information['download_url']
                 )
 
     return url_files
 
 
-def download_files_parallel(urls: list, destination_folder: str) -> None:
+def download_file(url: str, destination_directory: str,
+                  ignore_existing: bool = False) -> None:
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
+    file_name = url.split('/')[-1]
+    file_path = f'{destination_directory}/{file_name}'
+
+    if os.path.exists(file_path) and ignore_existing:
+        print(f'File already exists: {file_name}')
+        return
+
+    try:
+        print(f'Downloading file: {file_name}')
+        data = requests.get(url)
+        with open(file_path, 'wb') as file:
+            file.write(data.content)
+
+    except Exception as e:
+        print(f'Error downloading file: {file_name}.\nDetails: {repr(e)}')
+        exit(1)
+
+
+def download_files_parallel(urls: list, destination_directory: str,
+                            ignore_existing: bool = False) -> None:
     pool = Pool(cpu_count())
 
     download_function = partial(
         download_file,
-        destination_folder=destination_folder
+        destination_directory=destination_directory,
+        ignore_existing=ignore_existing
     )
 
     pool.map(download_function, urls)
@@ -132,23 +135,79 @@ def download_files_parallel(urls: list, destination_folder: str) -> None:
     pool.join()
 
 
-def main() -> None:
-    arguments = process_arguments()
-
-    data_required = {
-        'folder': ['zuul.d', '.zuul.d'],
+def download_zuul_config(**kwargs):
+    data_wanted = {
+        'directories': ['zuul.d', '.zuul.d'],
         'files': ['zuul.yaml', '.zuul.yaml']
     }
 
+    repository = kwargs.get('repository')
+    branch = kwargs.get('branch')
+    destination = kwargs.get('destination')
+    errors_fatal = kwargs.get('errors_fatal', True)
+    ignore_existing = kwargs.get('ignore_existing', False)
+
     project_urls = get_raw_url_files_in_repository(
-        arguments.project,
-        data_required,
-        arguments.branch
+        repository,
+        data_wanted,
+        branch,
+        errors_fatal
     )
 
-    for project_folder in project_urls:
-        download_files_parallel(project_urls[project_folder],
-                                f'{arguments.destination}/{project_folder}')
+    for project_directory in project_urls:
+        download_files_parallel(project_urls[project_directory],
+                                f'{destination}/{project_directory}',
+                                ignore_existing=ignore_existing)
+
+    return project_urls
+
+
+def process_arguments() -> Namespace:
+    parser = ArgumentParser()
+    parser.add_argument(
+        '-r', '--repo', '--repository',
+        dest='repository',
+        help='repository to browse for files',
+        metavar='REPOSITORY',
+        required=True
+    )
+    parser.add_argument(
+        '-b', '--branch',
+        dest='branch',
+        help='branch in repository to browse',
+        metavar='BRANCH',
+        required=True
+    )
+    parser.add_argument(
+        '-d', '--destination',
+        dest='destination',
+        help='target directory for files to save',
+        metavar='DESTINATION',
+        required=True
+    )
+    parser.add_argument(
+        '-n', '--non-fatal', '--errors-non-fatal',
+        dest='errors_fatal',
+        default=True,
+        action='store_false',
+        help='do not fail on non-existing remote'
+    )
+    parser.add_argument(
+        '-i', '--ignore', '--ignore-existing',
+        dest='ignore_existing',
+        default=False,
+        action='store_true',
+        help='do not overwrite existing files'
+    )
+
+    arguments = parser.parse_args()
+    return arguments
+
+
+def main() -> None:
+    arguments = process_arguments()
+
+    download_zuul_config(**vars(arguments))
 
 
 if __name__ == '__main__':
