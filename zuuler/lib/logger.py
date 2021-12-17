@@ -51,6 +51,7 @@ sh.setFormatter(logger_formatter)
 
 # Create logger and add handler to it
 LOG.addHandler(sh)
+LOG.propagate = False
 
 
 def zuuler_excepthook(exc_type, exc_value, exc_traceback):

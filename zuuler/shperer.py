@@ -17,9 +17,8 @@
 #
 
 from argparse import ArgumentParser
+from argparse import ArgumentDefaultsHelpFormatter
 from argparse import Namespace
-
-import argparse
 import datetime
 import logging
 import os
@@ -106,11 +105,11 @@ def _cli_find_jobs(directory, templates, triggers):
 
 
 def process_arguments() -> Namespace:
-    formatter = argparse.ArgumentDefaultsHelpFormatter
+    formatter = ArgumentDefaultsHelpFormatter
 
-    parser = argparse.ArgumentParser(prog='shperer',
-                                     description=APP_DESCRIPTION,
-                                     formatter_class=formatter, add_help=False)
+    parser = ArgumentParser(prog='shperer',
+                            description=APP_DESCRIPTION,
+                            formatter_class=formatter, add_help=False)
 
     parser.add_argument('-?', '-h', '--help',
                         action='help',
