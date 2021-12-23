@@ -99,7 +99,7 @@ def get_raw_url_files_in_repository(repository: str,
 
 
 def download_file(url: str, destination_directory: str,
-                  ignore_existing: bool = False) -> None:
+                  skip_existing: bool = False) -> None:
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
     file_name = url.split('/')[-1]
     file_path = f'{destination_directory}/{file_name}'
@@ -107,9 +107,9 @@ def download_file(url: str, destination_directory: str,
     if os.path.exists(file_path):
         LOG.warning(f'File already exists: {file_name}')
 
-    if ignore_existing:
-        LOG.info(f'Skipping the download of file: {file_name}')
-        return
+        if skip_existing:
+            LOG.info(f'Skipping the download of file: {file_name}')
+            return
 
     try:
         LOG.info(f'Downloading new file: {file_name}')
@@ -123,13 +123,13 @@ def download_file(url: str, destination_directory: str,
 
 
 def download_files_parallel(urls: list, destination_directory: str,
-                            ignore_existing: bool = False) -> None:
+                            skip_existing: bool = False) -> None:
     pool = Pool(cpu_count())
 
     download_function = partial(
         download_file,
         destination_directory=destination_directory,
-        ignore_existing=ignore_existing
+        skip_existing=skip_existing
     )
 
     pool.map(download_function, urls)
@@ -147,7 +147,7 @@ def download_zuul_config(**kwargs):
     branch = kwargs.get('branch')
     destination = kwargs.get('destination')
     errors_fatal = kwargs.get('errors_fatal', True)
-    ignore_existing = kwargs.get('ignore_existing', False)
+    skip_existing = kwargs.get('skip_existing', False)
 
     project_urls = get_raw_url_files_in_repository(
         repository,
@@ -159,7 +159,7 @@ def download_zuul_config(**kwargs):
     for project_directory in project_urls:
         download_files_parallel(project_urls[project_directory],
                                 f'{destination}/{project_directory}',
-                                ignore_existing=ignore_existing)
+                                skip_existing=skip_existing)
 
     return project_urls
 
@@ -195,8 +195,8 @@ def process_arguments() -> Namespace:
         help='do not fail on non-existing remote'
     )
     parser.add_argument(
-        '-i', '--ignore', '--ignore-existing',
-        dest='ignore_existing',
+        '-s', '--skip', '--skip-existing',
+        dest='skip_existing',
         default=False,
         action='store_true',
         help='do not overwrite existing files'

@@ -49,7 +49,7 @@ def fetch_osp_projects() -> list:
         branch=templates_branch,
         destination=UPSTREAM_CONFIGS_DIR,
         errors_fatal=False,
-        ignore_existing=True
+        skip_existing=True
     )
     templates_directory = list(templates_urls.keys())[0]
 
@@ -60,7 +60,7 @@ def fetch_osp_projects() -> list:
             branch=branch,
             destination=UPSTREAM_CONFIGS_DIR,
             errors_fatal=False,
-            ignore_existing=True
+            skip_existing=True
         )
         for directory in project_urls.keys():
             directories.append(directory)
