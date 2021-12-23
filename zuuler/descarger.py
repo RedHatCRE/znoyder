@@ -51,7 +51,8 @@ def get_raw_url_files_in_repository(repository: str,
             GITHUB_API_URL + GITHUB_REPO_ENDPOINT + GITHUB_CONTENT_ENDPOINT
         )
     else:
-        print('Unsupported repository')
+        print('Unrecognized or unsupported repository host.')
+        print('The tool supports: github.com and opendev.org repositories.')
         if errors_fatal:
             exit(1)
         else:
