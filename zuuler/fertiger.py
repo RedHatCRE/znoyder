@@ -25,15 +25,7 @@ from jinja2 import PackageLoader
 from jinja2 import Template
 
 
-JOBS_TO_COLLECT = [
-    'openstack-tox-pep8',
-    'openstack-tox-py36',
-    'openstack-tox-py37',
-    'openstack-tox-py38',
-    'openstack-tox-py39',
-]
-
-JOBS_REMAPPING = {
+JOBS_TO_COLLECT_WITH_MAPPING = {
     'openstack-tox-pep8': 'osp-tox-pep8',
     'openstack-tox-py36': 'osp-tox-py36',
     'openstack-tox-py37': 'osp-tox-py37',
@@ -54,11 +46,12 @@ def generate_zuul_config(path: str, name: str, jobs: list,
     for job in jobs:
         job_name = job.job_name
 
-        if not collect_all and job_name not in JOBS_TO_COLLECT:
+        if not collect_all and job_name not in JOBS_TO_COLLECT_WITH_MAPPING:
             continue
 
-        if job_name in JOBS_REMAPPING:
-            job_name = JOBS_REMAPPING[job_name]
+        if JOBS_TO_COLLECT_WITH_MAPPING.get(job_name) is not None:
+            new_name = JOBS_TO_COLLECT_WITH_MAPPING[job_name]
+            job_name = new_name
 
         jobs_dict[job.job_trigger_type].append(job_name)
 
@@ -79,9 +72,9 @@ def generate_zuul_config(path: str, name: str, jobs: list,
 
 def main() -> None:
     print('Jobs being collected by default:')
-    for job in JOBS_TO_COLLECT:
-        if job in JOBS_REMAPPING:
-            print(job, '->', JOBS_REMAPPING[job])
+    for job in JOBS_TO_COLLECT_WITH_MAPPING:
+        if JOBS_TO_COLLECT_WITH_MAPPING[job] is not None:
+            print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
         else:
             print(job)
 
