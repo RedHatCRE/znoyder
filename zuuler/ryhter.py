@@ -27,8 +27,8 @@ from zuuler import shperer
 from zuuler import znoyder
 
 
-UPSTREAM_CONFIGS_DIR = 'tmpdir'
-GENERATED_CONFIGS_DIR = 'outdir'
+UPSTREAM_CONFIGS_DIR = 'tmpdir/'
+GENERATED_CONFIGS_DIR = 'outdir/'
 CONFIG_PREFIX = 'cre-'
 CONFIG_EXTENSION = '.yaml'
 
@@ -120,40 +120,44 @@ def main() -> None:
     args = process_arguments()
 
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
-        print('Downloading new Zuul configuration from upstream...')
+        LOG.info('Downloading new Zuul configuration from upstream...')
+        LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
         directories = fetch_osp_projects()
         templates_directory = directories.pop(0)
     else:
-        print('Using local Zuul configuration files...')
+        LOG.info('Using local Zuul configuration files...')
+        LOG.info(f'Path to Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
         directories = list_existing_osp_projects()
         templates_directory = directories.pop(0)
 
-    if args.generate:
-        print('Generating new downstream configuration files...')
-        triggers = shperer.find_triggers('check,gate')
+    if not args.generate:
+        LOG.warning('Nothing else to do.')
+        return
 
+    LOG.info('Generating new downstream configuration files...')
+    LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
+    triggers = shperer.find_triggers('check,gate')
+
+    path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
+                                        templates_directory))
+    templates = shperer.find_templates(path, triggers)
+
+    for directory in directories:
+        LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                            templates_directory))
-        templates = shperer.find_templates(path, triggers)
+                                            directory))
+        jobs = shperer.find_jobs(path, templates, triggers)
 
-        for directory in directories:
-            path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                                directory))
-            jobs = shperer.find_jobs(path, templates, triggers)
+        name = directory.replace('/', '-')
+        config_dest = os.path.join(
+            GENERATED_CONFIGS_DIR,
+            CONFIG_PREFIX + name + CONFIG_EXTENSION
+        )
 
-            name = directory.replace('/', '-')
-            config_dest = os.path.join(
-                GENERATED_CONFIGS_DIR,
-                CONFIG_PREFIX + name + CONFIG_EXTENSION
-            )
-
-            fertiger.generate_zuul_config(path=config_dest,
-                                          name=name,
-                                          jobs=jobs,
-                                          collect_all=args.collect_all)
-
-    else:
-        print('Nothing else to do.')
+        fertiger.generate_zuul_config(path=config_dest,
+                                      name=name,
+                                      jobs=jobs,
+                                      collect_all=args.collect_all)
 
 
 if __name__ == '__main__':
