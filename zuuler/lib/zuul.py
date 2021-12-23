@@ -225,6 +225,8 @@ class ZuulProject(object):
                 for trigger_type in trigger_types:
                     if trigger_type in project:
                         jobs = project.get(trigger_type).get('jobs')
+                        if not jobs:
+                            continue
                         for job in jobs:
                             z_jobs = self._get_jobs_from_entry(job,
                                                                trigger_type)
