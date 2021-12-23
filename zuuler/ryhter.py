@@ -27,20 +27,22 @@ from zuuler import shperer
 from zuuler import znoyder
 
 
-UPSTREAM_CONFIGS_DIR = 'tmpdir/'
-GENERATED_CONFIGS_DIR = 'outdir/'
+UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
+GENERATED_CONFIGS_DIR = 'jobs-generated/'
 CONFIG_PREFIX = 'cre-'
 CONFIG_EXTENSION = '.yaml'
 
 LOG = logger.LOG
 
 
-def fetch_osp_projects() -> list:
-    packages = znoyder.get_packages(upstream='opendev.org', tag='osp-17.0')
+def fetch_osp_projects(**kwargs) -> list:
+    packages = znoyder.get_packages(upstream='opendev.org', **kwargs)
     repositories = [package.get('upstream') for package in packages]
+    branch = 'master'
 
-    release = znoyder.get_releases(tag='osp-17.0')[0].get('upstream_release')
-    branch = f'stable/{release}'
+    if kwargs.get('tag'):
+        release = znoyder.get_releases(**kwargs)[0].get('upstream_release')
+        branch = f'stable/{release}'
 
     templates_repository = 'https://opendev.org/openstack/openstack-zuul-jobs'
     templates_branch = 'master'
@@ -98,6 +100,21 @@ def process_arguments() -> Namespace:
         help='download the zuul configuration files from repositories'
     )
     parser.add_argument(
+        '-c', '--component',
+        dest='component',
+        help='OSP component name to filter projects'
+    )
+    parser.add_argument(
+        '-n', '--name',
+        dest='name',
+        help='OSP package name to filter projects'
+    )
+    parser.add_argument(
+        '-t', '--tag',
+        dest='tag',
+        help='OSP release tag to filter projects'
+    )
+    parser.add_argument(
         '-g', '--generate',
         dest='generate',
         default=False,
@@ -122,7 +139,7 @@ def main() -> None:
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
         LOG.info('Downloading new Zuul configuration from upstream...')
         LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
-        directories = fetch_osp_projects()
+        directories = fetch_osp_projects(**vars(args))
         templates_directory = directories.pop(0)
     else:
         LOG.info('Using local Zuul configuration files...')

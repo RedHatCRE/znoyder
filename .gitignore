@@ -2,3 +2,5 @@
 /*.egg-info/
 /.tox/
 __pycache__/
+jobs-upstream/
+jobs-generated/
