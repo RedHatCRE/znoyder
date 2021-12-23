@@ -24,9 +24,9 @@ import logging
 import os
 import sys
 
-from zuuler.lib import logger
-from zuuler.lib import zuul
-from zuuler.lib.exceptions import PathError
+from znoyder.lib import logger
+from znoyder.lib import zuul
+from znoyder.lib.exceptions import PathError
 
 
 APP_DESCRIPTION = 'Find ZUUL jobs, templates and associate them with projects.'
@@ -104,7 +104,7 @@ def _cli_find_jobs(directory, templates, triggers):
                   (job.job_trigger_type, job, template))
 
 
-def process_arguments() -> Namespace:
+def process_arguments(argv=None) -> Namespace:
     formatter = ArgumentDefaultsHelpFormatter
 
     parser = ArgumentParser(prog='shperer',
@@ -135,26 +135,25 @@ def process_arguments() -> Namespace:
                         help='comma separated job trigger types to return',
                         required=True)
 
-    arguments = parser.parse_args()
-
+    arguments = parser.parse_args(argv)
     return arguments
 
 
-def main() -> None:
-    arguments = process_arguments()
+def main(argv=None) -> None:
+    args = process_arguments(argv)
 
-    if arguments.verbose:
+    if args.verbose:
         LOG.setLevel(level=logging.DEBUG)
         LOG.debug('Shperer CLI running in debug mode')
 
-    LOG.debug('%s' % arguments)
+    LOG.debug('%s' % args)
 
     start_time = datetime.datetime.now()
 
     try:
-        _cli_find_jobs(arguments.directory,
-                       arguments.templates,
-                       arguments.trigger)
+        _cli_find_jobs(args.directory,
+                       args.templates,
+                       args.trigger)
 
     except PathError as ex:
         LOG.error(ex.message)

@@ -19,8 +19,8 @@
 import os
 import re
 
-from zuuler.lib.exceptions import PathError
-from zuuler.lib import logger
+from znoyder.lib.exceptions import PathError
+from znoyder.lib import logger
 
 
 LOG = logger.LOG

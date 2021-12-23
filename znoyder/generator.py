@@ -20,11 +20,11 @@ from argparse import ArgumentParser
 from argparse import Namespace
 import os.path
 
-from zuuler import descarger
-from zuuler import fertiger
-from zuuler.lib import logger
-from zuuler import shperer
-from zuuler import znoyder
+from znoyder import downloader
+from znoyder import templater
+from znoyder.lib import logger
+from znoyder import finder
+from znoyder import browser
 
 
 UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
@@ -36,17 +36,17 @@ LOG = logger.LOG
 
 
 def fetch_osp_projects(**kwargs) -> list:
-    packages = znoyder.get_packages(upstream='opendev.org', **kwargs)
+    packages = browser.get_packages(upstream='opendev.org', **kwargs)
     repositories = [package.get('upstream') for package in packages]
     branch = 'master'
 
     if kwargs.get('tag'):
-        release = znoyder.get_releases(**kwargs)[0].get('upstream_release')
+        release = browser.get_releases(**kwargs)[0].get('upstream_release')
         branch = f'stable/{release}'
 
     templates_repository = 'https://opendev.org/openstack/openstack-zuul-jobs'
     templates_branch = 'master'
-    templates_urls = descarger.download_zuul_config(
+    templates_urls = downloader.download_zuul_config(
         repository=templates_repository,
         branch=templates_branch,
         destination=UPSTREAM_CONFIGS_DIR,
@@ -57,7 +57,7 @@ def fetch_osp_projects(**kwargs) -> list:
 
     directories = []
     for repository in repositories:
-        project_urls = descarger.download_zuul_config(
+        project_urls = downloader.download_zuul_config(
             repository=repository,
             branch=branch,
             destination=UPSTREAM_CONFIGS_DIR,
@@ -83,7 +83,7 @@ def list_existing_osp_projects() -> list:
     return [templates_directory] + directories
 
 
-def process_arguments() -> Namespace:
+def process_arguments(argv=None) -> Namespace:
     parser = ArgumentParser()
     parser.add_argument(
         '-e', '--existing',
@@ -129,12 +129,12 @@ def process_arguments() -> Namespace:
         help='collect all jobs when generating downstream configuration'
     )
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(argv)
     return arguments
 
 
-def main() -> None:
-    args = process_arguments()
+def main(argv=None) -> None:
+    args = process_arguments(argv)
 
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
         LOG.info('Downloading new Zuul configuration from upstream...')
@@ -147,23 +147,19 @@ def main() -> None:
         directories = list_existing_osp_projects()
         templates_directory = directories.pop(0)
 
-    if not args.generate:
-        LOG.warning('Nothing else to do.')
-        return
-
     LOG.info('Generating new downstream configuration files...')
     LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
-    triggers = shperer.find_triggers('check,gate')
+    triggers = finder.find_triggers('check,gate')
 
     path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                         templates_directory))
-    templates = shperer.find_templates(path, triggers)
+    templates = finder.find_templates(path, triggers)
 
     for directory in directories:
         LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             directory))
-        jobs = shperer.find_jobs(path, templates, triggers)
+        jobs = finder.find_jobs(path, templates, triggers)
 
         name = directory.replace('/', '-')
         config_dest = os.path.join(
@@ -171,10 +167,10 @@ def main() -> None:
             CONFIG_PREFIX + name + CONFIG_EXTENSION
         )
 
-        fertiger.generate_zuul_config(path=config_dest,
-                                      name=name,
-                                      jobs=jobs,
-                                      collect_all=args.collect_all)
+        templater.generate_zuul_config(path=config_dest,
+                                       name=name,
+                                       jobs=jobs,
+                                       collect_all=args.collect_all)
 
 
 if __name__ == '__main__':

@@ -22,11 +22,11 @@ import collections
 import io
 import yaml
 
-from zuuler.lib import logger
-from zuuler.lib import utils
-from zuuler.lib.exceptions import JobTypeError
-from zuuler.lib.exceptions import TriggerTypeError
-from zuuler.lib.exceptions import YAMLDuplicateKeyError
+from znoyder.lib import logger
+from znoyder.lib import utils
+from znoyder.lib.exceptions import JobTypeError
+from znoyder.lib.exceptions import TriggerTypeError
+from znoyder.lib.exceptions import YAMLDuplicateKeyError
 
 
 LOG = logger.LOG

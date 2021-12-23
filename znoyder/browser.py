@@ -16,7 +16,8 @@
 #    under the License.
 #
 
-import argparse
+from argparse import ArgumentParser
+from argparse import Namespace
 from pprint import PrettyPrinter
 import sys
 
@@ -80,11 +81,11 @@ def get_releases(**kwargs):
     return releases
 
 
-def process_arguments():
-    parser = argparse.ArgumentParser(description=APP_DESCRIPTION)
+def process_arguments(argv=None) -> Namespace:
+    parser = ArgumentParser(description=APP_DESCRIPTION)
     subparsers = parser.add_subparsers(dest='command', metavar='command')
 
-    common = argparse.ArgumentParser(add_help=False)
+    common = ArgumentParser(add_help=False)
     common.add_argument('--debug', dest='debug',
                         default=False, action='store_true',
                         help='print all fields in output')
@@ -106,7 +107,7 @@ def process_arguments():
     releases = subparsers.add_parser('releases', help='', parents=[common])
     releases.add_argument('--tag', dest='tag')
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(argv)
 
     if not arguments.command:
         parser.print_help()
@@ -115,8 +116,8 @@ def process_arguments():
     return arguments
 
 
-def main():
-    args = process_arguments()
+def main(argv=None) -> None:
+    args = process_arguments(argv)
 
     if args.command == 'components':
         results = get_components(**vars(args))

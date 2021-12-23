@@ -24,9 +24,8 @@ from pathlib import Path
 
 from jinja2 import Environment
 from jinja2 import PackageLoader
-from jinja2 import Template
 
-from zuuler.lib import logger
+from znoyder.lib import logger
 
 
 LOG = logger.LOG
@@ -41,7 +40,7 @@ JOBS_TO_COLLECT_WITH_MAPPING = {
 
 JOB_TEMPLATE_FILE = 'zuul-job.j2'
 
-j2env = Environment(loader=PackageLoader('zuuler', 'templates'))
+j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
 JOB_TEMPLATE = j2env.get_template(JOB_TEMPLATE_FILE)
 
 
@@ -65,7 +64,7 @@ def generate_zuul_config(path: str, name: str, jobs: list,
         jobs_dict[job.job_trigger_type].append(job_name)
 
     if not jobs_dict:
-        LOG.error(f'No jobs collected, skipping config generation.')
+        LOG.error('No jobs collected, skipping config generation.')
         return False
 
     config = JOB_TEMPLATE.render(name=name, jobs=jobs_dict).strip()
@@ -80,7 +79,7 @@ def generate_zuul_config(path: str, name: str, jobs: list,
     return True
 
 
-def process_arguments() -> Namespace:
+def process_arguments(argv=None) -> Namespace:
     parser = ArgumentParser()
     parser.add_argument(
         '-j', '--json',
@@ -90,12 +89,12 @@ def process_arguments() -> Namespace:
         help='produce output in JSON format'
     )
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(argv)
     return arguments
 
 
-def main() -> None:
-    args = process_arguments()
+def main(argv=None) -> None:
+    args = process_arguments(argv)
 
     if args.json:
         print(JOBS_TO_COLLECT_WITH_MAPPING)

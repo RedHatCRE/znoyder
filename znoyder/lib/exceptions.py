@@ -18,14 +18,14 @@
 
 import textwrap
 
-from zuuler.lib import logger
+from znoyder.lib import logger
 
 
 LOG = logger.LOG
 
 
-class ZuulerCliException(Exception):
-    '''Base Zuuler Cli Exception
+class ZnoyderCliException(Exception):
+    '''Base Znoyder Cli Exception
     To use this class, inherit from it and define a
     a 'msg_fmt' property. That msg_fmt will get printf'd
     with the keyword arguments provided to the constructor.
@@ -47,22 +47,22 @@ class ZuulerCliException(Exception):
                 self.message = self.msg_fmt
 
 
-class PathError(ZuulerCliException):
+class PathError(ZnoyderCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class JobTypeError(ZuulerCliException):
+class JobTypeError(ZnoyderCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class TriggerTypeError(ZuulerCliException):
+class TriggerTypeError(ZnoyderCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 
 
-class YAMLDuplicateKeyError(ZuulerCliException):
+class YAMLDuplicateKeyError(ZnoyderCliException):
     def __init__(self, key, node, context, start_mark):
         intro = textwrap.fill(textwrap.dedent('''\
         Zuul encountered a syntax error while parsing its configuration in the

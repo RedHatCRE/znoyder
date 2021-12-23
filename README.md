@@ -1,119 +1,92 @@
-# Zuuler suite
+# Znoyder
 
-![](https://github.com/rhos-infra/zuuler/workflows/CI/badge.svg)
+![](https://github.com/rhos-infra/znoyder/workflows/CI/badge.svg)
 
 The goal of this project is to automate preparation of downstream CI jobs
 for Red Hat OpenStack Platform (OSP) releases.
 
-The zuuler suite consists of the following tools:
-– znoyder – finds the projects and their repositories,
-– descarger – fetches from projects repositories the Zuul configuration,
-– shperer – filters the Zuul configuration and converts to a sparser form,
-– fertiger – adjusts and saves the new configuration for OSP specifics,
-– ryhter – combines all the above together in a single workflow tool.
-
 The name `znoyder` is a play of Silesian word *znojdywacz* and its English
 meaning (*finder*).
-
-The name `descarger` is a play of Spanish verb *descargar* and its English
-meaning (*to download*).
-
-The name `shperer` is a play of Polish term *szperacz* and its English
-meaning (*rummager*).
-
-The name `fertiger` is a play of Silesian adjective *fertig* and its English
-meaning (*finished*).
-
-The name `ryhter` is a play of Silesian verb *ryhtować* and its English
-meaning (*to prepare*).
 
 
 # Usage examples
 
-The sections below provide brief description of each prepared tool.
-
+Below are the examples of the tool usage.
+The basic usage involves a valid subcommand and additional options to it.
 For further details, the standard `--help` shall guide you.
 
 
-## Znoyder
+## browse-osp
 
-The tool can be used to browse **ospinfo** data.
+This command can be used to explore the **ospinfo** data.
 
-Simply running `znoyder` with any valid subcommand will result
-in displaying the default fields of corresponding data.
-For example:
-
+To view existing components:
 ```
-znoyder components
+znoyder browse-osp components
 ```
 
 There is a basic filtering implemented that allows to limit and narrow results,
 for example to a specific release, project or component – for `packages` subcommand.
 It is also possible to select only certain fields as result, using the `--output` option.
 
+To list URLs to repositories of packages that belong to network component:
+
 ```
-znoyder packages --component network --tag osp-17.0 --output osp-patches
+znoyder browse-osp packages --component network --tag osp-17.0 --output osp-patches
 ```
 
 There exists the `--debug` option which will display raw dictionary as output.
 It can be useful to find fields (key names) for `--output` option.
 
 ```
-znoyder releases --debug
+znoyder browse-osp releases --debug
 ```
 
 
-## Descarger
+## download
 
-This tool downloads Zuul configuration, if there is any, from a given
-repository and its branch.
+This command allows fetching the Zuul configuration, if there is any,
+from a given repository and its branch.
 
 ```
-descarger -r https://opendev.org/openstack/nova -b master -d zuul-config-files/
+znoyder download --repo https://opendev.org/openstack/nova --branch master --destination zuul-config-files/
 ```
 
 
-## Shperer
+## find-jobs
 
-It allows investigating details of Zuul configuration.
-
-Before running `shperer` CLI, a set of projects should be available in the
-local path.
+It allows investigating details of Zuul configuration that is available
+in the local path.
 
 To get list of jobs and templates defined for a particular project
-and a Zuul trigger types, simply execute:
+and a specified Zuul trigger types, simply execute:
 
 ```
-shperer -d /path/to/neutron/ -b /path/to/templates/openstack-zuul-jobs -t check,gate
+znoyder find-jobs --dir path/to/nova --base /path/to/templates/openstack-zuul-jobs --trigger check,gate
 ```
-
-Note the tool requires absolute paths as an argument.
 
 There exists the `-v` option for getting a verbose output with many details.
 
 
-## Fertiger
+## templates
 
-It is mainly the templating tool for producing the adjusted configuration
-files for OSP-specifics. Calling it will produce a list of jobs considered
-during templates rendering and their remapping (if defined).
-
-```
-fertiger
-```
-
-
-## Ryhter
-
-This tool can be used to download Zuul upstream configuration, then process it
-and produce new configuration files, crafted for downstream OSP testing.
+Calling this command will produce a list of jobs considered during
+templates rendering and their remapping (if defined).
 
 ```
-ryhter --generate
+znoyder templates --json
 ```
 
-By default the tool only attempts to download all configuration files
-for later processing, unless the `-g` option is given explicitly.
+
+## generate
+
+This command can be used to download Zuul upstream configuration for a given
+OSP release and component (optional filtering), then process it and produce
+new configuration files, crafted for downstream OSP testing.
+
+```
+znoyder generate --tag osp-17.0 --component network --collect-all
+```
 
 
 # Tests

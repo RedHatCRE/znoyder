@@ -36,7 +36,7 @@ logger_formatter = colorlog.ColoredFormatter(
     )
 )
 
-LOGGER_NAME = 'zuulerLogger'
+LOGGER_NAME = 'znoyderLogger'
 DEFAULT_LOG_LEVEL = logging.INFO
 
 LOG = logging.getLogger(LOGGER_NAME)
@@ -54,14 +54,14 @@ LOG.addHandler(sh)
 LOG.propagate = False
 
 
-def zuuler_excepthook(exc_type, exc_value, exc_traceback):
-    '''exception hook that sends ZuulerCliException to log and other
+def znoyder_excepthook(exc_type, exc_value, exc_traceback):
+    '''exception hook that sends ZnoyderCliException to log and other
     exceptions to stderr (default excepthook)
     '''
-    from zuuler.lib.exceptions import ZuulerCliException
+    from znoyder.lib.exceptions import ZnoyderCliException
 
     # sends full exception with trace to log
-    if not isinstance(exc_value, ZuulerCliException):
+    if not isinstance(exc_value, ZnoyderCliException):
         return sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
     if LOG.getEffectiveLevel() <= logging.DEBUG:
@@ -72,4 +72,4 @@ def zuuler_excepthook(exc_type, exc_value, exc_traceback):
         LOG.error(exc_value.message)
 
 
-sys.excepthook = zuuler_excepthook
+sys.excepthook = znoyder_excepthook

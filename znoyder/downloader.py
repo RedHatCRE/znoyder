@@ -28,7 +28,7 @@ from sys import exit
 
 import requests
 
-from zuuler.lib import logger
+from znoyder.lib import logger
 
 
 LOG = logger.LOG
@@ -164,7 +164,7 @@ def download_zuul_config(**kwargs):
     return project_urls
 
 
-def process_arguments() -> Namespace:
+def process_arguments(argv=None) -> Namespace:
     parser = ArgumentParser()
     parser.add_argument(
         '-r', '--repo', '--repository',
@@ -202,14 +202,14 @@ def process_arguments() -> Namespace:
         help='do not overwrite existing files'
     )
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(argv)
     return arguments
 
 
-def main() -> None:
-    arguments = process_arguments()
+def main(argv=None) -> None:
+    args = process_arguments(argv)
 
-    download_zuul_config(**vars(arguments))
+    download_zuul_config(**vars(args))
 
 
 if __name__ == '__main__':
