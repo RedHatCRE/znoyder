@@ -20,6 +20,8 @@ from collections import defaultdict
 import os.path
 from pathlib import Path
 
+from jinja2 import Environment
+from jinja2 import PackageLoader
 from jinja2 import Template
 
 
@@ -39,17 +41,10 @@ JOBS_REMAPPING = {
     'openstack-tox-py39': 'osp-tox-py39',
 }
 
-JOB_TEMPLATE = Template('''
-- project:
-    name: {{ name }}
-    {%- for type in jobs %}
-    {{ type }}:
-      jobs:
-        {%- for job in jobs[type] %}
-        - {{ job }}
-        {%- endfor -%}
-    {%- endfor -%}
-''')
+JOB_TEMPLATE_FILE = 'zuul-job.j2'
+
+j2env = Environment(loader=PackageLoader('zuuler', 'templates'))
+JOB_TEMPLATE = j2env.get_template(JOB_TEMPLATE_FILE)
 
 
 def generate_zuul_config(path: str, name: str, jobs: list,
