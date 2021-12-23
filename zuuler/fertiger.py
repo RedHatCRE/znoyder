@@ -16,6 +16,8 @@
 #    under the License.
 #
 
+from argparse import ArgumentParser
+from argparse import Namespace
 from collections import defaultdict
 import os.path
 from pathlib import Path
@@ -70,13 +72,32 @@ def generate_zuul_config(path: str, name: str, jobs: list,
     return True
 
 
+def process_arguments() -> Namespace:
+    parser = ArgumentParser()
+    parser.add_argument(
+        '-j', '--json',
+        dest='json',
+        default=False,
+        action='store_true',
+        help='produce output in JSON format'
+    )
+
+    arguments = parser.parse_args()
+    return arguments
+
+
 def main() -> None:
-    print('Jobs being collected by default:')
-    for job in JOBS_TO_COLLECT_WITH_MAPPING:
-        if JOBS_TO_COLLECT_WITH_MAPPING[job] is not None:
-            print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
-        else:
-            print(job)
+    args = process_arguments()
+
+    if args.json:
+        print(JOBS_TO_COLLECT_WITH_MAPPING)
+    else:
+        print('Jobs being collected by default:')
+        for job in JOBS_TO_COLLECT_WITH_MAPPING:
+            if JOBS_TO_COLLECT_WITH_MAPPING[job] is not None:
+                print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
+            else:
+                print(job)
 
 
 if __name__ == '__main__':
