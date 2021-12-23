@@ -28,6 +28,10 @@ from sys import exit
 
 import requests
 
+from zuuler.lib import logger
+
+
+LOG = logger.LOG
 
 GITHUB_API_URL = 'https://api.github.com/'
 OPENDEV_API_URL = 'https://opendev.org/api/v1/'
@@ -45,8 +49,8 @@ def get_raw_url_files_in_repository(repository: str,
     elif 'github.com' in repository:
         ENDPOINT = (GITHUB_API_URL + REPO_ENDPOINT + CONTENT_ENDPOINT)
     else:
-        print('Unrecognized or unsupported repository host.')
-        print('The tool supports: github.com and opendev.org repositories.')
+        LOG.error('Unrecognized or unsupported repository host.')
+        LOG.error('The tool supports github.com and opendev.org repositories.')
         if errors_fatal:
             exit(1)
         else:
@@ -57,12 +61,12 @@ def get_raw_url_files_in_repository(repository: str,
                                                 path='.',
                                                 gitref=branch))
 
-    print('Requested:', response.url)
+    LOG.info(f'Requested: {response.url}')
     if response.status_code != 200:
-        print('Error getting URLs files from directory in remote repository.')
+        LOG.error('Error getting URLs from directory in remote repository.')
         details = json.loads(response.text).get('errors',
                                                 json.loads(response.text))
-        print(f'Details: {repr(details)}')
+        LOG.error(f'Details: {repr(details)}')
         if errors_fatal:
             exit(1)
         else:
@@ -100,18 +104,21 @@ def download_file(url: str, destination_directory: str,
     file_name = url.split('/')[-1]
     file_path = f'{destination_directory}/{file_name}'
 
-    if os.path.exists(file_path) and ignore_existing:
-        print(f'File already exists: {file_name}')
+    if os.path.exists(file_path):
+        LOG.warning(f'File already exists: {file_name}')
+
+    if ignore_existing:
+        LOG.info(f'Skipping the download of file: {file_name}')
         return
 
     try:
-        print(f'Downloading file: {file_name}')
+        LOG.info(f'Downloading new file: {file_name}')
         data = requests.get(url)
         with open(file_path, 'wb') as file:
             file.write(data.content)
 
     except Exception as e:
-        print(f'Error downloading file: {file_name}.\nDetails: {repr(e)}')
+        LOG.error(f'Error downloading file: {file_name}.\nDetails: {repr(e)}')
         exit(1)
 
 
