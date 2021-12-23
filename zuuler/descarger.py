@@ -30,12 +30,10 @@ import requests
 
 
 GITHUB_API_URL = 'https://api.github.com/'
-GITHUB_REPO_ENDPOINT = 'repos/{project}/'
-GITHUB_CONTENT_ENDPOINT = 'contents/{path}?ref={gitref}'
-
 OPENDEV_API_URL = 'https://opendev.org/api/v1/'
-OPENDEV_REPO_ENDPOINT = 'repos/{project}/'
-OPENDEV_CONTENT_ENDPOINT = 'contents/{path}?ref={gitref}'
+
+REPO_ENDPOINT = 'repos/{project}/'
+CONTENT_ENDPOINT = 'contents/{path}?ref={gitref}'
 
 
 def get_raw_url_files_in_repository(repository: str,
@@ -43,13 +41,9 @@ def get_raw_url_files_in_repository(repository: str,
                                     branch: str = 'master',
                                     errors_fatal: bool = True) -> dict:
     if 'opendev.org' in repository:
-        ENDPOINT = (
-            OPENDEV_API_URL + OPENDEV_REPO_ENDPOINT + OPENDEV_CONTENT_ENDPOINT
-        )
+        ENDPOINT = (OPENDEV_API_URL + REPO_ENDPOINT + CONTENT_ENDPOINT)
     elif 'github.com' in repository:
-        ENDPOINT = (
-            GITHUB_API_URL + GITHUB_REPO_ENDPOINT + GITHUB_CONTENT_ENDPOINT
-        )
+        ENDPOINT = (GITHUB_API_URL + REPO_ENDPOINT + CONTENT_ENDPOINT)
     else:
         print('Unrecognized or unsupported repository host.')
         print('The tool supports: github.com and opendev.org repositories.')
