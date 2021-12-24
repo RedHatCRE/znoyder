@@ -22,11 +22,11 @@ import collections
 import io
 import yaml
 
-from zuuler.lib import logger
-from zuuler.lib import utils
-from zuuler.lib.exceptions import JobTypeError
-from zuuler.lib.exceptions import TriggerTypeError
-from zuuler.lib.exceptions import YAMLDuplicateKeyError
+from znoyder.lib import logger
+from znoyder.lib import utils
+from znoyder.lib.exceptions import JobTypeError
+from znoyder.lib.exceptions import TriggerTypeError
+from znoyder.lib.exceptions import YAMLDuplicateKeyError
 
 
 LOG = logger.LOG
@@ -225,6 +225,8 @@ class ZuulProject(object):
                 for trigger_type in trigger_types:
                     if trigger_type in project:
                         jobs = project.get(trigger_type).get('jobs')
+                        if not jobs:
+                            continue
                         for job in jobs:
                             z_jobs = self._get_jobs_from_entry(job,
                                                                trigger_type)

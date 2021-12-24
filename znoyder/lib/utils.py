@@ -19,8 +19,8 @@
 import os
 import re
 
-from zuuler.lib.exceptions import PathError
-from zuuler.lib import logger
+from znoyder.lib.exceptions import PathError
+from znoyder.lib import logger
 
 
 LOG = logger.LOG
@@ -52,9 +52,6 @@ def get_config_paths(local_path) -> list:
 
     if not os.access(local_path, os.R_OK):
         raise PathError('Provided path is not readable: %s' % local_path)
-
-    if not os.path.isabs(local_path):
-        raise PathError('Provided path is not absolute one: %s' % local_path)
 
     if not os.path.isdir(local_path):
         raise PathError('Provided path is not directory: %s' % local_path)
