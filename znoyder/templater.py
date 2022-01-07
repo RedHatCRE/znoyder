@@ -61,7 +61,8 @@ def generate_zuul_config(path: str, name: str, jobs: list,
             job_name = new_name
 
         LOG.info(f'Collecting job: {job_name}')
-        jobs_dict[job.job_trigger_type].append(job_name)
+        if job_name not in jobs_dict[job.job_trigger_type]:
+            jobs_dict[job.job_trigger_type].append(job_name)
 
     if not jobs_dict:
         LOG.error('No jobs collected, skipping config generation.')
