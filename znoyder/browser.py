@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 from argparse import Namespace
 from pprint import PrettyPrinter
 import sys
+from urllib.parse import urlparse
 
 from distroinfo import info as di
 
@@ -81,6 +82,23 @@ def get_releases(**kwargs):
     return releases
 
 
+def get_projects(**kwawrgs) -> list:
+    packages = get_packages()
+    urls_components = [package['osp-patches'] for package in packages
+                       if package['osp-patches'] != '']
+    projects = []
+    for url_component in urls_components:
+        url_info = urlparse(url_component)
+        project_name = url_info.path[1:]
+        git_hostname = url_info.hostname
+        # Filter for specific Git URL or all
+        if kwawrgs.get('git_url') == git_hostname:
+            projects.append({'name': project_name})
+        else:
+            projects.append({'name': project_name})
+    return projects
+
+
 def process_arguments(argv=None) -> Namespace:
     parser = ArgumentParser(description=APP_DESCRIPTION)
     subparsers = parser.add_subparsers(dest='command', metavar='command')
@@ -103,6 +121,10 @@ def process_arguments(argv=None) -> Namespace:
     packages.add_argument('--name', dest='name')
     packages.add_argument('--tag', dest='tag')
     packages.add_argument('--upstream', dest='upstream')
+
+    projects = subparsers.add_parser('projects', help='', parents=[common])
+    projects.add_argument('--git_url', dest='git_url', default=False,
+                          help='Git URL that contains projects')
 
     releases = subparsers.add_parser('releases', help='', parents=[common])
     releases.add_argument('--tag', dest='tag')
@@ -128,6 +150,9 @@ def main(argv=None) -> None:
     elif args.command == 'releases':
         results = get_releases(**vars(args))
         default_output = ['ospinfo_tag_name', 'git_release_branch']
+    elif args.command == 'projects':
+        results = get_projects(**vars(args))
+        default_output = ['name']
     else:
         results = None
 
