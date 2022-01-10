@@ -41,6 +41,16 @@ JOBS_TO_COLLECT_WITH_MAPPING = {
 j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
 
 
+def _is_job_already_defined(jobs_dict: list, job_name: str, trigger_type: str):
+    jobs = jobs_dict.get(trigger_type)
+
+    if isinstance(jobs, list):
+        for job in jobs:
+            if job_name in job:
+                return True
+    return False
+
+
 def generate_zuul_config(path: str, name: str,
                          project_template: str,
                          jobs: list,
@@ -64,7 +74,8 @@ def generate_zuul_config(path: str, name: str,
             job_name = new_name
 
         LOG.info(f'Collecting job: {job_name}')
-        if job_name not in jobs_dict[job.job_trigger_type]:
+        if not _is_job_already_defined(jobs_dict, job_name,
+                                       job.job_trigger_type):
 
             templated_job = {
                 job_name: {
