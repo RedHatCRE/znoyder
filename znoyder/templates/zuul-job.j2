@@ -1,9 +1,0 @@
-- project:
-    name: {{ name }}
-    {%- for type in jobs %}
-    {{ type }}:
-      jobs:
-        {%- for job in jobs[type] %}
-        - {{ job }}
-        {%- endfor -%}
-    {%- endfor -%}
