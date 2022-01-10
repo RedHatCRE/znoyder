@@ -170,6 +170,8 @@ def main(argv=None) -> None:
                                             directory))
         jobs = finder.find_jobs(path, templates, triggers)
 
+        # Case where zuul configs are inside zuul.d
+        directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
         name = directory.replace('/', '-')
         config_dest = os.path.join(
             GENERATED_CONFIGS_DIR,
