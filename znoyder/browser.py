@@ -65,7 +65,7 @@ def get_packages(**kwargs):
                     if kwargs.get('tag') in package.get('tags')]
     if kwargs.get('upstream'):
         packages = [package for package in packages
-                    if kwargs.get('upstream') in package.get('upstream')]
+                    if kwargs.get('upstream') in str(package.get('upstream'))]
 
     return packages
 
