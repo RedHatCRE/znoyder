@@ -140,9 +140,14 @@ class ZuulSafeLoader(yaml.SafeLoader):
         wrapped_stream = io.StringIO(stream)
         wrapped_stream.name = str(context)
         super(ZuulSafeLoader, self).__init__(wrapped_stream)
+        self.add_multi_constructor('!encrypted/', self.construct_encrypted)
         self.name = str(context)
         self.zuul_context = context
         self.zuul_stream = stream
+
+    @classmethod
+    def construct_encrypted(cls, loader, tag_suffix, node):
+        return loader.construct_sequence(node)
 
     def construct_mapping(self, node, deep=False):
         keys = set()
