@@ -94,7 +94,7 @@ def get_projects(**kwawrgs) -> list:
         # Filter for specific Git URL or all
         if kwawrgs.get('git_url') == git_hostname:
             projects.append({'name': project_name})
-        else:
+        elif not kwawrgs['git_url']:
             projects.append({'name': project_name})
     return projects
 
