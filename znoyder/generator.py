@@ -131,6 +131,12 @@ def process_arguments(argv=None) -> Namespace:
         action='store_true',
         help='collect all jobs when generating downstream configuration'
     )
+    parser.add_argument(
+        '-m', '--template-name',
+        dest='template',
+        default='zuul-project',
+        help='Use defined template name, e.g. empty-zuul-project'
+    )
 
     arguments = parser.parse_args(argv)
     return arguments
@@ -177,7 +183,8 @@ def main(argv=None) -> None:
               args.tag.replace('osp', '^rhos').split('.')[0]
 
         templater.generate_zuul_config(path=config_dest,
-                                       template_name=CONFIG_PREFIX + name,
+                                       template_name=args.template,
+                                       project_template=CONFIG_PREFIX + name,
                                        name=name,
                                        jobs=jobs,
                                        collect_all=args.collect_all,

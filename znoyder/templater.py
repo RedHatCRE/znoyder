@@ -38,15 +38,14 @@ JOBS_TO_COLLECT_WITH_MAPPING = {
     'openstack-tox-py39': 'osp-tox-py39',
 }
 
-JOB_TEMPLATE_FILE = 'zuul-job.j2'
-
 j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
-JOB_TEMPLATE = j2env.get_template(JOB_TEMPLATE_FILE)
 
 
-def generate_zuul_config(path: str, name: str, template_name: str,
+def generate_zuul_config(path: str, name: str,
+                         project_template: str,
                          jobs: list,
                          branch_regex: str,
+                         template_name: str = None,
                          collect_all: bool = False,
                          voting: bool = False) -> bool:
 
@@ -80,7 +79,9 @@ def generate_zuul_config(path: str, name: str, template_name: str,
         LOG.error('No jobs collected, skipping config generation.')
         return False
 
-    config = JOB_TEMPLATE.render(name=template_name, jobs=jobs_dict).strip()
+    JOB_TEMPLATE = j2env.get_template(template_name+".j2")
+
+    config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
 
     destination_directory = os.path.dirname(path)
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
