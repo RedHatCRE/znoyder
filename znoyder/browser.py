@@ -92,9 +92,9 @@ def get_projects(**kwawrgs) -> list:
         project_name = url_info.path[1:]
         git_hostname = url_info.hostname
         # Filter for specific Git URL or all
-        if kwawrgs.get('git_url') == git_hostname:
+        if kwawrgs.get('git') == git_hostname:
             projects.append({'name': project_name})
-        elif not kwawrgs['git_url']:
+        elif not kwawrgs['git']:
             projects.append({'name': project_name})
     return projects
 
@@ -123,7 +123,7 @@ def process_arguments(argv=None) -> Namespace:
     packages.add_argument('--upstream', dest='upstream')
 
     projects = subparsers.add_parser('projects', help='', parents=[common])
-    projects.add_argument('--git_url', dest='git_url', default=False,
+    projects.add_argument('--git', dest='git', default=False,
                           help='Git URL that contains projects')
 
     releases = subparsers.add_parser('releases', help='', parents=[common])
