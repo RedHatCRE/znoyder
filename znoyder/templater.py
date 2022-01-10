@@ -44,8 +44,12 @@ j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
 JOB_TEMPLATE = j2env.get_template(JOB_TEMPLATE_FILE)
 
 
-def generate_zuul_config(path: str, name: str, jobs: list,
-                         collect_all: bool = False) -> bool:
+def generate_zuul_config(path: str, name: str, template_name: str,
+                         jobs: list,
+                         branch_regex: str,
+                         collect_all: bool = False,
+                         voting: bool = False) -> bool:
+
     jobs_dict = defaultdict(list)
 
     for job in jobs:
@@ -62,13 +66,21 @@ def generate_zuul_config(path: str, name: str, jobs: list,
 
         LOG.info(f'Collecting job: {job_name}')
         if job_name not in jobs_dict[job.job_trigger_type]:
-            jobs_dict[job.job_trigger_type].append(job_name)
+
+            templated_job = {
+                job_name: {
+                    'voting': voting,
+                    'branch_regex': branch_regex
+                }
+            }
+
+            jobs_dict[job.job_trigger_type].append(templated_job)
 
     if not jobs_dict:
         LOG.error('No jobs collected, skipping config generation.')
         return False
 
-    config = JOB_TEMPLATE.render(name=name, jobs=jobs_dict).strip()
+    config = JOB_TEMPLATE.render(name=template_name, jobs=jobs_dict).strip()
 
     destination_directory = os.path.dirname(path)
     Path(destination_directory).mkdir(parents=True, exist_ok=True)

@@ -1,9 +1,13 @@
-- project:
+- project-template:
     name: {{ name }}
     {%- for type in jobs %}
     {{ type }}:
       jobs:
-        {%- for job in jobs[type] %}
-        - {{ job }}
+        {%- for job_dict in jobs[type] %}
+        {%- for job in job_dict %}
+          - {{ job }}:
+            branches: {{ job_dict[job]['branch_regex'] }}
+            voting: {{ job_dict[job]['voting'] }}
+        {%- endfor -%}
         {%- endfor -%}
     {%- endfor -%}

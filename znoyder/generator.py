@@ -32,6 +32,9 @@ GENERATED_CONFIGS_DIR = 'jobs-generated/'
 CONFIG_PREFIX = 'cre-'
 CONFIG_EXTENSION = '.yaml'
 
+# We set it to newest
+DEFAULT_BRANCH_REGEX = '^rhos-17.*$'
+
 LOG = logger.LOG
 
 
@@ -167,10 +170,18 @@ def main(argv=None) -> None:
             CONFIG_PREFIX + name + CONFIG_EXTENSION
         )
 
+        branch_regex = DEFAULT_BRANCH_REGEX
+
+        if args.tag and args.tag.startswith('osp-'):
+            branch_regex = '%s.*$' % \
+              args.tag.replace('osp', '^rhos').split('.')[0]
+
         templater.generate_zuul_config(path=config_dest,
+                                       template_name=CONFIG_PREFIX + name,
                                        name=name,
                                        jobs=jobs,
-                                       collect_all=args.collect_all)
+                                       collect_all=args.collect_all,
+                                       branch_regex=branch_regex)
 
 
 if __name__ == '__main__':
