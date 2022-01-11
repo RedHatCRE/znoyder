@@ -79,7 +79,7 @@ def generate_zuul_config(path: str, name: str,
 
             templated_job = {
                 job_name: {
-                    'voting': voting,
+                    'voting': str(voting).lower(),
                     'branch_regex': branch_regex
                 }
             }
