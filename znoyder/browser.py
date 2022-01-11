@@ -20,6 +20,7 @@ from argparse import ArgumentParser
 from argparse import Namespace
 from pprint import PrettyPrinter
 import sys
+from urllib.parse import urlparse
 
 from distroinfo import info as di
 
@@ -68,6 +69,17 @@ def get_packages(**kwargs):
                     if kwargs.get('upstream') in str(package.get('upstream'))]
 
     return packages
+
+
+def get_projects_mapping(**kwawrgs) -> dict:
+    packages = get_packages(**kwawrgs)
+    projects_mapping = {}
+
+    for package in packages:
+        projects_mapping[package['name']] = urlparse(
+            package['osp-patches']).path[1:]
+
+    return projects_mapping
 
 
 def get_releases(**kwargs):
