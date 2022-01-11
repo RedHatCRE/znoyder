@@ -19,8 +19,6 @@
 from argparse import ArgumentParser
 from argparse import Namespace
 from collections import defaultdict
-import os.path
-from pathlib import Path
 
 from jinja2 import Environment
 from jinja2 import PackageLoader
@@ -57,6 +55,7 @@ def generate_zuul_config(path: str, name: str,
                          branch_regex: str,
                          template_name: str = None,
                          collect_all: bool = False,
+                         write_mode: str = 'w',
                          voting: bool = False) -> bool:
 
     jobs_dict = defaultdict(list)
@@ -93,11 +92,10 @@ def generate_zuul_config(path: str, name: str,
     JOB_TEMPLATE = j2env.get_template(template_name+".j2")
 
     config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
+    if write_mode == 'a' and config[0:4] == '---\n':
+        config = config[4:]
 
-    destination_directory = os.path.dirname(path)
-    Path(destination_directory).mkdir(parents=True, exist_ok=True)
-
-    with open(path, 'w') as file:
+    with open(path, write_mode) as file:
         file.write(config)
         file.write('\n')
 
