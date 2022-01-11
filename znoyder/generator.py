@@ -32,6 +32,9 @@ GENERATED_CONFIGS_DIR = 'jobs-generated/'
 CONFIG_PREFIX = 'cre-'
 CONFIG_EXTENSION = '.yaml'
 
+# We set it to newest
+DEFAULT_BRANCH_REGEX = '^rhos-17.*$'
+
 LOG = logger.LOG
 
 
@@ -128,6 +131,12 @@ def process_arguments(argv=None) -> Namespace:
         action='store_true',
         help='collect all jobs when generating downstream configuration'
     )
+    parser.add_argument(
+        '-m', '--template-name',
+        dest='template',
+        default='zuul-project',
+        help='Use defined template name, e.g. empty-zuul-project'
+    )
 
     arguments = parser.parse_args(argv)
     return arguments
@@ -155,22 +164,41 @@ def main(argv=None) -> None:
                                         templates_directory))
     templates = finder.find_templates(path, triggers)
 
+    us_to_ds_projects_map = browser.get_projects_mapping()
+
     for directory in directories:
         LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             directory))
         jobs = finder.find_jobs(path, templates, triggers)
 
+        # Case where zuul configs are inside zuul.d
+        directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
         name = directory.replace('/', '-')
+        if name not in us_to_ds_projects_map:
+            ds_name = name
+        else:
+            ds_name = us_to_ds_projects_map[name]
+
         config_dest = os.path.join(
             GENERATED_CONFIGS_DIR,
-            CONFIG_PREFIX + name + CONFIG_EXTENSION
+            CONFIG_PREFIX + ds_name + CONFIG_EXTENSION
         )
 
-        templater.generate_zuul_config(path=config_dest,
-                                       name=name,
-                                       jobs=jobs,
-                                       collect_all=args.collect_all)
+        branch_regex = DEFAULT_BRANCH_REGEX
+
+        if args.tag and args.tag.startswith('osp-'):
+            branch_regex = '%s.*$' % \
+              args.tag.replace('osp', '^rhos').split('.')[0]
+
+        templater.generate_zuul_config(
+            path=config_dest,
+            template_name=args.template,
+            project_template=CONFIG_PREFIX + ds_name,
+            name=ds_name,
+            jobs=jobs,
+            collect_all=args.collect_all,
+            branch_regex=branch_regex)
 
 
 if __name__ == '__main__':

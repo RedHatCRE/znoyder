@@ -66,9 +66,20 @@ def get_packages(**kwargs):
                     if kwargs.get('tag') in package.get('tags')]
     if kwargs.get('upstream'):
         packages = [package for package in packages
-                    if kwargs.get('upstream') in package.get('upstream')]
+                    if kwargs.get('upstream') in str(package.get('upstream'))]
 
     return packages
+
+
+def get_projects_mapping(**kwawrgs) -> dict:
+    packages = get_packages(**kwawrgs)
+    projects_mapping = {}
+
+    for package in packages:
+        projects_mapping[package['name']] = urlparse(
+            package['osp-patches']).path[1:]
+
+    return projects_mapping
 
 
 def get_releases(**kwargs):
