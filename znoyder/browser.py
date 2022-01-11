@@ -68,6 +68,9 @@ def get_packages(**kwargs):
         packages = [package for package in packages
                     if kwargs.get('upstream') in str(package.get('upstream'))]
 
+    for package in packages:
+        package['osp-project'] = urlparse(package['osp-patches']).path[1:]
+
     return packages
 
 
