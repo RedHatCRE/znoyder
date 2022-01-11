@@ -175,10 +175,11 @@ def main(argv=None) -> None:
         # Case where zuul configs are inside zuul.d
         directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
         name = directory.replace('/', '-')
-        if name not in us_to_ds_projects_map:
-            ds_name = name
-        else:
+
+        if name in us_to_ds_projects_map.keys():
             ds_name = us_to_ds_projects_map[name]
+        else:
+            ds_name = name
 
         config_dest = os.path.join(
             GENERATED_CONFIGS_DIR,

@@ -79,8 +79,18 @@ def get_projects_mapping(**kwawrgs) -> dict:
     projects_mapping = {}
 
     for package in packages:
-        projects_mapping[package['name']] = urlparse(
-            package['osp-patches']).path[1:]
+
+        if 'upstream' in package.keys() and package['upstream']:
+            upstream_name = urlparse(package['upstream']).path[1:]
+            upstream_name = upstream_name.replace("/", "-")
+        else:
+            upstream_name = package['name']
+
+        if 'osp-patches' in package.keys() and package['osp-patches']:
+            projects_mapping[upstream_name] = urlparse(
+                package['osp-patches']).path[1:]
+        else:
+            projects_mapping[upstream_name] = upstream_name
 
     return projects_mapping
 
