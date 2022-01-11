@@ -164,6 +164,8 @@ def main(argv=None) -> None:
                                         templates_directory))
     templates = finder.find_templates(path, triggers)
 
+    us_to_ds_projects_map = browser.get_projects_mapping()
+
     for directory in directories:
         LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
@@ -173,9 +175,14 @@ def main(argv=None) -> None:
         # Case where zuul configs are inside zuul.d
         directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
         name = directory.replace('/', '-')
+        if name not in us_to_ds_projects_map:
+            ds_name = name
+        else:
+            ds_name = us_to_ds_projects_map[name]
+
         config_dest = os.path.join(
             GENERATED_CONFIGS_DIR,
-            CONFIG_PREFIX + name + CONFIG_EXTENSION
+            CONFIG_PREFIX + ds_name + CONFIG_EXTENSION
         )
 
         branch_regex = DEFAULT_BRANCH_REGEX
@@ -184,13 +191,14 @@ def main(argv=None) -> None:
             branch_regex = '%s.*$' % \
               args.tag.replace('osp', '^rhos').split('.')[0]
 
-        templater.generate_zuul_config(path=config_dest,
-                                       template_name=args.template,
-                                       project_template=CONFIG_PREFIX + name,
-                                       name=name,
-                                       jobs=jobs,
-                                       collect_all=args.collect_all,
-                                       branch_regex=branch_regex)
+        templater.generate_zuul_config(
+            path=config_dest,
+            template_name=args.template,
+            project_template=CONFIG_PREFIX + ds_name,
+            name=ds_name,
+            jobs=jobs,
+            collect_all=args.collect_all,
+            branch_regex=branch_regex)
 
 
 if __name__ == '__main__':
