@@ -35,7 +35,7 @@ To list URLs to repositories of packages that belong to network component:
 znoyder browse-osp packages --component network --tag osp-17.0 --output osp-patches
 ```
 
-There is a argument used in the output to filter project name:
+There is an additional key `osp-project` introduced that contains downstream repository name:
 
 ```
 znoyder browse-osp packages --output osp-project
