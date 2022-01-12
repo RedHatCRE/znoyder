@@ -19,6 +19,8 @@
 from argparse import ArgumentParser
 from argparse import Namespace
 import os.path
+from pathlib import Path
+from shutil import rmtree
 
 from znoyder import downloader
 from znoyder import templater
@@ -86,6 +88,14 @@ def list_existing_osp_projects() -> list:
     return [templates_directory] + directories
 
 
+def cleanup_generated_jobs_dir() -> None:
+    if os.path.exists(GENERATED_CONFIGS_DIR):
+        rmtree(GENERATED_CONFIGS_DIR)
+        LOG.info('Removed the directory: {GENERATED_CONFIGS_DIR}')
+    destination_directory = os.path.dirname(GENERATED_CONFIGS_DIR)
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
+
+
 def process_arguments(argv=None) -> Namespace:
     parser = ArgumentParser()
     parser.add_argument(
@@ -111,6 +121,11 @@ def process_arguments(argv=None) -> Namespace:
         '-n', '--name',
         dest='name',
         help='OSP package name to filter projects'
+    )
+    parser.add_argument(
+        '--aggregate',
+        dest='aggregate',
+        help='File path where all templates will be aggregated'
     )
     parser.add_argument(
         '-t', '--tag',
@@ -145,6 +160,8 @@ def process_arguments(argv=None) -> Namespace:
 def main(argv=None) -> None:
     args = process_arguments(argv)
 
+    cleanup_generated_jobs_dir()
+
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
         LOG.info('Downloading new Zuul configuration from upstream...')
         LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
@@ -166,6 +183,12 @@ def main(argv=None) -> None:
 
     us_to_ds_projects_map = browser.get_projects_mapping()
 
+    if args.aggregate:
+        config_dest = os.path.join(GENERATED_CONFIGS_DIR, args.aggregate)
+        write_mode = 'a'
+        with open(config_dest, write_mode) as f:
+            f.write('---\n')
+
     for directory in directories:
         LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
@@ -181,10 +204,12 @@ def main(argv=None) -> None:
         else:
             ds_name = name
 
-        config_dest = os.path.join(
-            GENERATED_CONFIGS_DIR,
-            CONFIG_PREFIX + ds_name + CONFIG_EXTENSION
-        )
+        if not args.aggregate:
+            config_dest = os.path.join(
+                GENERATED_CONFIGS_DIR,
+                CONFIG_PREFIX + ds_name + CONFIG_EXTENSION
+            )
+            write_mode = 'w'
 
         branch_regex = DEFAULT_BRANCH_REGEX
 
@@ -199,6 +224,7 @@ def main(argv=None) -> None:
             name=ds_name,
             jobs=jobs,
             collect_all=args.collect_all,
+            write_mode=write_mode,
             branch_regex=branch_regex)
 
 
