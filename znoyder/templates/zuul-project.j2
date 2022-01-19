@@ -1,6 +1,8 @@
 ---
 - project-template:
     name: {{ name }}
+    vars:
+      python_use_pyenv: true
     {%- for type in jobs %}
     {{ type }}:
       jobs:
