@@ -23,6 +23,9 @@ from pathlib import Path
 from shutil import rmtree
 
 from znoyder import downloader
+from znoyder.exclude_map import excluded_jobs
+from znoyder.exclude_map import excluded_jobs_by_tag
+from znoyder.exclude_map import excluded_jobs_by_project_and_tag
 from znoyder import templater
 from znoyder.lib import logger
 from znoyder import finder
@@ -73,6 +76,36 @@ def fetch_osp_projects(**kwargs) -> list:
             directories.append(directory)
 
     return [templates_directory] + directories
+
+
+def exclude_jobs(jobs, project, tag) -> list:
+    """Returns list of jobs filtered by exclude map variables.
+
+    Args:
+        jobs: List of jobs
+        project: A project name string
+        tag: A tag string
+
+    Returns:
+        List of of jobs after being filtered with the exclude maps
+    """
+    included_jobs = []
+
+    for job in jobs:
+        if job.job_name in excluded_jobs:
+            continue
+
+        if tag in excluded_jobs_by_tag \
+           and job.job_name in excluded_jobs_by_tag[tag]:
+            continue
+
+        if project in excluded_jobs_by_project_and_tag \
+           and tag in excluded_jobs_by_project_and_tag[project] \
+           and job.job_name in excluded_jobs_by_project_and_tag[project][tag]:
+            continue
+        included_jobs.append(job)
+
+    return included_jobs
 
 
 def list_existing_osp_projects() -> list:
@@ -203,6 +236,8 @@ def main(argv=None) -> None:
             ds_name = us_to_ds_projects_map[name]
         else:
             ds_name = name
+
+        jobs = exclude_jobs(jobs, ds_name, args.tag)
 
         if not args.aggregate:
             config_dest = os.path.join(
