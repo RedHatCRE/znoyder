@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8de6f5e_d32cc5b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-01-27T10:51:40Z",
+      "side": 1,
+      "message": "Quality code, but I may have a suggestion to improve it",
+      "revId": "b74545c4423ac1caf2c5f61d6395a072b59fb6fd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af8ec6ee_ce02e26a",
+        "filename": "znoyder/generator.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-01-27T10:51:40Z",
+      "side": 1,
+      "message": "How about reversed logic?\n\n```\nif job.job_name in excluded_jobs:\n    continue\n\nif tag in excluded_jobs_by_tag \\\n   and job.job_name in excluded_jobs_by_tag[tag]:\n    continue\n\nif project in excluded_jobs_by_project_and_tag \\\n   and tag in excluded_jobs_by_project_and_tag[project] \\\n   and job.job_name in excluded_jobs_by_project_and_tag[project][tag]:\n    continue\n\nincluded_jobs.append(job)\n```\n\nIMO a bit easier to understand it. What do you think?",
+      "revId": "b74545c4423ac1caf2c5f61d6395a072b59fb6fd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}

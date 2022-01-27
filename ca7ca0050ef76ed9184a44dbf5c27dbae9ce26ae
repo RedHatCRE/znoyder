@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c599d6d_fa0148a3",
+        "filename": "znoyder/templates/zuul-project.j2",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-01-27T10:51:40Z",
+      "side": 0,
+      "message": "F\n\nBye bye pyenv! You served us well for this short time!",
+      "revId": "ca7ca0050ef76ed9184a44dbf5c27dbae9ce26ae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
