@@ -33,6 +33,24 @@
       "message": "How about reversed logic?\n\n```\nif job.job_name in excluded_jobs:\n    continue\n\nif tag in excluded_jobs_by_tag \\\n   and job.job_name in excluded_jobs_by_tag[tag]:\n    continue\n\nif project in excluded_jobs_by_project_and_tag \\\n   and tag in excluded_jobs_by_project_and_tag[project] \\\n   and job.job_name in excluded_jobs_by_project_and_tag[project][tag]:\n    continue\n\nincluded_jobs.append(job)\n```\n\nIMO a bit easier to understand it. What do you think?",
       "revId": "b74545c4423ac1caf2c5f61d6395a072b59fb6fd",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1e82aab_de774cff",
+        "filename": "znoyder/generator.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-01-27T12:12:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af8ec6ee_ce02e26a",
+      "revId": "b74545c4423ac1caf2c5f61d6395a072b59fb6fd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
