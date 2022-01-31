@@ -1,0 +1,10 @@
+---
+- job:
+    name: pep8-test
+    parent: base
+    description: this is running the unit tests for this project
+    run: playbooks/pep8.yaml
+    nodeset:
+      nodes:
+        - name: test-node
+          label: dib-centos-7
