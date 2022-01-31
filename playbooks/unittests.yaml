@@ -1,0 +1,10 @@
+---
+- hosts: test-node
+  tasks:
+    - name: install tox package
+      yum:
+        name: python-tox
+        state: present
+      become: yes
+    - name: run unit tests
+      command: tox

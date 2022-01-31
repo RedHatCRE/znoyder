@@ -1,0 +1,10 @@
+---
+- job:
+    name: unit-tests
+    parent: base
+    description: this is running the unit tests for this project
+    run: playbooks/unittests.yaml
+    nodeset:
+      nodes:
+        - name: test-node
+          label: dib-centos-7
