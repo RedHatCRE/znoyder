@@ -4,11 +4,13 @@
     parent: base
     description: this is running the unit tests for this project
     run: playbooks/pep8.yaml
-    nodeset:
-      nodes:
-        - name: test-node
-          label: dib-centos-7
+
 - project:
     check:
-        jobs:
-            - pep8-test
+      jobs:
+        - pep8-test:
+            nodeset:
+              nodes:
+                - name: container
+                  label: pod-rhel-8
+
