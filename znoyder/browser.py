@@ -24,8 +24,11 @@ from urllib.parse import urlparse
 
 from distroinfo import info as di
 
+from znoyder.lib import logger
+
 
 INFO_FILE = 'osp.yml'
+LOG = logger.LOG
 RDOINFO_GIT_URL = 'https://code.engineering.redhat.com/gerrit/ospinfo'
 
 APP_DESCRIPTION = 'Find OSP packages, repositories, components and releases.'
@@ -149,6 +152,14 @@ def main(argv=None) -> None:
         default_output = ['name']
     elif args.command == 'packages':
         results = get_packages(**vars(args))
+        if args.component and not results:
+            components_dict = get_components()
+            component_names = [comp['name'] for comp in components_dict]
+            if args.component not in component_names:
+                LOG.error("No such component: {}".format(args.component))
+                LOG.info("The following components are available:\n{}".format(
+                    "\n".join(component_names)))
+                sys.exit(2)
         default_output = ['osp-name', 'osp-distgit', 'osp-patches']
     elif args.command == 'releases':
         results = get_releases(**vars(args))
