@@ -40,6 +40,11 @@ excluded_jobs_by_tag = {
   #   'osp-17.0': {
   #     'openstack-tox-py37': 'not available in repos',
   #   }
+  'osp-17.0': {
+    'openstack-tox-py36': 'OSP 17 release is not using py38 and lower',
+    'openstack-tox-py37': 'OSP 17 release is not using py38 and lower',
+    'openstack-tox-py38': 'OSP 17 release is not using py38 and lower',
+  },
 }
 
 excluded_jobs_by_project_and_tag = {
