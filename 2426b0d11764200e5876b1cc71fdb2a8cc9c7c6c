@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab5e55ab_4ffa31bb",
+        "filename": "znoyder/exclude_map.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-02-07T13:49:05Z",
+      "side": 1,
+      "message": "... I just realized this should be osp-tox-* xD",
+      "revId": "2426b0d11764200e5876b1cc71fdb2a8cc9c7c6c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "591d7e9b_4e9a1090",
+        "filename": "znoyder/exclude_map.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1017875
+      },
+      "writtenOn": "2022-02-07T13:49:05Z",
+      "side": 1,
+      "message": "Well, this can be removed now as unnecessary... :-)",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 4
+      },
+      "revId": "2426b0d11764200e5876b1cc71fdb2a8cc9c7c6c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
