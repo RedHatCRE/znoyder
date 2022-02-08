@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1ff7830_d80b73b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019671
+      },
+      "writtenOn": "2022-02-08T09:25:57Z",
+      "side": 1,
+      "message": "It\u0027s working right now for `browse-osp`\n\n```\n$ znoyder browse-osp packages --component novaa\nERROR   No such component: novaa\nINFO    The following components are available:\ncommon\ncompute\ntripleo\nnetwork\noctavia\nglance\nmanila\nswift\ncinder\nsecurity\nclients\nbaremetal\ncloudops\nui\ntempest\nvalidation\n$ echo $?\n2\n```\n\nBut in the `generate` case it does not give any error:\n\n```\n$ znoyder generate --tag osp-17.0 -m zuul-project -c doestnotexist\nINFO    Removed the directory: {GENERATED_CONFIGS_DIR}\nINFO    Using local Zuul configuration files...\nINFO    Path to Zuul configuration files: jobs-upstream/\nINFO    Generating new downstream configuration files...\nINFO    Output path: jobs-generated/\n$ echo $?\n0\n```\n",
+      "revId": "2a8f843f662501537f947c2633db9e9e11535192",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
