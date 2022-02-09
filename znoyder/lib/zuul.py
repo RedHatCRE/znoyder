@@ -364,13 +364,12 @@ class ZuulProject(object):
         jobs = []
         if isinstance(job_entry, str):
             LOG.debug('Found %s job: %s' % (trigger_type, job_entry))
-            jobs.append(ZuulJob(job_entry, trigger_type, job_entry))
+            jobs.append(ZuulJob(job_entry, trigger_type, {}))
         else:
-            for job_name, job_value in job_entry.items():
-                LOG.debug('Found %s job: {%s:%s}' %
-                          (trigger_type, job_name, job_value))
-                jobs.append(ZuulJob(job_name, trigger_type,
-                            {job_name: job_value}))
+            for job_name, job_data in job_entry.items():
+                LOG.debug('Found %s job: %s with options %s' %
+                          (trigger_type, job_name, job_data))
+                jobs.append(ZuulJob(job_name, trigger_type, job_data))
 
         return jobs
 
@@ -424,8 +423,8 @@ class ZuulJob(object):
 
     Args:
         job_name (:obj:`str`): Job name
-        job_trigger_type(:obj:`JobTriggerType`): Trigger e.g. check/gate/post
-        job_data(:obj:`str`): JSON raw job data
+        job_trigger_type(:obj:`str`): Trigger type e.g. check/gate/post
+        job_data(:obj:`dict`): JSON job data
     """
     def __init__(self, job_name, job_trigger_type, job_data={}):
         self.job_name = job_name

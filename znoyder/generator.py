@@ -18,6 +18,7 @@
 
 from argparse import ArgumentParser
 from argparse import Namespace
+from copy import deepcopy
 import os.path
 from pathlib import Path
 from shutil import rmtree
@@ -26,8 +27,12 @@ from znoyder import downloader
 from znoyder.exclude_map import excluded_jobs
 from znoyder.exclude_map import excluded_jobs_by_tag
 from znoyder.exclude_map import excluded_jobs_by_project_and_tag
+from znoyder.include_map import additional_jobs
+from znoyder.include_map import additional_jobs_by_tag
+from znoyder.include_map import additional_jobs_by_project_and_tag
 from znoyder import templater
 from znoyder.lib import logger
+from znoyder.lib.zuul import ZuulJob
 from znoyder import finder
 from znoyder import browser
 
@@ -104,6 +109,34 @@ def exclude_jobs(jobs, project, tag) -> list:
            and job.job_name in excluded_jobs_by_project_and_tag[project][tag]:
             continue
         included_jobs.append(job)
+
+    return included_jobs
+
+
+def include_jobs(jobs, project, tag) -> list:
+    included_jobs = deepcopy(jobs)
+
+    def job_from_entry(entry: dict) -> ZuulJob:
+        job_name, job_options = deepcopy(entry)
+        job_trigger_type = job_options.pop('type', 'check')
+
+        if isinstance(job_trigger_type, str):
+            return [ZuulJob(job_name, job_trigger_type, job_options)]
+        else:
+            return [ZuulJob(job_name, trigger_type, job_options)
+                    for trigger_type in job_trigger_type]
+
+    for entry in additional_jobs.items():
+        included_jobs.extend(job_from_entry(entry))
+
+    if tag in additional_jobs_by_tag:
+        for entry in additional_jobs_by_tag[tag].items():
+            included_jobs.extend(job_from_entry(entry))
+
+    if project in additional_jobs_by_project_and_tag \
+       and tag in additional_jobs_by_project_and_tag[project]:
+        for entry in additional_jobs_by_project_and_tag[project][tag].items():
+            included_jobs.extend(job_from_entry(entry))
 
     return included_jobs
 
@@ -222,11 +255,21 @@ def main(argv=None) -> None:
         with open(config_dest, write_mode) as f:
             f.write('---\n')
 
+    additional_projects = [
+        name
+        for name in additional_jobs_by_project_and_tag.keys()
+        if name not in directories
+    ]
+    directories.extend(additional_projects)
+
     for directory in directories:
         LOG.info(f'Processing: {directory}')
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             directory))
-        jobs = finder.find_jobs(path, templates, triggers)
+        if os.path.exists(path):
+            jobs = finder.find_jobs(path, templates, triggers)
+        else:
+            jobs = []
 
         # Case where zuul configs are inside zuul.d
         directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
@@ -238,6 +281,7 @@ def main(argv=None) -> None:
             ds_name = name
 
         jobs = exclude_jobs(jobs, ds_name, args.tag)
+        jobs = include_jobs(jobs, ds_name, args.tag)
 
         if not args.aggregate:
             config_dest = os.path.join(
