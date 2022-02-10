@@ -15,41 +15,24 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-
 from argparse import ArgumentParser
 from argparse import Namespace
 from pprint import PrettyPrinter
 import sys
 from urllib.parse import urlparse
 
-from distroinfo import info as di
-
-
-INFO_FILE = 'osp.yml'
-RDOINFO_GIT_URL = 'https://code.engineering.redhat.com/gerrit/ospinfo'
+from znoyder.lib import logger
+from znoyder.component import Component
+from znoyder.distro import Distro
 
 APP_DESCRIPTION = 'Find OSP packages, repositories, components and releases.'
 
 
-def get_distroinfo():
-    return di.DistroInfo(info_files=INFO_FILE,
-                         cache_ttl=24*60*60,  # 1 day in seconds
-                         remote_git_info=RDOINFO_GIT_URL).get_info()
-
-
-def get_components(**kwargs):
-    info = get_distroinfo()
-    components = info.get('components')
-
-    if kwargs.get('name'):
-        components = [component for component in components
-                      if kwargs.get('name') == component.get('name')]
-
-    return components
+LOG = logger.LOG
 
 
 def get_packages(**kwargs):
-    info = get_distroinfo()
+    info = Distro.get_distroinfo()
     packages = info.get('packages')
 
     packages = [package for package in packages
@@ -96,7 +79,7 @@ def get_projects_mapping(**kwawrgs) -> dict:
 
 
 def get_releases(**kwargs):
-    info = get_distroinfo()
+    info = Distro.get_distroinfo()
     releases = info.get('osp_releases')
 
     if kwargs.get('tag'):
@@ -145,7 +128,7 @@ def main(argv=None) -> None:
     args = process_arguments(argv)
 
     if args.command == 'components':
-        results = get_components(**vars(args))
+        results = Component.get_components(**vars(args))
         default_output = ['name']
     elif args.command == 'packages':
         results = get_packages(**vars(args))
@@ -155,6 +138,14 @@ def main(argv=None) -> None:
         default_output = ['ospinfo_tag_name', 'git_release_branch']
     else:
         results = None
+
+    if not results and args.component:
+        if not Component.exists(args.component):
+            LOG.error("no such component: {}".format(args.component))
+            LOG.info("the following components are available:\n{}".format(
+                '\n'.join([comp['name'] for comp
+                           in Component.get_components()])))
+            sys.exit(2)
 
     if args.debug:
         pp = PrettyPrinter()

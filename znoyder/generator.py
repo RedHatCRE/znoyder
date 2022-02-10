@@ -15,14 +15,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-
 from argparse import ArgumentParser
 from argparse import Namespace
 from copy import deepcopy
 import os.path
 from pathlib import Path
 from shutil import rmtree
+import sys
 
+from znoyder.component import Component
 from znoyder import downloader
 from znoyder.exclude_map import excluded_jobs
 from znoyder.exclude_map import excluded_jobs_by_tag
@@ -37,13 +38,13 @@ from znoyder import finder
 from znoyder import browser
 
 
-UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
-GENERATED_CONFIGS_DIR = 'jobs-generated/'
-CONFIG_PREFIX = 'cre-'
 CONFIG_EXTENSION = '.yaml'
-
+CONFIG_PREFIX = 'cre-'
 # We set it to newest
 DEFAULT_BRANCH_REGEX = '^rhos-17.*$'
+UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
+GENERATED_CONFIGS_DIR = 'jobs-generated/'
+
 
 LOG = logger.LOG
 
@@ -238,6 +239,14 @@ def main(argv=None) -> None:
         LOG.info(f'Path to Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
         directories = list_existing_osp_projects()
         templates_directory = directories.pop(0)
+
+    if not directories and args.component:
+        if not Component.exists(args.component):
+            LOG.error("no such component: {}".format(args.component))
+            LOG.info("the following components are available:\n{}".format(
+                '\n'.join([comp['name'] for comp
+                           in Component.get_components()])))
+            sys.exit(2)
 
     LOG.info('Generating new downstream configuration files...')
     LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
