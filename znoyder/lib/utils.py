@@ -48,7 +48,7 @@ def get_config_paths(local_path) -> list:
     zuul_config_files = []
 
     if not os.path.exists(local_path):
-        raise PathError('Provided path does not exists: %s' % local_path)
+        raise PathError('Provided path does not exist: %s' % local_path)
 
     if not os.access(local_path, os.R_OK):
         raise PathError('Provided path is not readable: %s' % local_path)
