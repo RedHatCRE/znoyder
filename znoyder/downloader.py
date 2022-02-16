@@ -17,7 +17,6 @@
 #
 
 from argparse import ArgumentParser
-from argparse import Namespace
 from functools import partial
 import json
 from multiprocessing import cpu_count
@@ -164,7 +163,7 @@ def download_zuul_config(**kwargs):
     return project_urls
 
 
-def process_arguments(argv=None) -> Namespace:
+def extend_parser(parser) -> None:
     parser = ArgumentParser()
     parser.add_argument(
         '-r', '--repo', '--repository',
@@ -202,12 +201,8 @@ def process_arguments(argv=None) -> Namespace:
         help='do not overwrite existing files'
     )
 
-    arguments = parser.parse_args(argv)
-    return arguments
 
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
+def main(args) -> None:
 
     download_zuul_config(**vars(args))
 

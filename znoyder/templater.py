@@ -17,7 +17,6 @@
 #
 
 from argparse import ArgumentParser
-from argparse import Namespace
 from collections import defaultdict
 
 from jinja2 import Environment
@@ -102,7 +101,7 @@ def generate_zuul_config(path: str, name: str,
     return True
 
 
-def process_arguments(argv=None) -> Namespace:
+def extend_parser(args) -> None:
     parser = ArgumentParser()
     parser.add_argument(
         '-j', '--json',
@@ -112,13 +111,8 @@ def process_arguments(argv=None) -> Namespace:
         help='produce output in JSON format'
     )
 
-    arguments = parser.parse_args(argv)
-    return arguments
 
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
-
+def main(args) -> None:
     if args.json:
         print(JOBS_TO_COLLECT_WITH_MAPPING)
     else:

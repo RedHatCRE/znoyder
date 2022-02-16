@@ -29,27 +29,43 @@ from znoyder import templater
 
 
 COMMANDS = {
-    'browse-osp': 'explore ospinfo data to discover projects and releases',
-    'download': 'fetch Zuul configuration files from repository',
-    'find-jobs': 'analyze Zuul configuration to find defined jobs',
-    'templates': 'list defined jobs collection and remapping settings',
-    'generate': 'create new Zuul configuration files for downstream testing',
+    'browse-osp': {
+        'help': 'explore ospinfo data to discover projects and releases',
+        'module': browser
+    },
+    'download': {
+        'help': 'fetch Zuul configuration files from repository',
+        'module': downloader
+    },
+    'find-jobs': {
+        'help': 'analyze Zuul configuration to find defined jobs',
+        'module': finder
+    },
+    'templates': {
+        'help': 'list defined jobs collection and remapping settings',
+        'module': templater
+    },
+    'generate': {
+        'help': 'create new Zuul configuration files for downstream testing',
+        'module': generator
+    }
 }
-
-COMMANDS_DESCRIPTION = '\n'.join([f'  {command:11s} {description}'
-                                 for command, description in COMMANDS.items()])
 
 
 def process_arguments(argv=None) -> Namespace:
-    parser = ArgumentParser(
-        epilog=f'available commands:\n{COMMANDS_DESCRIPTION}',
-        formatter_class=RawDescriptionHelpFormatter,
-    )
-
-    parser.add_argument('command', metavar='command', choices=COMMANDS.keys(),
-                        help='specify actual action to do')
+    parser = ArgumentParser(epilog='available commands:\n',
+                            formatter_class=RawDescriptionHelpFormatter,)
+    subparsers = parser.add_subparsers()
     parser.add_argument('options', nargs=REMAINDER,
                         help='additional arguments to the selected command')
+
+    for command_name, command_dict in COMMANDS.items():
+        parser_command = subparsers.add_parser(command_name)
+        parser_command.set_defaults(
+            func=getattr(command_dict['module'], 'main'))
+        parser.epilog += "  {}:  {}\n".format(
+            command_name, command_dict['help'])
+        getattr(command_dict['module'], 'extend_parser')(parser_command)
 
     arguments = parser.parse_args(argv)
     return arguments
@@ -57,17 +73,7 @@ def process_arguments(argv=None) -> Namespace:
 
 def main(argv=None) -> None:
     args = process_arguments(argv)
-
-    if args.command == 'browse-osp':
-        browser.main(args.options)
-    elif args.command == 'download':
-        downloader.main(args.options)
-    elif args.command == 'find-jobs':
-        finder.main(args.options)
-    elif args.command == 'templates':
-        templater.main(args.options)
-    elif args.command == 'generate':
-        generator.main(args.options)
+    args.func(args)
 
 
 if __name__ == '__main__':
