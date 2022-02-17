@@ -18,7 +18,6 @@
 
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
-from argparse import Namespace
 import datetime
 import logging
 import os
@@ -104,7 +103,7 @@ def _cli_find_jobs(directory, templates, triggers):
                   (job.job_trigger_type, job, template))
 
 
-def process_arguments(argv=None) -> Namespace:
+def extend_parser(parser) -> None:
     formatter = ArgumentDefaultsHelpFormatter
 
     parser = ArgumentParser(prog='shperer',
@@ -135,13 +134,8 @@ def process_arguments(argv=None) -> Namespace:
                         help='comma separated job trigger types to return',
                         required=True)
 
-    arguments = parser.parse_args(argv)
-    return arguments
 
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
-
+def main(args) -> None:
     if args.verbose:
         LOG.setLevel(level=logging.DEBUG)
         LOG.debug('Shperer CLI running in debug mode')

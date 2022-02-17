@@ -17,9 +17,7 @@
 #
 
 from argparse import ArgumentParser
-from argparse import Namespace
 from pprint import PrettyPrinter
-import sys
 from urllib.parse import urlparse
 
 from distroinfo import info as di
@@ -106,8 +104,7 @@ def get_releases(**kwargs):
     return releases
 
 
-def process_arguments(argv=None) -> Namespace:
-    parser = ArgumentParser(description=APP_DESCRIPTION)
+def extend_parser(parser) -> None:
     subparsers = parser.add_subparsers(dest='command', metavar='command')
 
     common = ArgumentParser(add_help=False)
@@ -132,17 +129,8 @@ def process_arguments(argv=None) -> Namespace:
     releases = subparsers.add_parser('releases', help='', parents=[common])
     releases.add_argument('--tag', dest='tag')
 
-    arguments = parser.parse_args(argv)
 
-    if not arguments.command:
-        parser.print_help()
-        sys.exit(1)
-
-    return arguments
-
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
+def main(args) -> None:
 
     if args.command == 'components':
         results = get_components(**vars(args))

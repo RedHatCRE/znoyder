@@ -16,8 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
-from argparse import Namespace
 from copy import deepcopy
 import os.path
 from pathlib import Path
@@ -162,8 +160,7 @@ def cleanup_generated_jobs_dir() -> None:
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
 
-def process_arguments(argv=None) -> Namespace:
-    parser = ArgumentParser()
+def extend_parser(parser) -> None:
     parser.add_argument(
         '-e', '--existing',
         dest='existing',
@@ -219,13 +216,8 @@ def process_arguments(argv=None) -> Namespace:
         help='Use defined template name, e.g. empty-zuul-project'
     )
 
-    arguments = parser.parse_args(argv)
-    return arguments
 
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
-
+def main(args) -> None:
     cleanup_generated_jobs_dir()
 
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
