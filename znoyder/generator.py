@@ -16,8 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
-from argparse import Namespace
 from copy import deepcopy
 import os.path
 from pathlib import Path
@@ -32,6 +30,7 @@ from znoyder.include_map import additional_jobs_by_tag
 from znoyder.include_map import additional_jobs_by_project_and_tag
 from znoyder import templater
 from znoyder.lib import logger
+from znoyder.package import Package
 from znoyder.lib.zuul import ZuulJob
 from znoyder import finder
 from znoyder import browser
@@ -49,8 +48,9 @@ LOG = logger.LOG
 
 
 def fetch_osp_projects(**kwargs) -> list:
-    packages = browser.get_packages(upstream='opendev.org', **kwargs)
-    repositories = [package.get('upstream') for package in packages]
+    packages = Package.get_osp_packages(upstream='opendev.org', **kwargs)
+    repositories = [package.upstream for package in packages
+                    if package.upstream]
     branch = 'master'
 
     if kwargs.get('tag'):
@@ -162,8 +162,7 @@ def cleanup_generated_jobs_dir() -> None:
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
 
-def process_arguments(argv=None) -> Namespace:
-    parser = ArgumentParser()
+def extend_parser(parser) -> None:
     parser.add_argument(
         '-e', '--existing',
         dest='existing',
@@ -219,13 +218,8 @@ def process_arguments(argv=None) -> Namespace:
         help='Use defined template name, e.g. empty-zuul-project'
     )
 
-    arguments = parser.parse_args(argv)
-    return arguments
 
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
-
+def main(args) -> None:
     cleanup_generated_jobs_dir()
 
     if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):

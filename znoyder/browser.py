@@ -17,9 +17,7 @@
 #
 
 from argparse import ArgumentParser
-from argparse import Namespace
 from pprint import PrettyPrinter
-import sys
 from urllib.parse import urlparse
 
 from znoyder.distroinfo import get_distroinfo
@@ -49,15 +47,15 @@ def get_projects_mapping(**kwawrgs) -> dict:
 
     for package in packages:
 
-        if 'upstream' in package.keys() and package['upstream']:
-            upstream_name = urlparse(package['upstream']).path[1:]
+        if package.upstream:
+            upstream_name = urlparse(package.upstream).path[1:]
             upstream_name = upstream_name.replace("/", "-")
         else:
-            upstream_name = package['name']
+            upstream_name = package.name
 
-        if 'osp-patches' in package.keys() and package['osp-patches']:
+        if package.osp_patches:
             projects_mapping[upstream_name] = urlparse(
-                package['osp-patches']).path[1:]
+                package.osp_patches).path[1:]
         else:
             projects_mapping[upstream_name] = upstream_name
 
@@ -75,8 +73,7 @@ def get_releases(**kwargs):
     return releases
 
 
-def process_arguments(argv=None) -> Namespace:
-    parser = ArgumentParser(description=APP_DESCRIPTION)
+def extend_parser(parser) -> None:
     subparsers = parser.add_subparsers(dest='command', metavar='command')
 
     common = ArgumentParser(add_help=False)
@@ -101,17 +98,9 @@ def process_arguments(argv=None) -> Namespace:
     releases = subparsers.add_parser('releases', help='', parents=[common])
     releases.add_argument('--tag', dest='tag')
 
-    arguments = parser.parse_args(argv)
 
-    if not arguments.command:
-        parser.print_help()
-        sys.exit(1)
+def main(args) -> None:
 
-    return arguments
-
-
-def main(argv=None) -> None:
-    args = process_arguments(argv)
     # TODO(abregman): to be removed after creating abstractions
     #                 for release and component
     default_output = []
