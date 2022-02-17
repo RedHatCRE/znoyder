@@ -22,19 +22,14 @@ from pprint import PrettyPrinter
 import sys
 from urllib.parse import urlparse
 
-from distroinfo import info as di
+from znoyder.distroinfo import get_distroinfo
+from znoyder.package import Package
 
 
 INFO_FILE = 'osp.yml'
 RDOINFO_GIT_URL = 'https://code.engineering.redhat.com/gerrit/ospinfo'
 
 APP_DESCRIPTION = 'Find OSP packages, repositories, components and releases.'
-
-
-def get_distroinfo():
-    return di.DistroInfo(info_files=INFO_FILE,
-                         cache_ttl=24*60*60,  # 1 day in seconds
-                         remote_git_info=RDOINFO_GIT_URL).get_info()
 
 
 def get_components(**kwargs):
@@ -48,34 +43,8 @@ def get_components(**kwargs):
     return components
 
 
-def get_packages(**kwargs):
-    info = get_distroinfo()
-    packages = info.get('packages')
-
-    packages = [package for package in packages
-                if 'osp-name' in package.keys()]
-
-    if kwargs.get('component'):
-        packages = [package for package in packages
-                    if kwargs.get('component') == package.get('component')]
-    if kwargs.get('name'):
-        packages = [package for package in packages
-                    if kwargs.get('name') == package.get('name')]
-    if kwargs.get('tag'):
-        packages = [package for package in packages
-                    if kwargs.get('tag') in package.get('tags')]
-    if kwargs.get('upstream'):
-        packages = [package for package in packages
-                    if kwargs.get('upstream') in str(package.get('upstream'))]
-
-    for package in packages:
-        package['osp-project'] = urlparse(package['osp-patches']).path[1:]
-
-    return packages
-
-
 def get_projects_mapping(**kwawrgs) -> dict:
-    packages = get_packages(**kwawrgs)
+    packages = Package.get_osp_packages(**kwawrgs)
     projects_mapping = {}
 
     for package in packages:
@@ -143,18 +112,20 @@ def process_arguments(argv=None) -> Namespace:
 
 def main(argv=None) -> None:
     args = process_arguments(argv)
+    # TODO(abregman): to be removed after creating abstractions
+    #                 for release and component
+    default_output = []
+    results = None
 
     if args.command == 'components':
         results = get_components(**vars(args))
         default_output = ['name']
     elif args.command == 'packages':
-        results = get_packages(**vars(args))
-        default_output = ['osp-name', 'osp-distgit', 'osp-patches']
+        packages = Package.get_osp_packages(**vars(args))
+        packages = Package.filter(packages, vars(args))
     elif args.command == 'releases':
         results = get_releases(**vars(args))
         default_output = ['ospinfo_tag_name', 'git_release_branch']
-    else:
-        results = None
 
     if args.debug:
         pp = PrettyPrinter()
@@ -165,13 +136,18 @@ def main(argv=None) -> None:
         output = [entry.strip() for entry in args.output.split(',')]
     else:
         output = default_output
-
     if args.header:
         print(' '.join(output))
         print(' '.join(['-' * len(field) for field in output]))
 
-    for result in results:
-        print(' '.join([result.get(key, 'None') for key in output]))
+    # TODO(abregman): to be removed after creating abstractions
+    #                 for release and component
+    if results:
+        for result in results:
+            print(' '.join([result.get(key, 'None') for key in output]))
+    elif packages:
+        for package in packages:
+            print(package)
 
 
 if __name__ == '__main__':
