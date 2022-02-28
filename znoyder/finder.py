@@ -16,19 +16,14 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
-from argparse import ArgumentDefaultsHelpFormatter
 import datetime
 import logging
-import os
 import sys
 
 from znoyder.lib import logger
 from znoyder.lib import zuul
 from znoyder.lib.exceptions import PathError
 
-
-APP_DESCRIPTION = 'Find ZUUL jobs, templates and associate them with projects.'
 
 LOG = logger.LOG
 
@@ -101,38 +96,6 @@ def _cli_find_jobs(directory, templates, triggers):
         for job in template.get_jobs(trigger_types):
             print('%s: %s in template %s' %
                   (job.job_trigger_type, job, template))
-
-
-def extend_parser(parser) -> None:
-    formatter = ArgumentDefaultsHelpFormatter
-
-    parser = ArgumentParser(prog='shperer',
-                            description=APP_DESCRIPTION,
-                            formatter_class=formatter, add_help=False)
-
-    parser.add_argument('-?', '-h', '--help',
-                        action='help',
-                        help='show this help message and exit')
-
-    parser.add_argument('-v', '--verbose',
-                        action='store_true',
-                        default=os.environ.get('SHPERER_VERBOSE', False),
-                        help='increase output verbosity [SHPERER_VERBOSE]')
-
-    parser.add_argument('-d', '--dir',
-                        dest='directory',
-                        help='path to directory with zuul configuration',
-                        required=True)
-
-    parser.add_argument('-b', '--base',
-                        dest='templates',
-                        help='comma separated paths to jobs templates dirs',
-                        required=True)
-
-    parser.add_argument('-t', '--trigger',
-                        dest='trigger',
-                        help='comma separated job trigger types to return',
-                        required=True)
 
 
 def main(args) -> None:
