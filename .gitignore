@@ -4,3 +4,5 @@
 __pycache__/
 jobs-upstream/
 jobs-generated/
+.eggs
+.coverage
