@@ -160,63 +160,6 @@ def cleanup_generated_jobs_dir() -> None:
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
 
-def extend_parser(parser) -> None:
-    parser.add_argument(
-        '-e', '--existing',
-        dest='existing',
-        default=True,
-        action='store_false',
-        help='use existing configs to generate jobs files (default)'
-    )
-    parser.add_argument(
-        '-d', '--download',
-        dest='download',
-        default=False,
-        action='store_true',
-        help='download the zuul configuration files from repositories'
-    )
-    parser.add_argument(
-        '-c', '--component',
-        dest='component',
-        help='OSP component name to filter projects'
-    )
-    parser.add_argument(
-        '-n', '--name',
-        dest='name',
-        help='OSP package name to filter projects'
-    )
-    parser.add_argument(
-        '--aggregate',
-        dest='aggregate',
-        help='File path where all templates will be aggregated'
-    )
-    parser.add_argument(
-        '-t', '--tag',
-        dest='tag',
-        help='OSP release tag to filter projects'
-    )
-    parser.add_argument(
-        '-g', '--generate',
-        dest='generate',
-        default=False,
-        action='store_true',
-        help='generate new zuul configuration files from upstream sources'
-    )
-    parser.add_argument(
-        '-a', '--all', '--collect-all',
-        dest='collect_all',
-        default=False,
-        action='store_true',
-        help='collect all jobs when generating downstream configuration'
-    )
-    parser.add_argument(
-        '-m', '--template-name',
-        dest='template',
-        default='zuul-project',
-        help='Use defined template name, e.g. empty-zuul-project'
-    )
-
-
 def main(args) -> None:
     cleanup_generated_jobs_dir()
 

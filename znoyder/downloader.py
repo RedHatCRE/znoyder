@@ -16,7 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
 from functools import partial
 import json
 from multiprocessing import cpu_count
@@ -161,45 +160,6 @@ def download_zuul_config(**kwargs):
                                 skip_existing=skip_existing)
 
     return project_urls
-
-
-def extend_parser(parser) -> None:
-    parser = ArgumentParser()
-    parser.add_argument(
-        '-r', '--repo', '--repository',
-        dest='repository',
-        help='repository to browse for files',
-        metavar='REPOSITORY',
-        required=True
-    )
-    parser.add_argument(
-        '-b', '--branch',
-        dest='branch',
-        help='branch in repository to browse',
-        metavar='BRANCH',
-        required=True
-    )
-    parser.add_argument(
-        '-d', '--destination',
-        dest='destination',
-        help='target directory for files to save',
-        metavar='DESTINATION',
-        required=True
-    )
-    parser.add_argument(
-        '-n', '--non-fatal', '--errors-non-fatal',
-        dest='errors_fatal',
-        default=True,
-        action='store_false',
-        help='do not fail on non-existing remote'
-    )
-    parser.add_argument(
-        '-s', '--skip', '--skip-existing',
-        dest='skip_existing',
-        default=False,
-        action='store_true',
-        help='do not overwrite existing files'
-    )
 
 
 def main(args) -> None:

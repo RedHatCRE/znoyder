@@ -16,7 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
 from collections import defaultdict
 
 from jinja2 import Environment
@@ -99,17 +98,6 @@ def generate_zuul_config(path: str, name: str,
         file.write('\n')
 
     return True
-
-
-def extend_parser(args) -> None:
-    parser = ArgumentParser()
-    parser.add_argument(
-        '-j', '--json',
-        dest='json',
-        default=False,
-        action='store_true',
-        help='produce output in JSON format'
-    )
 
 
 def main(args) -> None:

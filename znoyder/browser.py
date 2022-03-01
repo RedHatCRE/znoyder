@@ -16,7 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
 from pprint import PrettyPrinter
 from urllib.parse import urlparse
 
@@ -102,32 +101,6 @@ def get_releases(**kwargs):
                     if kwargs.get('tag') in release.get('ospinfo_tag_name')]
 
     return releases
-
-
-def extend_parser(parser) -> None:
-    subparsers = parser.add_subparsers(dest='command', metavar='command')
-
-    common = ArgumentParser(add_help=False)
-    common.add_argument('--debug', dest='debug',
-                        default=False, action='store_true',
-                        help='print all fields in output')
-    common.add_argument('--header', dest='header',
-                        default=False, action='store_true',
-                        help='print header with output names on top')
-    common.add_argument('--output', dest='output',
-                        help='comma-separated list of fields to return')
-
-    components = subparsers.add_parser('components', help='', parents=[common])
-    components.add_argument('--name', dest='name')
-
-    packages = subparsers.add_parser('packages', help='', parents=[common])
-    packages.add_argument('--component', dest='component')
-    packages.add_argument('--name', dest='name')
-    packages.add_argument('--tag', dest='tag')
-    packages.add_argument('--upstream', dest='upstream')
-
-    releases = subparsers.add_parser('releases', help='', parents=[common])
-    releases.add_argument('--tag', dest='tag')
 
 
 def main(args) -> None:
