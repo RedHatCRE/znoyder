@@ -61,6 +61,9 @@ def generate_zuul_config(path: str, name: str,
 
     jobs_dict = defaultdict(list)
 
+
+# Making sure the template provided is available
+
     try:
         JOB_TEMPLATE = j2env.get_template(template_name+".j2")
     except TemplateNotFound:
@@ -69,10 +72,9 @@ def generate_zuul_config(path: str, name: str,
         LOG.error(f'Template "{template_name}" does not exist')
         LOG.info('Please use one of the following templates or add your own')
         LOG.info('Available templates:')
-        for template in os.listdir(f'{script_dir}/templates'):
-            if template.endswith(".j2") and os.path.isfile(template):
-                template = template[:-3]
-                LOG.info(f'   - {template}')
+        for template in j2env.list_templates():
+            template = os.path.splitext(template) 
+            LOG.info(f'   - {template[0]}')
         sys.exit()
 
     for job in jobs:
@@ -112,18 +114,6 @@ def generate_zuul_config(path: str, name: str,
         file.write('\n')
 
     return True
-
-
-def extend_parser(args) -> None:
-    parser = ArgumentParser()
-    parser.add_argument(
-        '-j', '--json',
-        dest='json',
-        default=False,
-        action='store_true',
-        help='produce output in JSON format'
-    )
-
 
 def main(args) -> None:
     if args.json:
