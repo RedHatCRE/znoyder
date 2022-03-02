@@ -16,11 +16,14 @@
 #    under the License.
 #
 
+from argparse import ArgumentParser
 from collections import defaultdict
 
 from jinja2 import Environment
+import os
 from jinja2 import PackageLoader
-
+from jinja2.exceptions import TemplateNotFound
+import sys
 from znoyder.lib import logger
 
 
@@ -58,6 +61,20 @@ def generate_zuul_config(path: str, name: str,
 
     jobs_dict = defaultdict(list)
 
+    try:
+        JOB_TEMPLATE = j2env.get_template(template_name+".j2")
+    except TemplateNotFound:
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+
+        LOG.error(f'Template "{template_name}" does not exist')
+        LOG.info('Please use one of the following templates or add your own')
+        LOG.info('Available templates:')
+        for template in os.listdir(f'{script_dir}/templates'):
+            if template.endswith(".j2") and os.path.isfile(template):
+                template = template[:-3]
+                LOG.info(f'   - {template}')
+        sys.exit()
+
     for job in jobs:
         job_name = job.job_name
 
@@ -86,9 +103,6 @@ def generate_zuul_config(path: str, name: str,
     if not jobs_dict:
         LOG.error('No jobs collected, skipping config generation.')
         return False
-
-    JOB_TEMPLATE = j2env.get_template(template_name+".j2")
-
     config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
     if write_mode == 'a' and config[0:4] == '---\n':
         config = config[4:]
@@ -98,6 +112,17 @@ def generate_zuul_config(path: str, name: str,
         file.write('\n')
 
     return True
+
+
+def extend_parser(args) -> None:
+    parser = ArgumentParser()
+    parser.add_argument(
+        '-j', '--json',
+        dest='json',
+        default=False,
+        action='store_true',
+        help='produce output in JSON format'
+    )
 
 
 def main(args) -> None:
