@@ -103,7 +103,8 @@ class OverridenSubparserAction(_SubParsersAction):
 
 
 def extend_parser_browser(parser) -> None:
-    subparsers = parser.add_subparsers(dest='command', metavar='command')
+    subparsers = parser.add_subparsers(dest='command', metavar='command',
+                                       required=True)
 
     common = ArgumentParser(add_help=False)
     common.add_argument('--debug', dest='debug',
