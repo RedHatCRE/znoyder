@@ -155,7 +155,7 @@ def list_existing_osp_projects() -> list:
 def cleanup_generated_jobs_dir() -> None:
     if os.path.exists(GENERATED_CONFIGS_DIR):
         rmtree(GENERATED_CONFIGS_DIR)
-        LOG.info('Removed the directory: {GENERATED_CONFIGS_DIR}')
+        LOG.info(f'Removed the directory: {GENERATED_CONFIGS_DIR}')
     destination_directory = os.path.dirname(GENERATED_CONFIGS_DIR)
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 

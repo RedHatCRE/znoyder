@@ -36,6 +36,8 @@ logger_formatter = colorlog.ColoredFormatter(
     )
 )
 
+file_logger_formater = logging.Formatter(fmt="%(levelname)-8s%(message)s")
+
 LOGGER_NAME = 'znoyderLogger'
 DEFAULT_LOG_LEVEL = logging.INFO
 
@@ -52,6 +54,19 @@ sh.setFormatter(logger_formatter)
 # Create logger and add handler to it
 LOG.addHandler(sh)
 LOG.propagate = False
+
+
+def set_logger_destination(args) -> None:
+    """Ensure that the logger respects the user choice to write to
+    file/stderr/both"""
+    if args.log_mode == "file":
+        # remove log handler that writes to stderr
+        LOG.handlers.pop()
+    if args.log_file and args.log_mode != "terminal":
+        file_handler = logging.FileHandler(args.log_file, mode="w")
+        file_handler.setLevel(DEFAULT_LOG_LEVEL)
+        file_handler.setFormatter(file_logger_formater)
+        LOG.addHandler(file_handler)
 
 
 def znoyder_excepthook(exc_type, exc_value, exc_traceback):
