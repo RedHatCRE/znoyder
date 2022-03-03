@@ -70,7 +70,7 @@ def generate_zuul_config(path: str, name: str,
         LOG.info('Please use one of the following templates or add your own')
         LOG.info('Available templates:')
         for template in j2env.list_templates():
-            template = os.path.splitext(template) 
+            template = os.path.splitext(template)
             LOG.info(f'   - {template[0]}')
         sys.exit()
 
@@ -111,6 +111,7 @@ def generate_zuul_config(path: str, name: str,
         file.write('\n')
 
     return True
+
 
 def main(args) -> None:
     if args.json:
