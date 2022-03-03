@@ -16,7 +16,6 @@
 #    under the License.
 #
 
-from argparse import ArgumentParser
 from collections import defaultdict
 
 from jinja2 import Environment
@@ -67,8 +66,6 @@ def generate_zuul_config(path: str, name: str,
     try:
         JOB_TEMPLATE = j2env.get_template(template_name+".j2")
     except TemplateNotFound:
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-
         LOG.error(f'Template "{template_name}" does not exist')
         LOG.info('Please use one of the following templates or add your own')
         LOG.info('Available templates:')
