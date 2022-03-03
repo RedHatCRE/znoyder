@@ -6,3 +6,4 @@ jobs-upstream/
 jobs-generated/
 .eggs
 .coverage
+.idea/
