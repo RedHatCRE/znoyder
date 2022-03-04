@@ -51,7 +51,7 @@ def fetch_osp_projects(**kwargs) -> list:
     repositories = [package.get('upstream') for package in packages]
     branch = 'master'
 
-    if kwargs.get('tag'):
+    if 'tag' in kwargs:
         release = browser.get_releases(**kwargs)[0].get('upstream_release')
         branch = f'stable/{release}'
 
