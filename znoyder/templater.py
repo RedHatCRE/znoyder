@@ -19,8 +19,10 @@
 from collections import defaultdict
 
 from jinja2 import Environment
+import os
 from jinja2 import PackageLoader
-
+from jinja2.exceptions import TemplateNotFound
+import sys
 from znoyder.lib import logger
 
 
@@ -58,6 +60,20 @@ def generate_zuul_config(path: str, name: str,
 
     jobs_dict = defaultdict(list)
 
+
+# Making sure the template provided is available
+
+    try:
+        JOB_TEMPLATE = j2env.get_template(template_name+".j2")
+    except TemplateNotFound:
+        LOG.error(f'Template "{template_name}" does not exist')
+        LOG.info('Please use one of the following templates or add your own')
+        LOG.info('Available templates:')
+        for template in j2env.list_templates():
+            template = os.path.splitext(template)
+            LOG.info(f'   - {template[0]}')
+        sys.exit()
+
     for job in jobs:
         job_name = job.job_name
 
@@ -86,9 +102,6 @@ def generate_zuul_config(path: str, name: str,
     if not jobs_dict:
         LOG.error('No jobs collected, skipping config generation.')
         return False
-
-    JOB_TEMPLATE = j2env.get_template(template_name+".j2")
-
     config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
     if write_mode == 'a' and config[0:4] == '---\n':
         config = config[4:]

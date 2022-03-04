@@ -4,6 +4,7 @@
 __pycache__/
 jobs-upstream/
 jobs-generated/
-.eggs
 .coverage
-.idea/
+.eggs
+znoyder_output.log
+.idea
