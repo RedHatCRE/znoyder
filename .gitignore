@@ -7,3 +7,4 @@ jobs-generated/
 .coverage
 .eggs
 znoyder_output.log
+.idea

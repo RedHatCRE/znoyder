@@ -116,6 +116,7 @@ def main(args) -> None:
         default_output = ['ospinfo_tag_name', 'git_release_branch']
     else:
         results = None
+        default_output = []
 
     if args.debug:
         pp = PrettyPrinter()
@@ -131,8 +132,9 @@ def main(args) -> None:
         print(' '.join(output))
         print(' '.join(['-' * len(field) for field in output]))
 
-    for result in results:
-        print(' '.join([result.get(key, 'None') for key in output]))
+    if results:
+        for result in results:
+            print(' '.join([result.get(key, 'None') for key in output]))
 
 
 if __name__ == '__main__':
