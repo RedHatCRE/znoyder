@@ -45,15 +45,16 @@ class TestFetchOSPProjects(TestCase):
     PACKAGE_DIR = 'my/package'
 
     def download_zuul_config(self, **kwargs):
-        match kwargs.get('repository'):
-            case self.TEMPLATES_REPOSITORY:
-                return {
-                    self.TEMPLATES_DIR: []
-                }
-            case self.PACKAGE_REPOSITORY:
-                return {
-                    self.PACKAGE_DIR: []
-                }
+        if kwargs.get('repository') == self.TEMPLATES_REPOSITORY:
+            return {
+                self.TEMPLATES_DIR: []
+            }
+        elif kwargs.get('repository') == self.PACKAGE_REPOSITORY:
+            return {
+                self.PACKAGE_DIR: []
+            }
+        else:
+            raise RuntimeError('Repository not supported by this test')
 
     def test_happy_path(self):
         kwargs = {'arg1': 'val1'}
@@ -298,11 +299,10 @@ class TestListExistingOSPProjects(TestCase):
         project = 'project_1'
 
         def listdir(path):
-            match path:
-                case znoyder.generator.UPSTREAM_CONFIGS_DIR:
-                    return [namespace]
-                case _:
-                    return [project]
+            if path == UPSTREAM_CONFIGS_DIR:
+                return [namespace]
+            else:
+                return [project]
 
         listdir_call = znoyder.generator.os.listdir = Mock()
         listdir_call.side_effect = listdir
@@ -320,11 +320,10 @@ class TestListExistingOSPProjects(TestCase):
         project = 'openstack-zuul-jobs'
 
         def listdir(path):
-            match path:
-                case znoyder.generator.UPSTREAM_CONFIGS_DIR:
-                    return [namespace]
-                case _:
-                    return [project]
+            if path == UPSTREAM_CONFIGS_DIR:
+                return [namespace]
+            else:
+                return [project]
 
         listdir_call = znoyder.generator.os.listdir = Mock()
         listdir_call.side_effect = listdir
