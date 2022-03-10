@@ -293,13 +293,13 @@ def process_arguments(argv=None) -> Namespace:
         '--log-mode',
         default="both",
         choices={"file", "terminal", "both"},
-        help='Where to write the output, default is terminal'
+        help='Where to write the output, default is both'
     )
     shared_parser.add_argument(
         '-f', '--log-file',
         dest='log_file',
         default='znoyder_output.log',
-        help='Path to store the output, default is generate_output.log'
+        help='Path to store the output, default is znoyder_output.log'
     )
 
     parser = ArgumentParser(epilog='available commands:\n',
