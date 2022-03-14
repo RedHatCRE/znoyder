@@ -21,7 +21,6 @@ from unittest.mock import patch
 
 import znoyder.browser
 import znoyder.downloader
-from znoyder.exclude_map import excluded_jobs_by_tag
 from znoyder.generator import GENERATED_CONFIGS_DIR
 from znoyder.generator import UPSTREAM_CONFIGS_DIR
 from znoyder.generator import additional_jobs
@@ -30,6 +29,7 @@ from znoyder.generator import additional_jobs_by_tag
 from znoyder.generator import cleanup_generated_jobs_dir
 from znoyder.generator import exclude_jobs
 from znoyder.generator import excluded_jobs
+from znoyder.generator import excluded_jobs_by_tag
 from znoyder.generator import excluded_jobs_by_project_and_tag
 from znoyder.generator import fetch_osp_projects
 from znoyder.generator import include_jobs
@@ -161,7 +161,7 @@ class TestExcludeJobs(TestCase):
         job1.job_name = 'job_1'
         job2.job_name = 'job_2'
 
-        excluded_jobs_by_tag[tag] = [job2.job_name]
+        excluded_jobs_by_tag[tag] = {job2.job_name: ''}
 
         self.assertEqual([job1], exclude_jobs([job1, job2], '', tag))
 

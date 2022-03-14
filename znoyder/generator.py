@@ -21,18 +21,18 @@ import os.path
 from pathlib import Path
 from shutil import rmtree
 
+from znoyder import browser
 from znoyder import downloader
 from znoyder.exclude_map import excluded_jobs
 from znoyder.exclude_map import excluded_jobs_by_tag
 from znoyder.exclude_map import excluded_jobs_by_project_and_tag
+from znoyder import finder
 from znoyder.include_map import additional_jobs
 from znoyder.include_map import additional_jobs_by_tag
 from znoyder.include_map import additional_jobs_by_project_and_tag
-from znoyder import templater
 from znoyder.lib import logger
 from znoyder.lib.zuul import ZuulJob
-from znoyder import finder
-from znoyder import browser
+from znoyder import templater
 
 
 UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'

@@ -16,8 +16,6 @@
 #    under the License.
 #
 
-import os
-
 from argparse import ArgumentParser
 from argparse import Namespace
 from argparse import RawDescriptionHelpFormatter
@@ -26,6 +24,7 @@ from argparse import _SubParsersAction
 from argparse import _UNRECOGNIZED_ARGS_ATTR
 from argparse import SUPPRESS
 from argparse import ArgumentError
+import os
 
 from znoyder import browser
 from znoyder import downloader
