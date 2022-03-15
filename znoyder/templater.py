@@ -17,12 +17,13 @@
 #
 
 from collections import defaultdict
+import os
+import sys
 
 from jinja2 import Environment
-import os
 from jinja2 import PackageLoader
 from jinja2.exceptions import TemplateNotFound
-import sys
+
 from znoyder.lib import logger
 
 
@@ -59,9 +60,6 @@ def generate_zuul_config(path: str, name: str,
                          voting: bool = False) -> bool:
 
     jobs_dict = defaultdict(list)
-
-
-# Making sure the template provided is available
 
     try:
         JOB_TEMPLATE = j2env.get_template(template_name+".j2")
