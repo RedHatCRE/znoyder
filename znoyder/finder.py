@@ -122,7 +122,3 @@ def main(args) -> None:
                   finish_time.strftime('%Y-%m-%d %H:%M:%S'))
         LOG.debug('Run time: %s [H]:[M]:[S].[ms]' %
                   str(finish_time - start_time))
-
-
-if __name__ == '__main__':
-    main()
