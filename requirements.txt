@@ -1,3 +1,4 @@
 colorlog
 distroinfo
 jinja2
+PyYAML

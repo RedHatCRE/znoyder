@@ -1,0 +1,42 @@
+---
+
+collect:
+  'openstack-tox-pep8': 'osp-tox-pep8'
+  'openstack-tox-py36': 'osp-tox-py36'
+  'openstack-tox-py37': 'osp-tox-py37'
+  'openstack-tox-py38': 'osp-tox-py38'
+  'openstack-tox-py39': 'osp-tox-py39'
+
+excluded_jobs: {}
+
+excluded_jobs_by_tag:
+  'osp-17.0':
+    'openstack-tox-py36': 'OSP 17 release is not using py38 and lower'
+    'openstack-tox-py37': 'OSP 17 release is not using py38 and lower'
+    'openstack-tox-py38': 'OSP 17 release is not using py38 and lower'
+
+excluded_jobs_by_project_and_tag:
+  'nova':
+    'osp-17.0':
+      'openstack-tox-py36': 'we do not support this Python version'
+      'openstack-tox-py38': 'we do not support this Python version'
+
+additional_jobs: {}
+
+additional_jobs_by_tag:
+  'osp-17.0':
+    'openstack-tox-py39':
+      'voting': false
+      'type': 'gate'
+
+additional_jobs_by_project_and_tag:
+  'gnocchi':
+    'osp-17.0':
+      'openstack-tox-pep8':
+        'voting': False
+        'type': ['check', 'gate']
+  'python-tripleoclient':
+    'osp-17.0':
+      'openstack-tox-py39':
+        'voting': False
+        'type': ['check', 'gate']

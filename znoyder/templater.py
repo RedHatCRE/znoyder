@@ -24,18 +24,11 @@ from jinja2 import Environment
 from jinja2 import PackageLoader
 from jinja2.exceptions import TemplateNotFound
 
+from znoyder.config import JOBS_TO_COLLECT_WITH_MAPPING
 from znoyder.lib import logger
 
 
 LOG = logger.LOG
-
-JOBS_TO_COLLECT_WITH_MAPPING = {
-    'openstack-tox-pep8': 'osp-tox-pep8',
-    'openstack-tox-py36': 'osp-tox-py36',
-    'openstack-tox-py37': 'osp-tox-py37',
-    'openstack-tox-py38': 'osp-tox-py38',
-    'openstack-tox-py39': 'osp-tox-py39',
-}
 
 j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
 
