@@ -24,13 +24,9 @@ import yaml
 with pkg_resources.open_text(__package__, 'config.yml') as file:
     CONFIG = yaml.load(file, Loader=yaml.FullLoader)
 
-JOBS_TO_COLLECT_WITH_MAPPING = CONFIG.get('collect', {})
+JOBS_TO_COLLECT_WITH_MAPPING = CONFIG.get('include', {})
 
-additional_jobs = CONFIG.get('additional_jobs', {})
-additional_jobs_by_tag = CONFIG.get('additional_jobs_by_tag', {})
-additional_jobs_by_project_and_tag = \
-    CONFIG.get('additional_jobs_by_project_and_tag', {})
-excluded_jobs = CONFIG.get('excluded_jobs', {})
-excluded_jobs_by_tag = CONFIG.get('excluded_jobs_by_tag', {})
-excluded_jobs_by_project_and_tag = \
-    CONFIG.get('excluded_jobs_by_project_and_tag', {})
+exclude_map = CONFIG.get('exclude', {})
+add_map = CONFIG.get('add', {})
+override_map = CONFIG.get('override', {})
+copy_map = CONFIG.get('copy', {})

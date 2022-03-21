@@ -16,22 +16,15 @@
 #    under the License.
 #
 
-from copy import deepcopy
 import os.path
 from pathlib import Path
 from shutil import rmtree
 
 from znoyder import browser
-from znoyder.config import additional_jobs
-from znoyder.config import additional_jobs_by_tag
-from znoyder.config import additional_jobs_by_project_and_tag
-from znoyder.config import excluded_jobs
-from znoyder.config import excluded_jobs_by_tag
-from znoyder.config import excluded_jobs_by_project_and_tag
 from znoyder import downloader
 from znoyder import finder
 from znoyder.lib import logger
-from znoyder.lib.zuul import ZuulJob
+from znoyder import mapper
 from znoyder import templater
 
 
@@ -79,64 +72,6 @@ def fetch_osp_projects(**kwargs) -> list:
             directories.append(directory)
 
     return [templates_directory] + directories
-
-
-def exclude_jobs(jobs, project, tag) -> list:
-    """Returns list of jobs filtered by exclude map variables.
-
-    Args:
-        jobs: List of jobs
-        project: A project name string
-        tag: A tag string
-
-    Returns:
-        List of of jobs after being filtered with the exclude maps
-    """
-    included_jobs = []
-
-    for job in jobs:
-        if job.job_name in excluded_jobs:
-            continue
-
-        if tag in excluded_jobs_by_tag \
-           and job.job_name in excluded_jobs_by_tag[tag]:
-            continue
-
-        if project in excluded_jobs_by_project_and_tag \
-           and tag in excluded_jobs_by_project_and_tag[project] \
-           and job.job_name in excluded_jobs_by_project_and_tag[project][tag]:
-            continue
-        included_jobs.append(job)
-
-    return included_jobs
-
-
-def include_jobs(jobs, project, tag) -> list:
-    included_jobs = deepcopy(jobs)
-
-    def job_from_entry(entry: dict) -> ZuulJob:
-        job_name, job_options = deepcopy(entry)
-        job_trigger_type = job_options.pop('type', 'check')
-
-        if isinstance(job_trigger_type, str):
-            return [ZuulJob(job_name, job_trigger_type, job_options)]
-        else:
-            return [ZuulJob(job_name, trigger_type, job_options)
-                    for trigger_type in job_trigger_type]
-
-    for entry in additional_jobs.items():
-        included_jobs.extend(job_from_entry(entry))
-
-    if tag in additional_jobs_by_tag:
-        for entry in additional_jobs_by_tag[tag].items():
-            included_jobs.extend(job_from_entry(entry))
-
-    if project in additional_jobs_by_project_and_tag \
-       and tag in additional_jobs_by_project_and_tag[project]:
-        for entry in additional_jobs_by_project_and_tag[project][tag].items():
-            included_jobs.extend(job_from_entry(entry))
-
-    return included_jobs
 
 
 def list_existing_osp_projects() -> list:
@@ -190,12 +125,20 @@ def main(args) -> None:
         with open(config_dest, write_mode) as f:
             f.write('---\n')
 
-    additional_projects = [
-        name
-        for name in additional_jobs_by_project_and_tag.keys()
-        if name not in directories
-    ]
-    directories.extend(additional_projects)
+    #
+    # TODO(sdatko): we need to figure something out here, but relying
+    #               on directories to get a list of projects is not
+    #               a good approach – we should always rely on list
+    #               of jobs from ospinfo (browser module); this whole
+    #               section around this comment will be refactored
+    #
+    #
+    # additional_projects = [
+    #     name
+    #     for name in additional_jobs_by_project_and_tag.keys()
+    #     if name not in directories
+    # ]
+    # directories.extend(additional_projects)
 
     for directory in directories:
         LOG.info(f'Processing: {directory}')
@@ -215,8 +158,10 @@ def main(args) -> None:
         else:
             ds_name = name
 
-        jobs = exclude_jobs(jobs, ds_name, args.tag)
-        jobs = include_jobs(jobs, ds_name, args.tag)
+        jobs = mapper.exclude_jobs(jobs, ds_name, args.tag)
+        jobs = mapper.add_jobs(jobs, ds_name, args.tag)
+        jobs = mapper.override_jobs(jobs, ds_name, args.tag)
+        jobs = mapper.copy_jobs(jobs, ds_name, args.tag)
 
         if not args.aggregate:
             config_dest = os.path.join(
