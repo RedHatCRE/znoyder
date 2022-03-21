@@ -9,6 +9,9 @@
         - {{ job }}:
             branches: {{ job_dict[job]['branch_regex'] }}
             voting: {{ job_dict[job]['voting'] }}
+            {%- for key, value in job_dict[job]['job_data'].items() %}
+            {{ key }}: {{ value }}
+            {%- endfor -%}
         {%- endfor -%}
         {%- endfor -%}
     {%- endfor -%}
