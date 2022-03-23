@@ -148,7 +148,7 @@ class TestExcludeJobs(TestCase):
         self.assertEqual([job1], exclude_jobs([job1, job2], project, tag))
 
 
-class TestIncludeJobs(TestCase):
+class TestAddJobs(TestCase):
     def setUp(self) -> None:
         add_map.clear()
 
@@ -245,7 +245,85 @@ class TestOverrideJobs(TestCase):
     def test_happy_path(self):
         self.assertEqual([], override_jobs([], 'any', 'any'))
 
-    pass  # TODO(sdatko): implement
+    def test_override_by_name(self):
+        job1 = Mock()
+        job2 = Mock()
+
+        job1.job_name = 'job_1'
+        job2.job_name = 'job_2'
+
+        job_data = {'voting': True}
+
+        jobs = [job1, job2]
+
+        override_map.update({
+            '/.*/': {
+                '/.*/': {
+                    job2.job_name: job_data
+                }
+            }
+        })
+
+        override_jobs(jobs, 'any', 'any')
+
+        self.assertNotIsInstance(job1.job_data, type(job_data))
+        self.assertIsInstance(job2.job_data, type(job_data))
+        self.assertEqual(job2.job_data, job_data)
+
+    def test_override_by_tag(self):
+        tag = 'tag_1'
+
+        job1 = Mock()
+        job2 = Mock()
+
+        job1.job_name = 'job_1'
+        job2.job_name = 'job_2'
+
+        job_data = {'voting': True}
+
+        jobs = [job1, job2]
+
+        override_map.update({
+            '/.*/': {
+                tag: {
+                    job2.job_name: job_data
+                }
+            }
+        })
+
+        override_jobs(jobs, 'any', tag)
+
+        self.assertNotIsInstance(job1.job_data, type(job_data))
+        self.assertIsInstance(job2.job_data, type(job_data))
+        self.assertEqual(job2.job_data, job_data)
+
+    def test_override_by_tag_and_project(self):
+        tag = 'tag_1'
+        project = 'project_1'
+
+        job1 = Mock()
+        job2 = Mock()
+
+        job1.job_name = 'job_1'
+        job2.job_name = 'job_2'
+
+        job_data = {'voting': True}
+
+        jobs = [job1, job2]
+
+        override_map.update({
+            project: {
+                tag: {
+                    job2.job_name: job_data
+                }
+            }
+        })
+
+        override_jobs(jobs, project, tag)
+
+        self.assertNotIsInstance(job1.job_data, type(job_data))
+        self.assertIsInstance(job2.job_data, type(job_data))
+        self.assertEqual(job2.job_data, job_data)
 
 
 class TestCopyJobs(TestCase):

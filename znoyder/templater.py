@@ -23,6 +23,7 @@ import sys
 from jinja2 import Environment
 from jinja2 import PackageLoader
 from jinja2.exceptions import TemplateNotFound
+import yaml
 
 from znoyder.config import JOBS_TO_COLLECT_WITH_MAPPING
 from znoyder.lib import logger
@@ -31,6 +32,12 @@ from znoyder.lib import logger
 LOG = logger.LOG
 
 j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
+
+
+class NestedDumper(yaml.Dumper):
+    # by https://stackoverflow.com/a/39681672
+    def increase_indent(self, flow=False, indentless=False):
+        return super(NestedDumper, self).increase_indent(flow, False)
 
 
 def _is_job_already_defined(jobs_dict: list, job_name: str, trigger_type: str):
@@ -83,8 +90,9 @@ def generate_zuul_config(path: str, name: str,
 
             templated_job = {
                 job_name: {
-                    'voting': str(voting).lower(),
-                    'branch_regex': branch_regex
+                    'voting': job.job_data.pop('voting', str(voting).lower()),
+                    'branch_regex': branch_regex,
+                    'job_data': job.job_data,
                 }
             }
 
@@ -93,7 +101,19 @@ def generate_zuul_config(path: str, name: str,
     if not jobs_dict:
         LOG.error('No jobs collected, skipping config generation.')
         return False
+
     config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
+
+    config = yaml.safe_load(config)
+    config = yaml.dump(
+        config,
+        Dumper=NestedDumper,
+        default_flow_style=False,
+        sort_keys=False,
+    )
+    config = '---\n' + config
+    config = config.strip()
+
     if write_mode == 'a' and config[0:4] == '---\n':
         config = config[4:]
 
@@ -114,7 +134,3 @@ def main(args) -> None:
                 print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
             else:
                 print(job)
-
-
-if __name__ == '__main__':
-    main()

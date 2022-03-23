@@ -71,34 +71,135 @@ exclude:
 #         'type': ['check']
 #
 add:
-  /.*/:  # every project
-    'osp-17.0':
-      'openstack-tox-py39':
-        'voting': false
-        'type':
-          - 'gate'
-
   'gnocchi':
     'osp-17.0':
       'openstack-tox-pep8':
-        'voting': false
-        'type':
+        voting: false
+        type:
+          - 'check'
+          - 'gate'
+
+  'keystone':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'check'
+          - 'gate'
+
+  'openstack-barbican':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'openstack-heat-agents':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'openstack-tripleo-common':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'python-castellan':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'python-keystoneauth1':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'python-keystonemiddleware':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'gate'
+
+  'python-openstacksdk':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
           - 'check'
           - 'gate'
 
   'python-tripleoclient':
     'osp-17.0':
       'openstack-tox-py39':
-        'voting': false
-        'type':
+        voting: false
+        type:
           - 'check'
           - 'gate'
+        vars:
+          rhos_release_args: '17.0'
+
+  'python-zaqarclient':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'check'
+          - 'gate'
+        vars:
+          rhos_release_args: '17.0'
 
 
 #
 # Override map: change options of all the jobs collected so far
 #
-override: {}  # TODO(sdatko): implement
+override:
+  'aodh':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        vars:
+          rhos_release_args: '17.0'
+          tox_envlist: 'py39-mysql'
+          tox_environment:
+            AODH_TEST_DRIVERS: 'mysql'
+
+  'python-ovsdbapp':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+        vars:
+          rhos_release_args: '17.0'
+
+  'python-swiftclient':
+    'osp-17.0':
+      'openstack-tox-py39':
+        voting: false
+
+  'python-tripleoclient':
+    'osp-17.0':
+      'openstack-tox-pep8':
+        voting: false
+        type:
+          - 'check'
+          - 'gate'
+        vars:
+          rhos_release_args: '17.0'
+      'openstack-tox-py39':
+        voting: false
+        type:
+          - 'check'
+          - 'gate'
+        vars:
+          rhos_release_args: '17.0'
 
 
 #

@@ -109,7 +109,21 @@ def add_jobs(jobs, project, tag) -> list:
 
 
 def override_jobs(jobs, project, tag) -> list:
-    override_map  # TODO(sdatko): implement
+    for project_specifier in override_map:
+        if not match(project, project_specifier):
+            continue
+
+        for tag_specifier in override_map[project_specifier]:
+            if not match(tag, tag_specifier):
+                continue
+
+            override_map_jobs = override_map[project_specifier][tag_specifier]
+            for job_entry in override_map_jobs.items():
+                for new_job in job_from_map_entry(job_entry):
+                    for index, job in enumerate(jobs):
+                        if match(job.job_name, new_job.job_name):
+                            jobs[index].job_data = new_job.job_data
+
     return jobs
 
 
