@@ -19,6 +19,7 @@
 #
 
 import collections
+from copy import deepcopy
 import io
 import yaml
 
@@ -426,10 +427,13 @@ class ZuulJob(object):
         job_trigger_type(:obj:`str`): Trigger type e.g. check/gate/post
         job_data(:obj:`dict`): JSON job data
     """
-    def __init__(self, job_name, job_trigger_type, job_data={}):
+    def __init__(self, job_name, job_trigger_type, job_data=None):
+        if job_data is None:
+            job_data = {}
+
         self.job_name = job_name
         self.job_trigger_type = job_trigger_type
-        self.job_data = job_data
+        self.job_data = deepcopy(job_data)
 
     def __str__(self) -> str:
         return self.job_name

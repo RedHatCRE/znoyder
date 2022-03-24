@@ -16,7 +16,6 @@
 #    under the License.
 #
 
-from copy import deepcopy
 import re
 
 from znoyder.config import add_map
@@ -64,8 +63,8 @@ def match(string: str, specifier: str) -> bool:
         return bool(regex.fullmatch(string))
 
 
-def job_from_map_entry(entry: dict) -> ZuulJob:
-    job_name, job_options = deepcopy(entry)
+def new_jobs_from_map_entry(entry: dict) -> ZuulJob:
+    job_name, job_options = entry
     job_trigger_type = job_options.pop('type', 'check')
 
     if isinstance(job_trigger_type, str):
@@ -73,6 +72,22 @@ def job_from_map_entry(entry: dict) -> ZuulJob:
     else:
         return [ZuulJob(job_name, trigger_type, job_options)
                 for trigger_type in job_trigger_type]
+
+
+def update_jobs_from_map_entry(jobs: list, entry: dict) -> list:
+    job_name, job_options = entry
+    job_trigger_type = job_options.pop('type', '/.*/')  # any type by default
+
+    for index, job in enumerate(jobs):
+        if (match(job.job_name, job_name)
+                and match(job.job_trigger_type, job_trigger_type)):
+            jobs[index].job_data.update(job_options)
+
+            for key, value in jobs[index].job_data.copy().items():
+                if value is None:
+                    del jobs[index].job_data[key]
+
+    return jobs
 
 
 def exclude_jobs(jobs, project, tag) -> list:
@@ -103,7 +118,7 @@ def add_jobs(jobs, project, tag) -> list:
 
             add_map_jobs = add_map[project_specifier][tag_specifier]
             for job_entry in add_map_jobs.items():
-                jobs.extend(job_from_map_entry(job_entry))
+                jobs.extend(new_jobs_from_map_entry(job_entry))
 
     return jobs
 
@@ -119,10 +134,7 @@ def override_jobs(jobs, project, tag) -> list:
 
             override_map_jobs = override_map[project_specifier][tag_specifier]
             for job_entry in override_map_jobs.items():
-                for new_job in job_from_map_entry(job_entry):
-                    for index, job in enumerate(jobs):
-                        if match(job.job_name, new_job.job_name):
-                            jobs[index].job_data = new_job.job_data
+                jobs = update_jobs_from_map_entry(jobs, job_entry)
 
     return jobs
 
