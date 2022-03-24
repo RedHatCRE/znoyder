@@ -16,6 +16,7 @@
 #    under the License.
 #
 
+from copy import deepcopy
 import os.path
 from pathlib import Path
 from shutil import rmtree
@@ -146,6 +147,7 @@ def main(args) -> None:
                                             directory))
         if os.path.exists(path):
             jobs = finder.find_jobs(path, templates, triggers)
+            jobs = deepcopy(jobs)
         else:
             jobs = []
 
