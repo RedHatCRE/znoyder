@@ -19,6 +19,7 @@ import json
 import os
 from argparse import Namespace
 from dataclasses import dataclass
+import logging
 from unittest import TestCase
 from unittest.mock import patch
 from tempfile import TemporaryDirectory
@@ -29,6 +30,9 @@ from znoyder.downloader import (CONTENT_ENDPOINT, GITHUB_API_URL,
                                 OPENDEV_API_URL, REPO_ENDPOINT, download_file,
                                 download_files_parallel, download_zuul_config,
                                 get_raw_url_files_in_repository, main)
+
+
+logging.disable(logging.CRITICAL)
 
 
 @dataclass
@@ -42,6 +46,9 @@ class MockHTMLResponse:
 
 class TestDownloader(TestCase):
     """Test the downloader module."""
+
+    def shortDescription(self):
+        return None
 
     def setUp(self):
         self.test_directory = TemporaryDirectory()

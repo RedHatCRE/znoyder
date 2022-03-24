@@ -15,6 +15,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+
+import logging
 from unittest import TestCase
 from unittest.mock import Mock
 from unittest.mock import patch
@@ -26,6 +28,9 @@ from znoyder.generator import UPSTREAM_CONFIGS_DIR
 from znoyder.generator import cleanup_generated_jobs_dir
 from znoyder.generator import fetch_osp_projects
 from znoyder.generator import list_existing_osp_projects
+
+
+logging.disable(logging.CRITICAL)
 
 
 class TestFetchOSPProjects(TestCase):

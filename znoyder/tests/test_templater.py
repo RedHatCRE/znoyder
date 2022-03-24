@@ -16,12 +16,16 @@
 #    under the License.
 #
 
+import logging
 from unittest import TestCase
 from unittest.mock import Mock
 from unittest.mock import patch
 
 from znoyder.templater import JOBS_TO_COLLECT_WITH_MAPPING
 from znoyder.templater import main
+
+
+logging.disable(logging.CRITICAL)
 
 
 class TestTemplaterMain(TestCase):

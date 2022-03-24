@@ -16,6 +16,7 @@
 #    under the License.
 #
 
+import logging
 from unittest import TestCase
 from unittest.mock import Mock
 
@@ -29,6 +30,9 @@ from znoyder.mapper import match
 from znoyder.mapper import override_map
 from znoyder.mapper import override_jobs
 from znoyder.lib.zuul import ZuulJob
+
+
+logging.disable(logging.CRITICAL)
 
 
 class TestMatcher(TestCase):

@@ -15,28 +15,41 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+
+import logging
 import os
+from unittest.mock import patch
 from unittest import TestCase
 
 from znoyder.cli import process_arguments
 
 
+logging.disable(logging.CRITICAL)
+
+
 class TestCli(TestCase):
     """Test cli for znoyder."""
-    def test_browse_empty(self):
+
+    def shortDescription(self):
+        return None
+
+    @patch('argparse.ArgumentParser._print_message')
+    def test_browse_empty(self, mock_argpare_print):
         """Test parsing of znoyder browse arguments."""
         cmd = ["browse-osp"]
         # this should fail, since browse-osp requires a command
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_browse_components(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_browse_components(self, mock_argpare_print):
         """Test parsing of znoyder browse arguments."""
         cmd = "browse-osp components".split()
         args = process_arguments(cmd)
         self.assertEqual(args.command, "components")
         self.assertFalse(args.debug)
 
-    def test_browse_packages(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_browse_packages(self, mock_argpare_print):
         """Test parsing of znoyder browse arguments."""
         cmd = ["browse-osp", "packages", "--component",
                "network", "--tag", "osp-17.0", "--output", "osp-patches"]
@@ -47,14 +60,16 @@ class TestCli(TestCase):
         self.assertEqual(args.tag, "osp-17.0")
         self.assertEqual(args.output, "osp-patches")
 
-    def test_browse_releases(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_browse_releases(self, mock_argpare_print):
         """Test parsing of znoyder browse arguments."""
         cmd = "browse-osp releases --debug".split()
         args = process_arguments(cmd)
         self.assertEqual(args.command, "releases")
         self.assertTrue(args.debug)
 
-    def test_download(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_download(self, mock_argpare_print):
         """Test parsing of znoyder download arguments."""
         cmd = ["download", "--repo", "repo_url", "--branch",
                "master", "--destination", "dest/"]
@@ -65,19 +80,22 @@ class TestCli(TestCase):
         self.assertTrue(args.errors_fatal)
         self.assertFalse(args.skip_existing)
 
-    def test_download_missing_destination(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_download_missing_destination(self, mock_argpare_print):
         """Test parsing of znoyder download arguments."""
         cmd = ["download", "--repo", "repo_url", "--branch",
                "master"]
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_download_missing_repo(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_download_missing_repo(self, mock_argpare_print):
         """Test parsing of znoyder download arguments."""
         cmd = ["download", "--destination", "repo_url", "--repo",
                "master"]
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_finder(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_finder(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
         cmd = "find-jobs --dir path --base base --trigger check".split()
         args = process_arguments(cmd)
@@ -87,28 +105,33 @@ class TestCli(TestCase):
         self.assertEqual(args.templates, "base")
         self.assertEqual(args.trigger, "check")
 
-    def test_finder_missing_dir(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_finder_missing_dir(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
         cmd = "find-jobs --base base --trigger check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_finder_missing_base(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_finder_missing_base(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
         cmd = "find-jobs --dir base --trigger check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_finder_missing_trigger(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_finder_missing_trigger(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
         cmd = "find-jobs --dir base --base check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)
 
-    def test_templates(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_templates(self, mock_argpare_print):
         """Test parsing of znoyder templates arguments."""
         cmd = "templates --json".split()
         args = process_arguments(cmd)
         self.assertTrue(args.json)
 
-    def test_generate(self):
+    @patch('argparse.ArgumentParser._print_message')
+    def test_generate(self, mock_argpare_print):
         """Test parsing of znoyder generate arguments."""
         cmd = "generate --tag osp-17 --component network --collect-all".split()
         args = process_arguments(cmd)
