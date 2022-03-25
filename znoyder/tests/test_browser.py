@@ -16,6 +16,7 @@
 #    under the License.
 #
 import builtins
+import logging
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
@@ -28,6 +29,9 @@ from znoyder.browser import get_packages
 from znoyder.browser import get_projects_mapping
 from znoyder.browser import get_releases
 from znoyder.browser import main
+
+
+logging.disable(logging.CRITICAL)
 
 
 def days_to_seconds(days):

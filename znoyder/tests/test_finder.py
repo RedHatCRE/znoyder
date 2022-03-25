@@ -17,6 +17,7 @@
 #
 import os
 from argparse import Namespace
+import logging
 from unittest import TestCase
 from unittest.mock import patch, call
 from tempfile import TemporaryDirectory
@@ -28,6 +29,9 @@ from znoyder.finder import main
 from znoyder.lib.exceptions import TriggerTypeError
 from znoyder.lib.exceptions import PathError
 from znoyder.lib.zuul import JobTriggerType
+
+
+logging.disable(logging.CRITICAL)
 
 
 EXAMPLE_ZUUL_CONFIG = """
@@ -60,6 +64,9 @@ EXAMPLE_ZUUL_CONFIG = """
 
 class TestFinder(TestCase):
     """Test the downloader module."""
+
+    def shortDescription(self):
+        return None
 
     def setUp(self):
         self.test_directory = TemporaryDirectory()
