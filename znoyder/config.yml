@@ -181,6 +181,13 @@ override:
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
 
+  'neutron':  # rhbz#2069099
+    'osp-17.0':
+      'openstack-tox-pep8':
+        voting: false
+      'openstack-tox-py39':
+        voting: false
+
   'python-ovsdbapp':
     'osp-17.0':
       'openstack-tox-py39':
