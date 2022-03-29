@@ -50,6 +50,65 @@ exclude:
       'openstack-tox-py37': 'OSP 17 release is not using py37'
       'openstack-tox-py38': 'OSP 17 release is not using py38'
 
+  'cinder':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'glance':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'glance_store':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'manila':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'manila-ui':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-cinderclient':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-cinderlib':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-glanceclient':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-manilaclient':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-os-brick':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'python-swiftclient':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
+
+  'swift':  # OSPCRE-22
+    'osp-17.0':
+      'openstack-tox-pep8': 'Storage DFG decided to opt-out for now'
+      'openstack-tox-py39': 'Storage DFG decided to opt-out for now'
 
 
 #
