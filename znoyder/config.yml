@@ -243,6 +243,13 @@ override:
       'openstack-tox-py39':
         voting: false
 
+  'keystone':  # rhbz#2052499
+    'osp-17.0':
+      'openstack-tox-pep8':
+        voting: false
+      'openstack-tox-py39':
+        voting: false
+
   'ovn-octavia-provider':  # rhbz#2069526
     'osp-17.0':
       'openstack-tox-pep8':
@@ -264,7 +271,7 @@ override:
       'openstack-tox-py39':
         voting: false
 
-  'python-ovsdbapp': # rhos release provides the openvswitch package
+  'python-ovsdbapp':  # rhos release provides the openvswitch package
     'osp-17.0':
       'openstack-tox-pep8':
         vars:
