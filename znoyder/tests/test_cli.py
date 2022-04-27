@@ -30,7 +30,7 @@ logging.disable(logging.CRITICAL)
 class TestCli(TestCase):
     """Test cli for znoyder."""
 
-    def shortDescription(self):
+    def shortDescription(self):  # pragma: no cover
         return None
 
     @patch('argparse.ArgumentParser._print_message')

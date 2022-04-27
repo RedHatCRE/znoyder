@@ -47,7 +47,7 @@ class MockHTMLResponse:
 class TestDownloader(TestCase):
     """Test the downloader module."""
 
-    def shortDescription(self):
+    def shortDescription(self):  # pragma: no cover
         return None
 
     def setUp(self):

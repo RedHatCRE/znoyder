@@ -65,7 +65,7 @@ EXAMPLE_ZUUL_CONFIG = """
 class TestFinder(TestCase):
     """Test the downloader module."""
 
-    def shortDescription(self):
+    def shortDescription(self):  # pragma: no cover
         return None
 
     def setUp(self):
