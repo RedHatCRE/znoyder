@@ -15,20 +15,27 @@
 # and it is equivalent to setting /^osp-17\.0$/ as a tag specifier.
 #
 
+
+#
+# Branches config
+#
+branches:
+  'osp-17.0':
+    downstream: '^rhos-17.*$'
+    upstream: 'stable/wallaby'
+
+
 #
 # Include map: specify which upstream jobs to collect
 #
 # Format:
-#   '<upstream-job-name>': '<downstream-job-name>'
-#
-# TODO(sdatko): implement support for multiple OSP releases
+#   '<release-tag>':
+#     '<upstream-job-name>': '<downstream-job-name>'
 #
 include:
-  'openstack-tox-pep8': 'osp-tox-pep8'
-  'openstack-tox-py36': 'osp-tox-py36'
-  'openstack-tox-py37': 'osp-tox-py37'
-  'openstack-tox-py38': 'osp-tox-py38'
-  'openstack-tox-py39': 'osp-tox-py39'
+  'osp-17.0':
+    'openstack-tox-pep8': 'osp-tox-pep8'
+    'openstack-tox-py39': 'osp-tox-py39'
 
 
 #
@@ -44,12 +51,6 @@ include:
 #       'osp-tox-py37': 'Python 3.7 is not available in our repos'
 #
 exclude:
-  /.*/:  # every project
-    'osp-17.0':
-      'openstack-tox-py36': 'OSP 17 release is not using py36'
-      'openstack-tox-py37': 'OSP 17 release is not using py37'
-      'openstack-tox-py38': 'OSP 17 release is not using py38'
-
   'cinder':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
