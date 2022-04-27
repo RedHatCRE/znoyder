@@ -328,7 +328,3 @@ def main(argv=None) -> None:
     args = process_arguments(argv)
     logger.set_logger_destination(args)
     args.func(args)
-
-
-if __name__ == '__main__':
-    main()

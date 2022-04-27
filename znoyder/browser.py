@@ -135,7 +135,3 @@ def main(args) -> None:
     if results:
         for result in results:
             print(' '.join([result.get(key, 'None') for key in output]))
-
-
-if __name__ == '__main__':
-    main()

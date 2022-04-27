@@ -163,9 +163,4 @@ def download_zuul_config(**kwargs):
 
 
 def main(args) -> None:
-
     download_zuul_config(**vars(args))
-
-
-if __name__ == '__main__':
-    main()
