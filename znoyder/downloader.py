@@ -68,7 +68,7 @@ def get_raw_url_files_in_repository(repository: str,
         if errors_fatal:
             exit(1)
         else:
-            return {}
+            return {project_name: []}
 
     url_files = {}
 
@@ -98,7 +98,6 @@ def get_raw_url_files_in_repository(repository: str,
 
 def download_file(url: str, destination_directory: str,
                   skip_existing: bool = False) -> None:
-    Path(destination_directory).mkdir(parents=True, exist_ok=True)
     file_name = url.split('/')[-1]
     file_path = f'{destination_directory}/{file_name}'
 
@@ -122,6 +121,7 @@ def download_file(url: str, destination_directory: str,
 
 def download_files_parallel(urls: list, destination_directory: str,
                             skip_existing: bool = False) -> None:
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
     pool = Pool(cpu_count())
 
     download_function = partial(
@@ -146,6 +146,16 @@ def download_zuul_config(**kwargs):
     destination = kwargs.get('destination')
     errors_fatal = kwargs.get('errors_fatal', True)
     skip_existing = kwargs.get('skip_existing', False)
+
+    project_directory = '/'.join(repository.split('/')[-2:])
+    final_destination = os.path.join(destination, project_directory)
+
+    if os.path.exists(final_destination):
+        LOG.warning(f'Directory already exists: {final_destination}')
+
+        if skip_existing:
+            LOG.info(f'Skipping the download to: {final_destination}')
+            return {project_directory: []}
 
     project_urls = get_raw_url_files_in_repository(
         repository,
