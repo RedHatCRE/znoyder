@@ -190,20 +190,6 @@ def extend_parser_finder(parser) -> None:
 
 def extend_parser_generator(parser) -> None:
     parser.add_argument(
-        '-e', '--existing',
-        dest='existing',
-        default=True,
-        action='store_false',
-        help='use existing configs to generate jobs files (default)'
-    )
-    parser.add_argument(
-        '-d', '--download',
-        dest='download',
-        default=False,
-        action='store_true',
-        help='download the zuul configuration files from repositories'
-    )
-    parser.add_argument(
         '-c', '--component',
         dest='component',
         help='OSP component name to filter projects'
@@ -214,45 +200,14 @@ def extend_parser_generator(parser) -> None:
         help='OSP package name to filter projects'
     )
     parser.add_argument(
-        '--aggregate',
-        dest='aggregate',
-        help='File path where all templates will be aggregated'
-    )
-    parser.add_argument(
         '-t', '--tag',
         dest='tag',
         help='OSP release tag to filter projects'
     )
-    parser.add_argument(
-        '-g', '--generate',
-        dest='generate',
-        default=False,
-        action='store_true',
-        help='generate new zuul configuration files from upstream sources'
-    )
-    parser.add_argument(
-        '-a', '--all', '--collect-all',
-        dest='collect_all',
-        default=False,
-        action='store_true',
-        help='collect all jobs when generating downstream configuration'
-    )
-    parser.add_argument(
-        '-m', '--template-name',
-        dest='template',
-        default='zuul-project',
-        help='Use defined template name, e.g. empty-zuul-project'
-    )
 
 
 def extend_parser_templater(parser) -> None:
-    parser.add_argument(
-        '-j', '--json',
-        dest='json',
-        default=False,
-        action='store_true',
-        help='produce output in JSON format'
-    )
+    pass
 
 
 COMMANDS = {

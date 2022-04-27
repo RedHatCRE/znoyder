@@ -76,11 +76,10 @@ There exists the `-v` option for getting a verbose output with many details.
 
 ## templates
 
-Calling this command will produce a list of jobs considered during
-templates rendering and their remapping (if defined).
+Calling this command will produce a list of available templates.
 
 ```
-znoyder templates --json
+znoyder templates
 ```
 
 
@@ -91,7 +90,7 @@ OSP release and component (optional filtering), then process it and produce
 new configuration files, crafted for downstream OSP testing.
 
 ```
-znoyder generate --tag osp-17.0 --component network --collect-all
+znoyder generate --tag osp-17.0 --component network
 ```
 
 

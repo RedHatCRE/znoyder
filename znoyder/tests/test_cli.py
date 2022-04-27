@@ -126,21 +126,15 @@ class TestCli(TestCase):
     @patch('argparse.ArgumentParser._print_message')
     def test_templates(self, mock_argpare_print):
         """Test parsing of znoyder templates arguments."""
-        cmd = "templates --json".split()
+        cmd = "templates".split()
         args = process_arguments(cmd)
-        self.assertTrue(args.json)
+        self.assertTrue(args)
 
     @patch('argparse.ArgumentParser._print_message')
     def test_generate(self, mock_argpare_print):
         """Test parsing of znoyder generate arguments."""
-        cmd = "generate --tag osp-17 --component network --collect-all".split()
+        cmd = "generate --tag osp-17 --component network".split()
         args = process_arguments(cmd)
-        self.assertTrue(args.existing)
-        self.assertTrue(args.collect_all)
-        self.assertFalse(args.download)
-        self.assertFalse(args.generate)
         self.assertIsNone(args.name)
-        self.assertIsNone(args.aggregate)
         self.assertEqual(args.component, "network")
-        self.assertEqual(args.template, "zuul-project")
         self.assertEqual(args.tag, "osp-17")
