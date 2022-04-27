@@ -8,10 +8,12 @@ jobs:
     container:
       image: alpine:latest
     steps:
-      - name: Packages installation
+      - name: Packages
         run: apk add --no-cache git python3 py3-pip && pip3 install tox
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Tox call tests
-        run: tox -v
+      - name: Tox
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          tox -v
 
