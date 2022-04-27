@@ -25,7 +25,6 @@ from jinja2 import PackageLoader
 from jinja2.exceptions import TemplateNotFound
 import yaml
 
-from znoyder.config import JOBS_TO_COLLECT_WITH_MAPPING
 from znoyder.lib import logger
 
 
@@ -75,15 +74,6 @@ def generate_zuul_config(path: str, name: str,
     for job in jobs:
         job_name = job.job_name
 
-        if not collect_all and job_name not in JOBS_TO_COLLECT_WITH_MAPPING:
-            LOG.warning(f'Ignoring job: {job_name}')
-            continue
-
-        if JOBS_TO_COLLECT_WITH_MAPPING.get(job_name) is not None:
-            new_name = JOBS_TO_COLLECT_WITH_MAPPING[job_name]
-            LOG.info(f'Renaming job: {job_name} -> {new_name}')
-            job_name = new_name
-
         LOG.info(f'Collecting job: {job_name}')
         if not _is_job_already_defined(jobs_dict, job_name,
                                        job.job_trigger_type):
@@ -125,12 +115,7 @@ def generate_zuul_config(path: str, name: str,
 
 
 def main(args) -> None:
-    if args.json:
-        print(JOBS_TO_COLLECT_WITH_MAPPING)
-    else:
-        print('Jobs being collected by default:')
-        for job in JOBS_TO_COLLECT_WITH_MAPPING:
-            if JOBS_TO_COLLECT_WITH_MAPPING[job] is not None:
-                print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
-            else:
-                print(job)
+    LOG.info('Available templates:')
+    for template in j2env.list_templates():
+        template = os.path.splitext(template)
+        LOG.info(f'   - {template[0]}')

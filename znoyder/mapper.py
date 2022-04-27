@@ -16,13 +16,19 @@
 #    under the License.
 #
 
+from copy import deepcopy
 import re
 
 from znoyder.config import add_map
 from znoyder.config import copy_map
 from znoyder.config import exclude_map
+from znoyder.config import include_map
 from znoyder.config import override_map
+from znoyder.lib import logger
 from znoyder.lib.zuul import ZuulJob
+
+
+LOG = logger.LOG
 
 
 def match(string: str, specifier: str) -> bool:
@@ -88,6 +94,28 @@ def update_jobs_from_map_entry(jobs: list, entry: dict) -> list:
                     del jobs[index].job_data[key]
 
     return jobs
+
+
+def include_jobs(jobs, tag) -> list:
+    upstream_jobs = deepcopy(jobs)
+    collected_jobs = []
+    jobs_to_collect = include_map.get(tag, {})
+
+    for job in upstream_jobs:
+        if job.job_name not in jobs_to_collect:
+            LOG.warning(f'Ignoring job: {job.job_name}')
+            continue
+
+        if jobs_to_collect.get(job.job_name) is not None:
+            new_name = jobs_to_collect[job.job_name]
+            LOG.info(f'Renaming job: {job.job_name} -> {new_name}'
+                     f' ({job.job_trigger_type})')
+            job.job_name = new_name
+
+        LOG.info(f'Included job: {job.job_name} ({job.job_trigger_type})')
+        collected_jobs.append(job)
+
+    return collected_jobs
 
 
 def exclude_jobs(jobs, project, tag) -> list:
