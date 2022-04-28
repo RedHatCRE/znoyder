@@ -47,7 +47,7 @@ class MockHTMLResponse:
 class TestDownloader(TestCase):
     """Test the downloader module."""
 
-    def shortDescription(self):
+    def shortDescription(self):  # pragma: no cover
         return None
 
     def setUp(self):
@@ -98,7 +98,7 @@ class TestDownloader(TestCase):
                                                     url, b"")
 
         data = get_raw_url_files_in_repository(repo, {}, errors_fatal=False)
-        self.assertEqual(data, {})
+        self.assertEqual(data, {repo: []})
         patched_get.assert_called_with(url=url)
 
     @patch("requests.get")
@@ -266,6 +266,19 @@ class TestDownloader(TestCase):
             with open(os.path.join(out_folder, name), "rb") as file_obj:
                 content_read = file_obj.read()
             self.assertEqual(content, content_read)
+
+    @patch("os.path.exists")
+    @patch("znoyder.downloader.get_raw_url_files_in_repository")
+    def test_download_zuul_config_skip(self, get_files_call, exists_call):
+        repo = "repo_url.opendev.org/organization/project_name"
+        exists_call.return_value = True
+
+        files = download_zuul_config(repository=repo, branch="master",
+                                     destination=self.dest_dir,
+                                     skip_existing=True)
+
+        self.assertEqual(files, {'organization/project_name': []})
+        self.assertFalse(get_files_call.called)
 
     @patch("requests.get")
     def test_main(self, patched_get):

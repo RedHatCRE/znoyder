@@ -1,0 +1,15 @@
+---
+- project-template:
+    name: {{ name }}
+    {%- for pipeline, jobs in pipelines.items() | sort %}
+    {{ pipeline }}:
+      jobs:
+        {%- for job in jobs %}
+        - {{ job.name }}:
+            branches: {{ job.branch }}
+            voting: {{ job.voting }}
+            {%- for key, value in job.job_data.items() %}
+            {{ key }}: {{ value }}
+            {%- endfor -%}
+        {%- endfor -%}
+    {%- endfor -%}

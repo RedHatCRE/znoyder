@@ -16,12 +16,17 @@
 #    under the License.
 #
 
-from copy import deepcopy
+from collections import defaultdict
 import os.path
 from pathlib import Path
 from shutil import rmtree
 
 from znoyder import browser
+from znoyder.config import branches_map
+from znoyder.config import GENERATED_CONFIGS_DIR
+from znoyder.config import GENERATED_CONFIG_PREFIX
+from znoyder.config import GENERATED_CONFIG_EXTENSION
+from znoyder.config import UPSTREAM_CONFIGS_DIR
 from znoyder import downloader
 from znoyder import finder
 from znoyder.lib import logger
@@ -29,28 +34,27 @@ from znoyder import mapper
 from znoyder import templater
 
 
-UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
-GENERATED_CONFIGS_DIR = 'jobs-generated/'
-CONFIG_PREFIX = 'cre-'
-CONFIG_EXTENSION = '.yaml'
-
-# We set it to newest
-DEFAULT_BRANCH_REGEX = '^rhos-17.*$'
-
 LOG = logger.LOG
 
 
-def fetch_osp_projects(**kwargs) -> list:
-    packages = browser.get_packages(upstream='opendev.org', **kwargs)
-    repositories = [package.get('upstream') for package in packages]
-    branch = 'master'
+def cleanup_generated_jobs_dir() -> None:
+    if os.path.exists(GENERATED_CONFIGS_DIR):
+        rmtree(GENERATED_CONFIGS_DIR)
+        LOG.info(f'Removed the directory: {GENERATED_CONFIGS_DIR}')
 
-    if 'tag' in kwargs:
-        release = browser.get_releases(**kwargs)[0].get('upstream_release')
-        branch = f'stable/{release}'
+    destination_directory = os.path.join(GENERATED_CONFIGS_DIR,
+                                         'osp-internal-jobs-config', 'zuul.d')
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
+    destination_directory = os.path.join(GENERATED_CONFIGS_DIR,
+                                         'osp-internal-jobs', 'zuul.d')
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
+
+
+def fetch_templates_directory():
     templates_repository = 'https://opendev.org/openstack/openstack-zuul-jobs'
     templates_branch = 'master'
+
     templates_urls = downloader.download_zuul_config(
         repository=templates_repository,
         branch=templates_branch,
@@ -58,10 +62,17 @@ def fetch_osp_projects(**kwargs) -> list:
         errors_fatal=False,
         skip_existing=True
     )
+
     templates_directory = list(templates_urls.keys())[0]
 
-    directories = []
-    for repository in repositories:
+    return templates_directory
+
+
+def fetch_osp_projects(branch: str, filters: dict) -> list:
+    projects = {package.get('osp-project'): package.get('upstream')
+                for package in browser.get_packages(**filters)}
+
+    for osp_name, repository in projects.items():
         project_urls = downloader.download_zuul_config(
             repository=repository,
             branch=branch,
@@ -69,125 +80,125 @@ def fetch_osp_projects(**kwargs) -> list:
             errors_fatal=False,
             skip_existing=True
         )
+
+        projects[osp_name] = ''
         for directory in project_urls.keys():
-            directories.append(directory)
+            projects[osp_name] = directory
 
-    return [templates_directory] + directories
-
-
-def list_existing_osp_projects() -> list:
-    templates_directory = 'openstack/openstack-zuul-jobs'
-
-    directories = [os.path.join(namespace, project)
-                   for namespace in os.listdir(UPSTREAM_CONFIGS_DIR)
-                   for project in os.listdir(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                                          namespace))]
-    if templates_directory in directories:
-        directories.remove(templates_directory)
-
-    return [templates_directory] + directories
+    return projects
 
 
-def cleanup_generated_jobs_dir() -> None:
-    if os.path.exists(GENERATED_CONFIGS_DIR):
-        rmtree(GENERATED_CONFIGS_DIR)
-        LOG.info(f'Removed the directory: {GENERATED_CONFIGS_DIR}')
-    destination_directory = os.path.dirname(GENERATED_CONFIGS_DIR)
-    Path(destination_directory).mkdir(parents=True, exist_ok=True)
+def discover_jobs(project_name, osp_tag, directory,
+                  templates, triggers) -> list:
+    jobs = []
+
+    if directory:
+        path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
+                                            directory))
+        if os.path.exists(path):
+            LOG.info(f'Including from: {directory}')
+            upstream_jobs = finder.find_jobs(path, templates, triggers)
+            jobs = mapper.include_jobs(upstream_jobs, osp_tag)
+
+    jobs = mapper.exclude_jobs(jobs, project_name, osp_tag)
+    jobs = mapper.add_jobs(jobs, project_name, osp_tag)
+    jobs = mapper.override_jobs(jobs, project_name, osp_tag)
+    jobs = mapper.copy_jobs(jobs, project_name, osp_tag)
+
+    LOG.info(f'Jobs number: {len(jobs)}')
+    for job in jobs:
+        LOG.debug(f'{job.job_trigger_type}/{job.job_name}:{job.job_data}')
+
+    return jobs
+
+
+def generate_projects_pipleines_dict(args):
+    # The scheme is: projects{} -> pipelines{} -> jobs[]
+    projects_pipelines_dict = defaultdict(lambda: defaultdict(list))
+
+    if args.tag:
+        tags = args.tag.split(',')
+    else:
+        tags = list(branches_map.keys())
+
+    for osp_tag in tags:
+        upstream_branch = branches_map.get(osp_tag, {}).get('upstream')
+        downstream_branch = branches_map.get(osp_tag, {}).get('downstream')
+
+        ospinfo_filters = {'tag': osp_tag}
+        if args.name:
+            ospinfo_filters['name'] = args.name
+        if args.component:
+            ospinfo_filters['component'] = args.component
+
+        LOG.info('Downloading Zuul configuration from upstream...')
+        LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
+        templates_directory = fetch_templates_directory()
+        projects = fetch_osp_projects(
+            branch=upstream_branch,
+            filters=ospinfo_filters,
+        )
+
+        path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
+                                            templates_directory))
+
+        triggers = finder.find_triggers('check,gate')
+        templates = finder.find_templates(path, triggers)
+
+        LOG.info('Generating new downstream configuration files...')
+        LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
+
+        for project_name, directory in projects.items():
+            LOG.info(f'Processing: {project_name}')
+            jobs = discover_jobs(project_name, osp_tag, directory,
+                                 templates, triggers)
+
+            for job in jobs:
+                projects_pipelines_dict[project_name][job.job_trigger_type].append(  # noqa
+                    {
+                        'name': job.job_name,
+                        'branch': downstream_branch,
+                        'job_data': job.job_data,
+                        'voting': job.job_data.pop('voting', 'false'),
+                    }
+                )
+
+    return projects_pipelines_dict
+
+
+def generate_projects_templates(projects_pipelines_dict: dict) -> None:
+    for project_name in projects_pipelines_dict:
+        pipelines = projects_pipelines_dict[project_name]
+        config_dest = os.path.join(
+            GENERATED_CONFIGS_DIR,
+            'osp-internal-jobs', 'zuul.d',
+            GENERATED_CONFIG_PREFIX + project_name + GENERATED_CONFIG_EXTENSION
+        )
+
+        templater.generate_zuul_project_template(
+            path=config_dest,
+            name=GENERATED_CONFIG_PREFIX + project_name,
+            pipelines=pipelines
+        )
+
+
+def generate_projects_config(projects_pipelines_dict: dict) -> None:
+    projects = list(projects_pipelines_dict.keys())
+    config_dest = os.path.join(
+        GENERATED_CONFIGS_DIR,
+        'osp-internal-jobs-config', 'zuul.d',
+        GENERATED_CONFIG_PREFIX + 'projects' + GENERATED_CONFIG_EXTENSION
+    )
+
+    templater.generate_zuul_projects_config(
+        path=config_dest,
+        projects=projects,
+        prefix=GENERATED_CONFIG_PREFIX
+    )
 
 
 def main(args) -> None:
     cleanup_generated_jobs_dir()
-
-    if args.download or not(os.path.exists(UPSTREAM_CONFIGS_DIR)):
-        LOG.info('Downloading new Zuul configuration from upstream...')
-        LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
-        directories = fetch_osp_projects(**vars(args))
-        templates_directory = directories.pop(0)
-    else:
-        LOG.info('Using local Zuul configuration files...')
-        LOG.info(f'Path to Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
-        directories = list_existing_osp_projects()
-        templates_directory = directories.pop(0)
-
-    LOG.info('Generating new downstream configuration files...')
-    LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
-    triggers = finder.find_triggers('check,gate')
-
-    path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                        templates_directory))
-    templates = finder.find_templates(path, triggers)
-
-    us_to_ds_projects_map = browser.get_projects_mapping()
-
-    if args.aggregate:
-        config_dest = os.path.join(GENERATED_CONFIGS_DIR, args.aggregate)
-        write_mode = 'a'
-        with open(config_dest, write_mode) as f:
-            f.write('---\n')
-
-    #
-    # TODO(sdatko): we need to figure something out here, but relying
-    #               on directories to get a list of projects is not
-    #               a good approach – we should always rely on list
-    #               of jobs from ospinfo (browser module); this whole
-    #               section around this comment will be refactored
-    #
-    #
-    # additional_projects = [
-    #     name
-    #     for name in additional_jobs_by_project_and_tag.keys()
-    #     if name not in directories
-    # ]
-    # directories.extend(additional_projects)
-
-    for directory in directories:
-        LOG.info(f'Processing: {directory}')
-        path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                            directory))
-        if os.path.exists(path):
-            jobs = finder.find_jobs(path, templates, triggers)
-            jobs = deepcopy(jobs)
-        else:
-            jobs = []
-
-        # Case where zuul configs are inside zuul.d
-        directory = directory.replace('/zuul.d', '').replace('/.zuul.d', '')
-        name = directory.replace('/', '-')
-
-        if name in us_to_ds_projects_map.keys():
-            ds_name = us_to_ds_projects_map[name]
-        else:
-            ds_name = name
-
-        jobs = mapper.exclude_jobs(jobs, ds_name, args.tag)
-        jobs = mapper.add_jobs(jobs, ds_name, args.tag)
-        jobs = mapper.override_jobs(jobs, ds_name, args.tag)
-        jobs = mapper.copy_jobs(jobs, ds_name, args.tag)
-
-        if not args.aggregate:
-            config_dest = os.path.join(
-                GENERATED_CONFIGS_DIR,
-                CONFIG_PREFIX + ds_name + CONFIG_EXTENSION
-            )
-            write_mode = 'w'
-
-        branch_regex = DEFAULT_BRANCH_REGEX
-
-        if args.tag and args.tag.startswith('osp-'):
-            branch_regex = '%s.*$' % \
-              args.tag.replace('osp', '^rhos').split('.')[0]
-
-        templater.generate_zuul_config(
-            path=config_dest,
-            template_name=args.template,
-            project_template=CONFIG_PREFIX + ds_name,
-            name=ds_name,
-            jobs=jobs,
-            collect_all=args.collect_all,
-            write_mode=write_mode,
-            branch_regex=branch_regex)
-
-
-if __name__ == '__main__':
-    main()
+    projects_pipelines_dict = generate_projects_pipleines_dict(args)
+    generate_projects_templates(projects_pipelines_dict)
+    generate_projects_config(projects_pipelines_dict)

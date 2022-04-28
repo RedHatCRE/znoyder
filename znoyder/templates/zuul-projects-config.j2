@@ -1,0 +1,9 @@
+---
+{%- for project in projects | sort %}
+- project:
+    name: {{ project }}
+    templates:
+      - {{ prefix }}{{ project }}
+    vars:
+      test_setup_skip: true
+{% endfor %}

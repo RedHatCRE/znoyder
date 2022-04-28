@@ -16,16 +16,12 @@
 #    under the License.
 #
 
-from collections import defaultdict
 import os
-import sys
 
 from jinja2 import Environment
 from jinja2 import PackageLoader
-from jinja2.exceptions import TemplateNotFound
 import yaml
 
-from znoyder.config import JOBS_TO_COLLECT_WITH_MAPPING
 from znoyder.lib import logger
 
 
@@ -40,97 +36,37 @@ class NestedDumper(yaml.Dumper):
         return super(NestedDumper, self).increase_indent(flow, False)
 
 
-def _is_job_already_defined(jobs_dict: list, job_name: str, trigger_type: str):
-    jobs = jobs_dict.get(trigger_type)
+def generate_zuul_project_template(path: str, name: str, pipelines: dict):
+    template = j2env.get_template('zuul-project-template.j2')
 
-    if isinstance(jobs, list):
-        for job in jobs:
-            if job_name in job:
-                return True
-    return False
-
-
-def generate_zuul_config(path: str, name: str,
-                         project_template: str,
-                         jobs: list,
-                         branch_regex: str,
-                         template_name: str = None,
-                         collect_all: bool = False,
-                         write_mode: str = 'w',
-                         voting: bool = False) -> bool:
-
-    jobs_dict = defaultdict(list)
-
-    try:
-        JOB_TEMPLATE = j2env.get_template(template_name+".j2")
-    except TemplateNotFound:
-        LOG.error(f'Template "{template_name}" does not exist')
-        LOG.info('Please use one of the following templates or add your own')
-        LOG.info('Available templates:')
-        for template in j2env.list_templates():
-            template = os.path.splitext(template)
-            LOG.info(f'   - {template[0]}')
-        sys.exit()
-
-    for job in jobs:
-        job_name = job.job_name
-
-        if not collect_all and job_name not in JOBS_TO_COLLECT_WITH_MAPPING:
-            LOG.warning(f'Ignoring job: {job_name}')
-            continue
-
-        if JOBS_TO_COLLECT_WITH_MAPPING.get(job_name) is not None:
-            new_name = JOBS_TO_COLLECT_WITH_MAPPING[job_name]
-            LOG.info(f'Renaming job: {job_name} -> {new_name}')
-            job_name = new_name
-
-        LOG.info(f'Collecting job: {job_name}')
-        if not _is_job_already_defined(jobs_dict, job_name,
-                                       job.job_trigger_type):
-
-            templated_job = {
-                job_name: {
-                    'voting': job.job_data.pop('voting', str(voting).lower()),
-                    'branch_regex': branch_regex,
-                    'job_data': job.job_data,
-                }
-            }
-
-            jobs_dict[job.job_trigger_type].append(templated_job)
-
-    if not jobs_dict:
-        LOG.error('No jobs collected, skipping config generation.')
-        return False
-
-    config = JOB_TEMPLATE.render(name=project_template, jobs=jobs_dict).strip()
-
+    config = template.render(name=name, pipelines=pipelines)
     config = yaml.safe_load(config)
-    config = yaml.dump(
+    config = '---\n' + yaml.dump(
         config,
         Dumper=NestedDumper,
         default_flow_style=False,
         sort_keys=False,
     )
-    config = '---\n' + config
     config = config.strip()
 
-    if write_mode == 'a' and config[0:4] == '---\n':
-        config = config[4:]
-
-    with open(path, write_mode) as file:
+    with open(path, 'w') as file:
         file.write(config)
         file.write('\n')
 
-    return True
+
+def generate_zuul_projects_config(path: str, projects: list, prefix: str):
+    template = j2env.get_template('zuul-projects-config.j2')
+
+    config = template.render(projects=projects, prefix=prefix)
+    config = config.strip()
+
+    with open(path, 'w') as file:
+        file.write(config)
+        file.write('\n')
 
 
 def main(args) -> None:
-    if args.json:
-        print(JOBS_TO_COLLECT_WITH_MAPPING)
-    else:
-        print('Jobs being collected by default:')
-        for job in JOBS_TO_COLLECT_WITH_MAPPING:
-            if JOBS_TO_COLLECT_WITH_MAPPING[job] is not None:
-                print(job, '->', JOBS_TO_COLLECT_WITH_MAPPING[job])
-            else:
-                print(job)
+    LOG.info('Available templates:')
+    for template in j2env.list_templates():
+        template = os.path.splitext(template)
+        LOG.info(f'   - {template[0]}')

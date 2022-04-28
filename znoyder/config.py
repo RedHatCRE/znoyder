@@ -24,9 +24,14 @@ import yaml
 with pkg_resources.open_text(__package__, 'config.yml') as file:
     CONFIG = yaml.load(file, Loader=yaml.FullLoader)
 
-JOBS_TO_COLLECT_WITH_MAPPING = CONFIG.get('include', {})
-
+branches_map = CONFIG.get('branches', {})
+include_map = CONFIG.get('include', {})
 exclude_map = CONFIG.get('exclude', {})
 add_map = CONFIG.get('add', {})
 override_map = CONFIG.get('override', {})
 copy_map = CONFIG.get('copy', {})
+
+UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
+GENERATED_CONFIGS_DIR = 'jobs-generated/'
+GENERATED_CONFIG_PREFIX = 'cre-'
+GENERATED_CONFIG_EXTENSION = '.yaml'

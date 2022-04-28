@@ -190,7 +190,10 @@ class ZuulProject(object):
         project_name (:obj:`str`): Name of the project e.g. neutron
         project_path (:obj:`str`): Local path to the project directory
     """
-    def __init__(self, project_name=None, project_path=None, templates=[]):
+    def __init__(self, project_name=None, project_path=None, templates=None):
+        if templates is None:
+            templates = []
+
         self.project_name = project_name
         self.project_path = project_path
         self.all_templates = templates  # defined by other projects
@@ -207,7 +210,7 @@ class ZuulProject(object):
         self.config_paths = utils.get_config_paths(self.project_path)
         return self.config_paths
 
-    def get_list_of_jobs(self, job_trigger_types=[]) -> list:
+    def get_list_of_jobs(self, job_trigger_types=None) -> list:
         """Gets list of jobs for a particular project.
            This does not include jobs defined under templates.
 
@@ -217,6 +220,8 @@ class ZuulProject(object):
         Returns:
             (:obj:`list`): list of ZuulJob objects associated with the project
         """
+        if job_trigger_types is None:
+            job_trigger_types = []
 
         trigger_types = JobTriggerType.get_job_types_str(job_trigger_types)
 
@@ -290,7 +295,7 @@ class ZuulProject(object):
 
         return template_obj
 
-    def get_list_of_defined_templates(self, job_trigger_types=[]) -> list:
+    def get_list_of_defined_templates(self, job_trigger_types=None) -> list:
         """Gets list of templates defined in a project.
 
         Args:
@@ -300,6 +305,8 @@ class ZuulProject(object):
             (:obj:`list`): list of ZuulProjectTemplate objects
                            associated with the project
         """
+        if job_trigger_types is None:
+            job_trigger_types = []
 
         trigger_types = JobTriggerType.get_job_types_str(job_trigger_types)
 
@@ -383,7 +390,10 @@ class ZuulProjectTemplate(object):
         template_name (:obj:`str`): Template name
     """
     def __init__(self, template_name, template_project=None,
-                 template_data={}):
+                 template_data=None):
+        if template_data is None:
+            template_data = {}
+
         # Project that defines template
         self.template_project = template_project
         self.template_name = template_name
