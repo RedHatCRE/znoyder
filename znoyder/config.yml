@@ -262,13 +262,6 @@ override:
       'osp-tox-py39':
         voting: false
 
-  'neutron':  # rhbz#2069099
-    'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
-      'osp-tox-py39':
-        voting: false
-
   'ovn-octavia-provider':  # rhbz#2069526
     'osp-17.0':
       'osp-tox-pep8':
