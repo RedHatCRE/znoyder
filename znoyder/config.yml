@@ -150,65 +150,65 @@ add:
   'gnocchi':
     'osp-17.0':
       'osp-tox-pep8':
-        type:
+        pipeline:
           - 'check'
           - 'gate'
 
   'keystone':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'check'
           - 'gate'
 
   'openstack-barbican':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
 
   'openstack-heat-agents':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
 
   'openstack-tripleo-common':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
 
   'python-castellan':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
 
   'python-keystoneauth1':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
 
   'python-keystonemiddleware':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'check'
           - 'gate'
 
   'python-openstacksdk':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'check'
           - 'gate'
 
   'python-tripleoclient':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'gate'
         vars:
           rhos_release_args: '17.0'
@@ -216,7 +216,7 @@ add:
   'python-zaqarclient':
     'osp-17.0':
       'osp-tox-py39':
-        type:
+        pipeline:
           - 'check'
           - 'gate'
         vars:
@@ -234,7 +234,7 @@ add:
 #   /.*/:
 #     'osp-17.0':
 #       'osp-tox-py37':
-#         type: 'check'
+#         pipeline: 'check'
 #         voting: false
 #         required-projects: ~
 #
