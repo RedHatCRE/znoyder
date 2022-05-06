@@ -36,6 +36,15 @@ include:
   'osp-17.0':
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py39': 'osp-tox-py39'
+    'openstack-tox-functional-py39': 'osp-tox-functional-py39'
+    'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
+    'nova-tox-functional-py39': 'nova-tox-functional-py39'
+    'placement-nova-tox-functional-py39': 'placement-nova-tox-functional-py39'
+    # yamllint disable-line rule:line-length
+    'glance-tox-functional-py39-cursive-tips': 'glance-tox-functional-py39-cursive-tips'
+    # yamllint disable-line rule:line-length
+    'glance-tox-functional-py39-rbac-defaults': 'glance-tox-functional-py39-rbac-defaults'
+    'openstack-tox-functional': 'osp-tox-functional'
 
 
 #
@@ -55,62 +64,73 @@ exclude:
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'glance':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'glance_store':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'manila':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'manila-ui':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-cinderclient':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-cinderlib':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-glanceclient':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-manilaclient':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-os-brick':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'python-swiftclient':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
   'swift':  # OSPCRE-22
     'osp-17.0':
       'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
       'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-
+      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
 #
 # Add map: specify custom jobs to add in the generated result
