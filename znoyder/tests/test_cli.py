@@ -97,28 +97,28 @@ class TestCli(TestCase):
     @patch('argparse.ArgumentParser._print_message')
     def test_finder(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
-        cmd = "find-jobs --dir path --base base --trigger check".split()
+        cmd = "find-jobs --dir path --base base --pipeline check".split()
         args = process_arguments(cmd)
         verbose = os.environ.get('SHPERER_VERBOSE', False)
         self.assertEqual(args.verbose, verbose)
         self.assertEqual(args.directory, "path")
         self.assertEqual(args.templates, "base")
-        self.assertEqual(args.trigger, "check")
+        self.assertEqual(args.pipeline, "check")
 
     @patch('argparse.ArgumentParser._print_message')
     def test_finder_missing_dir(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
-        cmd = "find-jobs --base base --trigger check".split()
+        cmd = "find-jobs --base base --pipeline check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)
 
     @patch('argparse.ArgumentParser._print_message')
     def test_finder_missing_base(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
-        cmd = "find-jobs --dir base --trigger check".split()
+        cmd = "find-jobs --dir base --pipeline check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)
 
     @patch('argparse.ArgumentParser._print_message')
-    def test_finder_missing_trigger(self, mock_argpare_print):
+    def test_finder_missing_pipeline(self, mock_argpare_print):
         """Test parsing of znoyder find-jobs arguments."""
         cmd = "find-jobs --dir base --base check".split()
         self.assertRaises(SystemExit, process_arguments, cmd)

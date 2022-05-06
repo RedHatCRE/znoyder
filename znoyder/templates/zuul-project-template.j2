@@ -1,14 +1,14 @@
 ---
 - project-template:
     name: {{ name }}
-    {%- for pipeline, jobs in pipelines.items() | sort %}
+    {%- for pipeline, jobs in pipelines | dictsort %}
     {{ pipeline }}:
       jobs:
-        {%- for job in jobs %}
+        {%- for job in jobs | sort(attribute='name') %}
         - {{ job.name }}:
             branches: {{ job.branch }}
             voting: {{ job.voting }}
-            {%- for key, value in job.job_data.items() %}
+            {%- for key, value in job.parameters | dictsort %}
             {{ key }}: {{ value }}
             {%- endfor -%}
         {%- endfor -%}

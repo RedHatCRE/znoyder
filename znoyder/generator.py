@@ -89,7 +89,7 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
 
 
 def discover_jobs(project_name, osp_tag, directory,
-                  templates, triggers) -> list:
+                  templates, pipelines) -> list:
     jobs = []
 
     if directory:
@@ -97,7 +97,7 @@ def discover_jobs(project_name, osp_tag, directory,
                                             directory))
         if os.path.exists(path):
             LOG.info(f'Including from: {directory}')
-            upstream_jobs = finder.find_jobs(path, templates, triggers)
+            upstream_jobs = finder.find_jobs(path, templates, pipelines)
             jobs = mapper.include_jobs(upstream_jobs, osp_tag)
 
     jobs = mapper.exclude_jobs(jobs, project_name, osp_tag)
@@ -107,7 +107,7 @@ def discover_jobs(project_name, osp_tag, directory,
 
     LOG.info(f'Jobs number: {len(jobs)}')
     for job in jobs:
-        LOG.debug(f'{job.job_trigger_type}/{job.job_name}:{job.job_data}')
+        LOG.debug(f'{job.pipeline}/{job.name}:{job.parameters}')
 
     return jobs
 
@@ -142,8 +142,8 @@ def generate_projects_pipleines_dict(args):
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             templates_directory))
 
-        triggers = finder.find_triggers('check,gate')
-        templates = finder.find_templates(path, triggers)
+        pipelines = finder.find_pipelines('check,gate')
+        templates = finder.find_templates(path, pipelines)
 
         LOG.info('Generating new downstream configuration files...')
         LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
@@ -151,15 +151,15 @@ def generate_projects_pipleines_dict(args):
         for project_name, directory in projects.items():
             LOG.info(f'Processing: {project_name}')
             jobs = discover_jobs(project_name, osp_tag, directory,
-                                 templates, triggers)
+                                 templates, pipelines)
 
             for job in jobs:
-                projects_pipelines_dict[project_name][job.job_trigger_type].append(  # noqa
+                projects_pipelines_dict[project_name][job.pipeline].append(
                     {
-                        'name': job.job_name,
+                        'name': job.name,
                         'branch': downstream_branch,
-                        'job_data': job.job_data,
-                        'voting': job.job_data.pop('voting', 'false'),
+                        'parameters': job.parameters,
+                        'voting': job.parameters.pop('voting', 'false'),
                     }
                 )
 

@@ -71,27 +71,27 @@ def match(string: str, specifier: str) -> bool:
 
 def new_jobs_from_map_entry(entry: dict) -> ZuulJob:
     job_name, job_options = entry
-    job_trigger_type = job_options.pop('type', 'check')
+    pipeline = job_options.pop('pipeline', 'check')
 
-    if isinstance(job_trigger_type, str):
-        return [ZuulJob(job_name, job_trigger_type, job_options)]
+    if isinstance(pipeline, str):
+        return [ZuulJob(job_name, pipeline, job_options)]
     else:
-        return [ZuulJob(job_name, trigger_type, job_options)
-                for trigger_type in job_trigger_type]
+        return [ZuulJob(job_name, pipeline, job_options)
+                for pipeline in pipeline]
 
 
 def update_jobs_from_map_entry(jobs: list, entry: dict) -> list:
     job_name, job_options = entry
-    job_trigger_type = job_options.pop('type', '/.*/')  # any type by default
+    pipeline = job_options.pop('pipeline', '/.*/')  # any pipeline by default
 
     for index, job in enumerate(jobs):
-        if (match(job.job_name, job_name)
-                and match(job.job_trigger_type, job_trigger_type)):
-            jobs[index].job_data.update(job_options)
+        if (match(job.name, job_name)
+                and match(job.pipeline, pipeline)):
+            jobs[index].parameters.update(job_options)
 
-            for key, value in jobs[index].job_data.copy().items():
+            for key, value in jobs[index].parameters.copy().items():
                 if value is None:
-                    del jobs[index].job_data[key]
+                    del jobs[index].parameters[key]
 
     return jobs
 
@@ -102,17 +102,17 @@ def include_jobs(jobs, tag) -> list:
     jobs_to_collect = include_map.get(tag, {})
 
     for job in upstream_jobs:
-        if job.job_name not in jobs_to_collect:
-            LOG.warning(f'Ignoring job: {job.job_name}')
+        if job.name not in jobs_to_collect:
+            LOG.warning(f'Ignoring job: {job.name}')
             continue
 
-        if jobs_to_collect.get(job.job_name) is not None:
-            new_name = jobs_to_collect[job.job_name]
-            LOG.info(f'Renaming job: {job.job_name} -> {new_name}'
-                     f' ({job.job_trigger_type})')
-            job.job_name = new_name
+        if jobs_to_collect.get(job.name) is not None:
+            new_name = jobs_to_collect[job.name]
+            LOG.info(f'Renaming job: {job.name} -> {new_name}'
+                     f' ({job.pipeline})')
+            job.name = new_name
 
-        LOG.info(f'Included job: {job.job_name} ({job.job_trigger_type})')
+        LOG.info(f'Included job: {job.name} ({job.pipeline})')
         collected_jobs.append(job)
 
     return collected_jobs
@@ -130,7 +130,7 @@ def exclude_jobs(jobs, project, tag) -> list:
             exclude_map_jobs = exclude_map[project_specifier][tag_specifier]
             for job_specifier in exclude_map_jobs.keys():
                 jobs = [job for job in jobs
-                        if not match(job.job_name, job_specifier)]
+                        if not match(job.name, job_specifier)]
 
     return jobs
 

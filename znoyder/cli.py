@@ -182,9 +182,9 @@ def extend_parser_finder(parser) -> None:
                         help='comma separated paths to jobs templates dirs',
                         required=True)
 
-    parser.add_argument('-t', '--trigger',
-                        dest='trigger',
-                        help='comma separated job trigger types to return',
+    parser.add_argument('-p', '--pipeline',
+                        dest='pipeline',
+                        help='comma separated pipelines to return',
                         required=True)
 
 

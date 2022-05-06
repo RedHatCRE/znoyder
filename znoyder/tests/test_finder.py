@@ -23,12 +23,12 @@ from unittest.mock import patch, call
 from tempfile import TemporaryDirectory
 
 from znoyder.finder import find_jobs
-from znoyder.finder import find_triggers
+from znoyder.finder import find_pipelines
 from znoyder.finder import find_templates
 from znoyder.finder import main
-from znoyder.lib.exceptions import TriggerTypeError
+from znoyder.lib.exceptions import PipelineError
 from znoyder.lib.exceptions import PathError
-from znoyder.lib.zuul import JobTriggerType
+from znoyder.lib.zuul import ZuulPipeline
 
 
 logging.disable(logging.CRITICAL)
@@ -78,46 +78,46 @@ class TestFinder(TestCase):
     def tearDown(self):
         self.test_directory.cleanup()
 
-    def test_find_triggers(self):
-        """Tests that find_triggers works correctly."""
-        triggers = "experimental,post,gate,check,templates"
-        result = find_triggers(triggers)
-        expected = [JobTriggerType.EXPERIMENTAL, JobTriggerType.POST,
-                    JobTriggerType.GATE, JobTriggerType.CHECK,
-                    JobTriggerType.TEMPLATES]
+    def test_find_pipelines(self):
+        """Tests that find_pipelines works correctly."""
+        pipelines = "experimental,post,gate,check,templates"
+        result = find_pipelines(pipelines)
+        expected = [ZuulPipeline.EXPERIMENTAL, ZuulPipeline.POST,
+                    ZuulPipeline.GATE, ZuulPipeline.CHECK,
+                    ZuulPipeline.TEMPLATES]
         self.assertEqual(result, expected)
 
-    def test_find_triggers_nonexisting_trigger(self):
-        """Test that find_triggers fails with unknown trigger."""
-        trigger = "unknown"
+    def test_find_pipelines_nonexisting_pipeline(self):
+        """Test that find_pipelines fails with unknown pipeline."""
+        pipeline = "unknown"
 
-        self.assertRaises(TriggerTypeError, find_triggers, trigger)
+        self.assertRaises(PipelineError, find_pipelines, pipeline)
 
     def test_find_jobs(self):
         """Test find_jobs."""
 
-        output = find_jobs(self.dest_dir, [], [JobTriggerType.CHECK])
+        output = find_jobs(self.dest_dir, [], [ZuulPipeline.CHECK])
         self.assertEqual(len(output), 2)
-        self.assertEqual(output[0].job_name, "job1")
-        self.assertEqual(output[0].job_trigger_type, "check")
-        self.assertEqual(output[1].job_name, "job2")
-        self.assertEqual(output[1].job_trigger_type, "check")
+        self.assertEqual(output[0].name, "job1")
+        self.assertEqual(output[0].pipeline, "check")
+        self.assertEqual(output[1].name, "job2")
+        self.assertEqual(output[1].pipeline, "check")
 
     def test_find_templates(self):
         """Test find_teamplates."""
-        output = find_templates(self.dest_dir, [JobTriggerType.CHECK])
+        output = find_templates(self.dest_dir, [ZuulPipeline.CHECK])
         self.assertEqual(len(output), 2)
         template1, template2 = output
         self.assertEqual(template1.template_name, "template1")
-        self.assertEqual(template1.template_jobs[0].job_name, "job1")
-        self.assertEqual(template1.template_jobs[1].job_name, "job2")
-        self.assertEqual(template1.template_jobs[0].job_trigger_type, "check")
-        self.assertEqual(template1.template_jobs[1].job_trigger_type, "check")
+        self.assertEqual(template1.template_jobs[0].name, "job1")
+        self.assertEqual(template1.template_jobs[1].name, "job2")
+        self.assertEqual(template1.template_jobs[0].pipeline, "check")
+        self.assertEqual(template1.template_jobs[1].pipeline, "check")
         self.assertEqual(template2.template_name, "template2")
-        self.assertEqual(template2.template_jobs[0].job_name, "job1")
-        self.assertEqual(template2.template_jobs[1].job_name, "job2")
-        self.assertEqual(template2.template_jobs[0].job_trigger_type, "check")
-        self.assertEqual(template2.template_jobs[1].job_trigger_type, "check")
+        self.assertEqual(template2.template_jobs[0].name, "job1")
+        self.assertEqual(template2.template_jobs[1].name, "job2")
+        self.assertEqual(template2.template_jobs[0].pipeline, "check")
+        self.assertEqual(template2.template_jobs[1].pipeline, "check")
 
     @patch('builtins.print')
     def test_main(self, mock_print):
@@ -126,7 +126,7 @@ class TestFinder(TestCase):
         setattr(args_mock, "directory", self.dest_dir)
         setattr(args_mock, "verbose", True)
         setattr(args_mock, "templates", self.dest_dir)
-        setattr(args_mock, "trigger", "check")
+        setattr(args_mock, "pipeline", "check")
         main(args_mock)
         calls = [call("check: job1"), call("check: job2"),
                  call("check: job1 in template template1"),
@@ -143,6 +143,6 @@ class TestFinder(TestCase):
         setattr(args_mock, "directory", self.dest_dir)
         setattr(args_mock, "verbose", True)
         setattr(args_mock, "templates", self.dest_dir)
-        setattr(args_mock, "trigger", "check")
+        setattr(args_mock, "pipeline", "check")
         mock_func.side_effect = PathError("Error body")
         self.assertRaises(SystemExit, main, args_mock)

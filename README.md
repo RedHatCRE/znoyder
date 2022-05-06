@@ -65,10 +65,10 @@ It allows investigating details of Zuul configuration that is available
 in the local path.
 
 To get list of jobs and templates defined for a particular project
-and a specified Zuul trigger types, simply execute:
+and specified Zuul pipelines, simply execute:
 
 ```
-znoyder find-jobs --dir path/to/nova --base /path/to/templates/openstack-zuul-jobs --trigger check,gate
+znoyder find-jobs --dir path/to/nova --base /path/to/templates/openstack-zuul-jobs --pipeline check,gate
 ```
 
 There exists the `-v` option for getting a verbose output with many details.
