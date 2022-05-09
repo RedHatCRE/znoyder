@@ -58,6 +58,12 @@ def get_packages(**kwargs):
     if kwargs.get('name'):
         packages = [package for package in packages
                     if kwargs.get('name') == package.get('name')]
+    if kwargs.get('osp_name'):
+        packages = [package for package in packages
+                    if kwargs.get('osp_name') == package.get('osp-name')]
+    if kwargs.get('project'):
+        packages = [package for package in packages
+                    if kwargs.get('project') == package.get('project')]
     if kwargs.get('tag'):
         packages = [package for package in packages
                     if kwargs.get('tag') in package.get('tags')]
@@ -67,6 +73,9 @@ def get_packages(**kwargs):
 
     for package in packages:
         package['osp-project'] = urlparse(package['osp-patches']).path[1:]
+    if kwargs.get('osp_project'):
+        packages = [package for package in packages
+                    if kwargs.get('osp_project') == package.get('osp-project')]
 
     return packages
 

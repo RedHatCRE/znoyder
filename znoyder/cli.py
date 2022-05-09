@@ -121,6 +121,9 @@ def extend_parser_browser(parser) -> None:
     packages = subparsers.add_parser('packages', help='', parents=[common])
     packages.add_argument('--component', dest='component')
     packages.add_argument('--name', dest='name')
+    packages.add_argument('--osp-name', dest='osp_name')
+    packages.add_argument('--osp-project', dest='osp_project')
+    packages.add_argument('--project', dest='project')
     packages.add_argument('--tag', dest='tag')
     packages.add_argument('--upstream', dest='upstream')
 
