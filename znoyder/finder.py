@@ -28,74 +28,74 @@ from znoyder.lib.exceptions import PathError
 LOG = logger.LOG
 
 
-def find_jobs(directory, templates, triggers):
+def find_jobs(directory, templates, pipelines):
     LOG.debug('Directory: %s' % directory)
 
     project = zuul.ZuulProject(project_path=directory,
                                templates=templates)
 
-    zuul_jobs = project.get_list_of_jobs(triggers)
+    zuul_jobs = project.get_list_of_jobs(pipelines)
 
     project_templates = project.get_list_of_used_templates()
     for template in project_templates:
-        zuul_jobs.extend(template.get_jobs(triggers))
+        zuul_jobs.extend(template.get_jobs(pipelines))
 
     return zuul_jobs
 
 
-def find_templates(directories, triggers):
+def find_templates(directories, pipelines):
     LOG.debug('Directories: %s' % directories)
 
     zuul_templates = []
 
     for directory in directories.split(','):
         project = zuul.ZuulProject(project_path=directory)
-        templates = project.get_list_of_defined_templates(triggers)
+        templates = project.get_list_of_defined_templates(pipelines)
         zuul_templates.extend(templates)
 
     return zuul_templates
 
 
-def find_triggers(triggers):
-    LOG.debug('Triggers: %s' % triggers)
+def find_pipelines(pipelines):
+    LOG.debug('Triggers: %s' % pipelines)
 
-    trigger_types = []
+    pipelines_list = []
 
-    for trigger in triggers.split(','):
-        trigger_types.append(zuul.JobTriggerType.to_type(trigger))
+    for pipeline in pipelines.split(','):
+        pipelines_list.append(zuul.ZuulPipeline.to_type(pipeline))
 
-    return trigger_types
+    return pipelines_list
 
 
-def _cli_find_jobs(directory, templates, triggers):
+def _cli_find_jobs(directory, templates, pipelines):
     LOG.debug('Project dir: %s' % directory)
     LOG.debug('Template dirs: %s' % templates)
-    LOG.debug('Trigger types: %s' % triggers)
+    LOG.debug('Pipelines: %s' % pipelines)
 
-    trigger_types = []
-    for trigger in triggers.split(','):
-        trigger_types.append(zuul.JobTriggerType.to_type(trigger))
+    pipelines_list = []
+    for pipeline in pipelines.split(','):
+        pipelines_list.append(zuul.ZuulPipeline.to_type(pipeline))
 
     zuul_templates = []
 
     for template_dir in templates.split(','):
         project = zuul.ZuulProject(project_path=template_dir)
-        templates = project.get_list_of_defined_templates(trigger_types)
+        templates = project.get_list_of_defined_templates(pipelines_list)
         zuul_templates.extend(templates)
 
     project = zuul.ZuulProject(project_path=directory,
                                templates=zuul_templates)
 
-    zuul_jobs = project.get_list_of_jobs(trigger_types)
+    zuul_jobs = project.get_list_of_jobs(pipelines_list)
 
     for job in zuul_jobs:
-        print('%s: %s' % (job.job_trigger_type, job))
+        print('%s: %s' % (job.pipeline, job))
 
     project_templates = project.get_list_of_used_templates()
     for template in project_templates:
-        for job in template.get_jobs(trigger_types):
+        for job in template.get_jobs(pipelines_list):
             print('%s: %s in template %s' %
-                  (job.job_trigger_type, job, template))
+                  (job.pipeline, job, template))
 
 
 def main(args) -> None:
@@ -110,7 +110,7 @@ def main(args) -> None:
     try:
         _cli_find_jobs(args.directory,
                        args.templates,
-                       args.trigger)
+                       args.pipeline)
 
     except PathError as ex:
         LOG.error(ex.message)

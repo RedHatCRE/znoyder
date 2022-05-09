@@ -52,12 +52,7 @@ class PathError(ZnoyderCliException):
         super(self.__class__, self).__init__(msg)
 
 
-class JobTypeError(ZnoyderCliException):
-    def __init__(self, msg):
-        super(self.__class__, self).__init__(msg)
-
-
-class TriggerTypeError(ZnoyderCliException):
+class PipelineError(ZnoyderCliException):
     def __init__(self, msg):
         super(self.__class__, self).__init__(msg)
 

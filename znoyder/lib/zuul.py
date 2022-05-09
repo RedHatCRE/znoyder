@@ -25,66 +25,65 @@ import yaml
 
 from znoyder.lib import logger
 from znoyder.lib import utils
-from znoyder.lib.exceptions import JobTypeError
-from znoyder.lib.exceptions import TriggerTypeError
+from znoyder.lib.exceptions import PipelineError
 from znoyder.lib.exceptions import YAMLDuplicateKeyError
 
 
 LOG = logger.LOG
 
 
-class JobTriggerType(object):
-    """Enumeration for the Job Trigger Type"""
-    # TEMPLATES are same level as trigger type
+class ZuulPipeline(object):
+    """Enumeration for the Zuul Pipeline"""
+    # TEMPLATES are same level as other pipelines
     RANGE = (TEMPLATES, CHECK, GATE, POST, EXPERIMENTAL) = range(5)
 
     @staticmethod
     def to_str(column) -> str:
         return {
-            JobTriggerType.TEMPLATES: 'templates',
-            JobTriggerType.CHECK: 'check',
-            JobTriggerType.GATE: 'gate',
-            JobTriggerType.POST: 'post',
-            JobTriggerType.EXPERIMENTAL: 'experimental',
+            ZuulPipeline.TEMPLATES: 'templates',
+            ZuulPipeline.CHECK: 'check',
+            ZuulPipeline.GATE: 'gate',
+            ZuulPipeline.POST: 'post',
+            ZuulPipeline.EXPERIMENTAL: 'experimental',
         }[column]
 
     @staticmethod
-    def to_type(trigger) -> int:
-        types = {
-            'templates': JobTriggerType.TEMPLATES,
-            'check': JobTriggerType.CHECK,
-            'gate': JobTriggerType.GATE,
-            'post': JobTriggerType.POST,
-            'experimental': JobTriggerType.EXPERIMENTAL,
+    def to_type(pipeline) -> int:
+        pipelines = {
+            'templates': ZuulPipeline.TEMPLATES,
+            'check': ZuulPipeline.CHECK,
+            'gate': ZuulPipeline.GATE,
+            'post': ZuulPipeline.POST,
+            'experimental': ZuulPipeline.EXPERIMENTAL,
         }
-        if trigger not in types:
-            raise TriggerTypeError("Job trigger type is not valid: %s" %
-                                   trigger)
-        return types[trigger]
+        if pipeline not in pipelines:
+            raise PipelineError("Job pipeline is not valid: %s" %
+                                pipeline)
+        return pipelines[pipeline]
 
     @staticmethod
-    def get_job_types_str(job_trigger_types) -> list:
+    def get_pipelines_str(pipelines) -> list:
         """Gets job types as strings
 
         Args:
-            job_trigger_types (:obj:`list`): Trigger types as JobTriggerType
+            pipelines (:obj:`list`): Trigger types as ZuulPipeline
 
         Returns:
-            (:obj:`list`): list of trigger types as strings
+            (:obj:`list`): list of pipelines as strings
         """
-        # Convert to list if one trigger type was passed
-        job_trigger_types = [job_trigger_types] if type(job_trigger_types) \
-            is int else job_trigger_types
+        # Convert to list if one pipeline was passed
+        pipelines = [pipelines] if type(pipelines) \
+            is int else pipelines
 
-        for job_type in job_trigger_types:
-            if job_type not in JobTriggerType.RANGE:
-                raise JobTypeError("Job type is not valid: %s" %
-                                   job_trigger_types)
+        for job_pipeline in pipelines:
+            if job_pipeline not in ZuulPipeline.RANGE:
+                raise PipelineError("Job pipeline is not valid: %s" %
+                                    job_pipeline)
 
         # We are interested only in jobs defined in project
-        trigger_types = list(map(lambda x: JobTriggerType.to_str(x),
-                             job_trigger_types))
-        return trigger_types
+        pipelines = list(map(lambda pipeline: ZuulPipeline.to_str(pipeline),
+                             pipelines))
+        return pipelines
 
 
 class ZuulMark:
@@ -210,37 +209,37 @@ class ZuulProject(object):
         self.config_paths = utils.get_config_paths(self.project_path)
         return self.config_paths
 
-    def get_list_of_jobs(self, job_trigger_types=None) -> list:
+    def get_list_of_jobs(self, pipelines=None) -> list:
         """Gets list of jobs for a particular project.
            This does not include jobs defined under templates.
 
         Args:
-            job_trigger_types (:obj:`list`): Trigger types as JobTriggerType
+            pipelines (:obj:`list`): Pipelines as list of ZuulPipeline objects
 
         Returns:
             (:obj:`list`): list of ZuulJob objects associated with the project
         """
-        if job_trigger_types is None:
-            job_trigger_types = []
+        if pipelines is None:
+            pipelines = []
 
-        trigger_types = JobTriggerType.get_job_types_str(job_trigger_types)
+        pipelines = ZuulPipeline.get_pipelines_str(pipelines)
 
-        LOG.debug('Discovering jobs for trigger: %s' %
-                  trigger_types)
+        LOG.debug('Discovering jobs for pipelines: %s' %
+                  pipelines)
 
         CASE = 'project'
 
         for config_file in self.get_project_config_files():
             projects = self._get_entries_from_config(config_file, CASE)
             for project in projects:
-                for trigger_type in trigger_types:
-                    if trigger_type in project:
-                        jobs = project.get(trigger_type).get('jobs')
+                for pipeline in pipelines:
+                    if pipeline in project:
+                        jobs = project.get(pipeline).get('jobs')
                         if not jobs:
                             continue
                         for job in jobs:
                             z_jobs = self._get_jobs_from_entry(job,
-                                                               trigger_type)
+                                                               pipeline)
                             self.project_jobs.extend(z_jobs)
 
         return self.project_jobs
@@ -260,7 +259,7 @@ class ZuulProject(object):
         for config_file in self.get_project_config_files():
             project = self._get_entries_from_config(config_file, CASE)
 
-            template_str = JobTriggerType.to_str(JobTriggerType.TEMPLATES)
+            template_str = ZuulPipeline.to_str(ZuulPipeline.TEMPLATES)
             for used_template in project:
                 if template_str in used_template:
                     templates = used_template.get(template_str)
@@ -295,23 +294,23 @@ class ZuulProject(object):
 
         return template_obj
 
-    def get_list_of_defined_templates(self, job_trigger_types=None) -> list:
+    def get_list_of_defined_templates(self, pipelines=None) -> list:
         """Gets list of templates defined in a project.
 
         Args:
-            job_trigger_types (:obj:`list`): Trigger types as JobTriggerType
+            pipelines (:obj:`list`): Pipelines as list of ZuulPipeline objects
 
         Returns:
             (:obj:`list`): list of ZuulProjectTemplate objects
                            associated with the project
         """
-        if job_trigger_types is None:
-            job_trigger_types = []
+        if pipelines is None:
+            pipelines = []
 
-        trigger_types = JobTriggerType.get_job_types_str(job_trigger_types)
+        pipelines = ZuulPipeline.get_pipelines_str(pipelines)
 
-        LOG.debug('Discovering templates and jobs for trigger: %s' %
-                  trigger_types)
+        LOG.debug('Discovering templates and jobs for pipelines: %s' %
+                  pipelines)
 
         CASE = 'project-template'
 
@@ -323,11 +322,11 @@ class ZuulProject(object):
                                                  self.project_name,
                                                  template)
 
-                for trigger in trigger_types:
-                    if trigger in template:
-                        jobs = template.get(trigger).get('jobs')
+                for pipeline in pipelines:
+                    if pipeline in template:
+                        jobs = template.get(pipeline).get('jobs')
                         for job_r in jobs:
-                            job = self._get_jobs_from_entry(job_r, trigger)
+                            job = self._get_jobs_from_entry(job_r, pipeline)
                             p_template.associate_job(job)
 
                 self.defined_templates.append(p_template)
@@ -358,26 +357,26 @@ class ZuulProject(object):
                     config.append(entry.get(config_section))
         return config
 
-    def _get_jobs_from_entry(self, job_entry, trigger_type) -> list:
+    def _get_jobs_from_entry(self, job_entry, pipeline) -> list:
         """Helper function to standardize job object as the zuul job entry
            may be just a string or dictionary.
 
         Args:
             job_entry (:obj:`str`): zuul entry for the job
-            trigger_type (:obj:`str`): Trigger type as JobTriggerType
+            pipeline (:obj:`str`): ZuulPipeline as string name
 
         Returns:
             (:obj:`list`): list of ZuulJob objects associated with the project
         """
         jobs = []
         if isinstance(job_entry, str):
-            LOG.debug('Found %s job: %s' % (trigger_type, job_entry))
-            jobs.append(ZuulJob(job_entry, trigger_type, {}))
+            LOG.debug('Found %s job: %s' % (pipeline, job_entry))
+            jobs.append(ZuulJob(job_entry, pipeline, {}))
         else:
-            for job_name, job_data in job_entry.items():
+            for job_name, job_parameters in job_entry.items():
                 LOG.debug('Found %s job: %s with options %s' %
-                          (trigger_type, job_name, job_data))
-                jobs.append(ZuulJob(job_name, trigger_type, job_data))
+                          (pipeline, job_name, job_parameters))
+                jobs.append(ZuulJob(job_name, pipeline, job_parameters))
 
         return jobs
 
@@ -406,20 +405,21 @@ class ZuulProjectTemplate(object):
         else:
             LOG.warning('JOB %s defined multiple times' % job)
 
-    def get_jobs(self, job_trigger_type):
-        """Get jobs associated with template with specific trigger type
+    def get_jobs(self, pipeline):
+        """Get jobs associated with template and specific pipeline
 
         Args:
-            job_trigger_type(:obj:`JobTriggerType`): Trigger type
+            pipeline (:obj:`ZuulPipeline`): Job pipeline, e.g. check, gate
 
         Returns:
             (:obj:`list`): list of ZuulJob objects associated with the project
         """
         jobs = []
         for job in self.template_jobs:
-            trigger_type = JobTriggerType.to_type(job.job_trigger_type)
-            if trigger_type in job_trigger_type:
+            job_pipeline = ZuulPipeline.to_type(job.pipeline)
+            if job_pipeline in pipeline:
                 jobs.append(job)
+
         return jobs
 
     def __str__(self) -> str:
@@ -433,20 +433,20 @@ class ZuulJob(object):
     """Zuul Job representation
 
     Args:
-        job_name (:obj:`str`): Job name
-        job_trigger_type(:obj:`str`): Trigger type e.g. check/gate/post
-        job_data(:obj:`dict`): JSON job data
+        name (:obj:`str`): Job name
+        pipeline (:obj:`str`): Job pipeline, e.g. check, gate, post
+        parameters (:obj:`dict`): JSON job parameters
     """
-    def __init__(self, job_name, job_trigger_type, job_data=None):
-        if job_data is None:
-            job_data = {}
+    def __init__(self, name, pipeline, parameters=None):
+        if parameters is None:
+            parameters = {}
 
-        self.job_name = job_name
-        self.job_trigger_type = job_trigger_type
-        self.job_data = deepcopy(job_data)
+        self.name = name
+        self.pipeline = pipeline
+        self.parameters = deepcopy(parameters)
 
     def __str__(self) -> str:
-        return self.job_name
+        return self.name
 
     def __repr__(self) -> str:
-        return self.job_name
+        return self.name

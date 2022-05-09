@@ -48,12 +48,12 @@ class TestJobsGeneratorFromMapEntry(TestCase):
 
     def test_job_generation_without_type(self):
         job_name = 'job_1'
-        job_options = {'opt_1': 'val_1'}
+        job_parameters = {'opt_1': 'val_1'}
 
         add_map.update({
             '/.*/': {
                 '/.*/': {
-                    job_name: job_options
+                    job_name: job_parameters
                 }
             }
         })
@@ -62,19 +62,19 @@ class TestJobsGeneratorFromMapEntry(TestCase):
 
         self.assertIsInstance(result, ZuulJob)
 
-        self.assertEqual(job_name, result.job_name)
-        self.assertEqual('check', result.job_trigger_type)
-        self.assertEqual(job_options, result.job_data)
+        self.assertEqual(job_name, result.name)
+        self.assertEqual('check', result.pipeline)
+        self.assertEqual(job_parameters, result.parameters)
 
     def test_job_generation_with_type(self):
         job_name = 'job_1'
         job_type = 'type'
-        job_options = {'opt_1': 'val_1'}
+        job_parameters = {'opt_1': 'val_1'}
 
         add_map.update({
             '/.*/': {
                 '/.*/': {
-                    job_name: {'type': job_type} | job_options
+                    job_name: {'pipeline': job_type} | job_parameters
                 }
             }
         })
@@ -83,19 +83,19 @@ class TestJobsGeneratorFromMapEntry(TestCase):
 
         self.assertIsInstance(result, ZuulJob)
 
-        self.assertEqual(job_name, result.job_name)
-        self.assertEqual(job_type, result.job_trigger_type)
-        self.assertEqual(job_options, result.job_data)
+        self.assertEqual(job_name, result.name)
+        self.assertEqual(job_type, result.pipeline)
+        self.assertEqual(job_parameters, result.parameters)
 
     def test_job_generation_with_multiple_types(self):
         job_name = 'job_1'
         job_types = ['type1', 'type2']
-        job_options = {'opt_1': 'val_1'}
+        job_parameters = {'opt_1': 'val_1'}
 
         add_map.update({
             '/.*/': {
                 '/.*/': {
-                    job_name: {'type': job_types} | job_options
+                    job_name: {'pipeline': job_types} | job_parameters
                 }
             }
         })
@@ -105,9 +105,9 @@ class TestJobsGeneratorFromMapEntry(TestCase):
         self.assertIsInstance(result, list)
 
         for i in range(len(job_types)):
-            self.assertEqual(job_name, result[i].job_name)
-            self.assertEqual(job_types[i], result[i].job_trigger_type)
-            self.assertEqual(job_options, result[i].job_data)
+            self.assertEqual(job_name, result[i].name)
+            self.assertEqual(job_types[i], result[i].pipeline)
+            self.assertEqual(job_parameters, result[i].parameters)
 
 
 class TestExcludeJobs(TestCase):
@@ -121,13 +121,13 @@ class TestExcludeJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         exclude_map.update({
             '/.*/': {
                 '/.*/': {
-                    job2.job_name: ''
+                    job2.name: ''
                 }
             }
         })
@@ -140,13 +140,13 @@ class TestExcludeJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         exclude_map.update({
             '/.*/': {
                 tag: {
-                    job2.job_name: ''
+                    job2.name: ''
                 }
             }
         })
@@ -160,13 +160,13 @@ class TestExcludeJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         exclude_map.update({
             project: {
                 tag: {
-                    job2.job_name: ''
+                    job2.name: ''
                 }
             }
         })
@@ -180,15 +180,15 @@ class TestExcludeJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1, job2]
 
         exclude_map.update({
             project: {
                 tag: {
-                    job2.job_name: ''
+                    job2.name: ''
                 }
             }
         })
@@ -204,15 +204,15 @@ class TestExcludeJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1, job2]
 
         exclude_map.update({
             project: {
                 tag: {
-                    job2.job_name: ''
+                    job2.name: ''
                 }
             }
         })
@@ -230,29 +230,29 @@ class TestAddJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1, job2]
 
         result = add_jobs(jobs, 'any', 'any')
 
         for i, _ in enumerate(result):
-            self.assertEqual(jobs[i].job_name, result[i].job_name)
+            self.assertEqual(jobs[i].name, result[i].name)
 
     def test_add_by_name(self):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1]
 
         add_map.update({
             '/.*/': {
                 '/.*/': {
-                    job2.job_name: {}
+                    job2.name: {}
                 }
             }
         })
@@ -260,7 +260,7 @@ class TestAddJobs(TestCase):
         result = add_jobs(jobs, 'any', 'any')
 
         for i, _ in enumerate(result):
-            self.assertEqual([job1, job2][i].job_name, result[i].job_name)
+            self.assertEqual([job1, job2][i].name, result[i].name)
 
     def test_add_by_tag(self):
         tag = 'tag_1'
@@ -268,15 +268,15 @@ class TestAddJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1]
 
         add_map.update({
             '/.*/': {
                 tag: {
-                    job2.job_name: {}
+                    job2.name: {}
                 }
             }
         })
@@ -284,7 +284,7 @@ class TestAddJobs(TestCase):
         result = add_jobs(jobs, 'any', tag)
 
         for i, _ in enumerate(result):
-            self.assertEqual([job1, job2][i].job_name, result[i].job_name)
+            self.assertEqual([job1, job2][i].name, result[i].name)
 
     def test_add_by_tag_and_project(self):
         tag = 'tag_1'
@@ -293,15 +293,15 @@ class TestAddJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1]
 
         add_map.update({
             project: {
                 tag: {
-                    job2.job_name: {}
+                    job2.name: {}
                 }
             }
         })
@@ -309,7 +309,7 @@ class TestAddJobs(TestCase):
         result = add_jobs(jobs, project, tag)
 
         for i, _ in enumerate(result):
-            self.assertEqual([job1, job2][i].job_name, result[i].job_name)
+            self.assertEqual([job1, job2][i].name, result[i].name)
 
     def test_add_skip_unmatched_project(self):
         tag = 'tag_1'
@@ -318,15 +318,15 @@ class TestAddJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1]
 
         add_map.update({
             project: {
                 tag: {
-                    job2.job_name: {}
+                    job2.name: {}
                 }
             }
         })
@@ -342,15 +342,15 @@ class TestAddJobs(TestCase):
         job1 = Mock()
         job2 = Mock()
 
-        job1.job_name = 'job_1'
-        job2.job_name = 'job_2'
+        job1.name = 'job_1'
+        job2.name = 'job_2'
 
         jobs = [job1]
 
         add_map.update({
             project: {
                 tag: {
-                    job2.job_name: {}
+                    job2.name: {}
                 }
             }
         })
@@ -381,15 +381,15 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             '/.*/': {
                 '/.*/': {
-                    job2.job_name: job_data
+                    job2.name: job_data
                 }
             }
         })
 
         override_jobs(jobs, 'any', 'any')
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertTrue(set(job_data).issubset(set(job2.job_data)))
+        self.assertDictEqual(job1.parameters, {})
+        self.assertTrue(set(job_data).issubset(set(job2.parameters)))
 
     def test_override_by_tag(self):
         tag = 'tag_1'
@@ -404,15 +404,15 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             '/.*/': {
                 tag: {
-                    job2.job_name: job_data
+                    job2.name: job_data
                 }
             }
         })
 
         override_jobs(jobs, 'any', tag)
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertTrue(set(job_data).issubset(set(job2.job_data)))
+        self.assertDictEqual(job1.parameters, {})
+        self.assertTrue(set(job_data).issubset(set(job2.parameters)))
 
     def test_override_by_tag_and_project(self):
         tag = 'tag_1'
@@ -428,15 +428,15 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             project: {
                 tag: {
-                    job2.job_name: job_data
+                    job2.name: job_data
                 }
             }
         })
 
         override_jobs(jobs, project, tag)
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertTrue(set(job_data).issubset(set(job2.job_data)))
+        self.assertDictEqual(job1.parameters, {})
+        self.assertTrue(set(job_data).issubset(set(job2.parameters)))
 
     def test_override_skip_unmatched_project(self):
         tag = 'tag_1'
@@ -452,15 +452,15 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             project: {
                 tag: {
-                    job2.job_name: job_data
+                    job2.name: job_data
                 }
             }
         })
 
         override_jobs(jobs, 'any', tag)
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertDictEqual(job2.job_data, {})
+        self.assertDictEqual(job1.parameters, {})
+        self.assertDictEqual(job2.parameters, {})
 
     def test_override_skip_unmatched_tag(self):
         tag = 'tag_1'
@@ -476,15 +476,15 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             project: {
                 tag: {
-                    job2.job_name: job_data
+                    job2.name: job_data
                 }
             }
         })
 
         override_jobs(jobs, project, 'any')
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertDictEqual(job2.job_data, {})
+        self.assertDictEqual(job1.parameters, {})
+        self.assertDictEqual(job2.parameters, {})
 
     def test_override_unset_job_option(self):
         tag = 'tag_1'
@@ -501,7 +501,7 @@ class TestOverrideJobs(TestCase):
         override_map.update({
             project: {
                 tag: {
-                    job2.job_name: {
+                    job2.name: {
                         job_data_key: None
                     }
                 }
@@ -510,8 +510,8 @@ class TestOverrideJobs(TestCase):
 
         override_jobs(jobs, project, tag)
 
-        self.assertDictEqual(job1.job_data, {})
-        self.assertDictEqual(job2.job_data, {})
+        self.assertDictEqual(job1.parameters, {})
+        self.assertDictEqual(job2.parameters, {})
         self.assertFalse(job_data == {})
 
 
