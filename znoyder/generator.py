@@ -81,7 +81,6 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
             skip_existing=True
         )
 
-        projects[osp_name] = ''
         for directory in project_urls.keys():
             projects[osp_name] = directory
 
@@ -152,6 +151,9 @@ def generate_projects_pipleines_dict(args):
             LOG.info(f'Processing: {project_name}')
             jobs = discover_jobs(project_name, osp_tag, directory,
                                  templates, pipelines)
+
+            if not jobs:
+                projects_pipelines_dict[project_name] = {}
 
             for job in jobs:
                 projects_pipelines_dict[project_name][job.pipeline].append(
