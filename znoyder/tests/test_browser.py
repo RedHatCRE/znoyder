@@ -142,17 +142,19 @@ class TestGetPackages(TestCase):
 
     def test_search_by_name(self):
         package1 = {
+            'name': 'name_1',
             'osp-name': 'pack_1',
-            'osp-project': '',
-            'osp-patches': 'http://localhost:8080/',
-            'name': 'name_1'
+            'osp-project': 'repo_name_1',
+            'osp-patches': 'http://localhost:8080/repo_name_1',
+            'project': 'project_1',
         }
 
         package2 = {
+            'name': 'name_2',
             'osp-name': 'pack_2',
-            'osp-project': '',
-            'osp-patches': 'http://localhost:8080/',
-            'name': 'name_2'
+            'osp-project': 'repo_name_2',
+            'osp-patches': 'http://localhost:8080/repo_name_2',
+            'project': 'project_2',
         }
 
         packages = [package1, package2]
@@ -166,6 +168,96 @@ class TestGetPackages(TestCase):
         self.assertEqual(
             [package1],
             get_packages(name=package1['name'])
+        )
+
+    def test_search_by_osp_name(self):
+        package1 = {
+            'name': 'name_1',
+            'osp-name': 'pack_1',
+            'osp-project': 'repo_name_1',
+            'osp-patches': 'http://localhost:8080/repo_name_1',
+            'project': 'project_1',
+        }
+
+        package2 = {
+            'name': 'name_2',
+            'osp-name': 'pack_2',
+            'osp-project': 'repo_name_2',
+            'osp-patches': 'http://localhost:8080/repo_name_2',
+            'project': 'project_2',
+        }
+
+        packages = [package1, package2]
+
+        info_call = znoyder.browser.get_distroinfo = Mock()
+
+        info_call.return_value = Mock()
+        info_call.return_value.get = Mock()
+        info_call.return_value.get.return_value = packages
+
+        self.assertEqual(
+            [package1],
+            get_packages(osp_name=package1['osp-name'])
+        )
+
+    def test_search_by_osp_project(self):
+        package1 = {
+            'name': 'name_1',
+            'osp-name': 'pack_1',
+            'osp-project': 'repo_name_1',
+            'osp-patches': 'http://localhost:8080/repo_name_1',
+            'project': 'project_1',
+        }
+
+        package2 = {
+            'name': 'name_2',
+            'osp-name': 'pack_2',
+            'osp-project': 'repo_name_2',
+            'osp-patches': 'http://localhost:8080/repo_name_2',
+            'project': 'project_2',
+        }
+
+        packages = [package1, package2]
+
+        info_call = znoyder.browser.get_distroinfo = Mock()
+
+        info_call.return_value = Mock()
+        info_call.return_value.get = Mock()
+        info_call.return_value.get.return_value = packages
+
+        self.assertEqual(
+            [package1],
+            get_packages(osp_project=package1['osp-project'])
+        )
+
+    def test_search_by_project(self):
+        package1 = {
+            'name': 'name_1',
+            'osp-name': 'pack_1',
+            'osp-project': 'repo_name_1',
+            'osp-patches': 'http://localhost:8080/repo_name_1',
+            'project': 'project_1',
+        }
+
+        package2 = {
+            'name': 'name_2',
+            'osp-name': 'pack_2',
+            'osp-project': 'repo_name_2',
+            'osp-patches': 'http://localhost:8080/repo_name_2',
+            'project': 'project_2',
+        }
+
+        packages = [package1, package2]
+
+        info_call = znoyder.browser.get_distroinfo = Mock()
+
+        info_call.return_value = Mock()
+        info_call.return_value.get = Mock()
+        info_call.return_value.get.return_value = packages
+
+        self.assertEqual(
+            [package1],
+            get_packages(project=package1['project'])
         )
 
     def test_search_by_tag(self):
