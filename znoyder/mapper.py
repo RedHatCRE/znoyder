@@ -18,6 +18,7 @@
 
 from copy import deepcopy
 import re
+import sys
 
 from znoyder.config import add_map
 from znoyder.config import copy_map
@@ -96,6 +97,40 @@ def update_jobs_from_map_entry(jobs: list, entry: dict) -> list:
     return jobs
 
 
+def copy_jobs_from_map_entry(jobs: list, entry: dict) -> list:
+    job_name, job_options = tuple(deepcopy(entry).items())[0]
+    pipeline = job_options.pop('from', '/.*/')  # any pipeline by default
+    new_pipeline = job_options.pop('to', None)
+    new_name = job_options.pop('as', job_name)
+
+    if job_name == new_name and not new_pipeline:
+        LOG.error(f'Bad entry definition: {entry}')
+        LOG.error('Target pipeline or unique new name shall be specified.')
+        sys.exit(1)
+
+    new_jobs = []
+
+    for index, job in enumerate(jobs):
+        if match(job.name, job_name) and match(job.pipeline, pipeline):
+            new_job = deepcopy(job)
+            new_job.parameters.update(job_options)
+
+            for key, value in new_job.parameters.copy().items():
+                if value is None:
+                    del new_job.parameters[key]
+
+            if new_name:
+                new_job.name = new_name
+            if new_pipeline:
+                new_job.pipeline = new_pipeline
+
+            new_jobs.append(new_job)
+
+    jobs.extend(new_jobs)
+
+    return jobs
+
+
 def include_jobs(jobs, tag) -> list:
     upstream_jobs = deepcopy(jobs)
     collected_jobs = []
@@ -168,5 +203,15 @@ def override_jobs(jobs, project, tag) -> list:
 
 
 def copy_jobs(jobs, project, tag) -> list:
-    copy_map  # TODO(sdatko): implement
+    for project_specifier in copy_map:
+        if not match(project, project_specifier):
+            continue
+
+        for tag_specifier in copy_map[project_specifier]:
+            if not match(tag, tag_specifier):
+                continue
+
+            for map_entry in copy_map[project_specifier][tag_specifier]:
+                jobs = copy_jobs_from_map_entry(jobs, map_entry)
+
     return jobs
