@@ -450,3 +450,13 @@ class ZuulJob(object):
 
     def __repr__(self) -> str:
         return self.name
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.pipeline))
+
+    def __eq__(self, other) -> bool:
+        return type(other) is type(self) and (
+            self.name == other.name
+            and self.pipeline == other.pipeline
+            and self.parameters == other.parameters
+        )

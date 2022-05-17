@@ -414,4 +414,31 @@ override:
 #
 # Copy map: duplicate a job entry from one pipeline/project to another
 #
-copy: {}  # TODO(sdatko): implement
+# Format:
+#   '<project-name>':
+#     '<release-tag>':
+#       - '<job-name>': {<options...>}
+# e.g.
+#   /.*/:
+#     'osp-17.0':
+#       - 'osp-tox-py37':
+#           from: 'check'
+#           to: 'gate'
+#           as: 'tox-py37'
+#           voting: false
+#           required-projects: ~
+#
+# The `from/to/as` are special keywords in options.
+# Everything else is considered as a job parameter to override after copy.
+#
+# Either `from/to` or `as` is always required (all three are also possible).
+#
+copy:
+  /.*/:  # every project
+    /.*/:  # every tag
+      - 'osp-tox-pep8':
+          from: 'check'
+          to: 'weekly'
+      - 'osp-tox-py39':
+          from: 'check'
+          to: 'weekly'

@@ -522,4 +522,208 @@ class TestCopyJobs(TestCase):
     def test_happy_path(self):
         self.assertEqual([], copy_jobs([], 'any', 'any'))
 
-    pass  # TODO(sdatko): implement
+    def test_copy_from_to(self):
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            '/.*/': {
+                '/.*/': [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, 'any', 'any')
+
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate', {'voting': True}) in jobs)
+
+    def test_copy_as(self):
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            '/.*/': {
+                '/.*/': [{
+                    job2.name: {
+                        'as': 'job3',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, 'any', 'any')
+
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job3', 'check', {'voting': True}) in jobs)
+
+    def test_copy_by_tag(self):
+        tag = 'tag_1'
+
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            '/.*/': {
+                tag: [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, 'any', tag)
+
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate', {'voting': True}) in jobs)
+
+    def test_copy_by_tag_and_project(self):
+        tag = 'tag_1'
+        project = 'project_1'
+
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            project: {
+                tag: [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, project, tag)
+
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate', {'voting': True}) in jobs)
+
+    def test_copy_skip_unmatched_project(self):
+        tag = 'tag_1'
+        project = 'project_1'
+
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            project: {
+                tag: [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, 'any', tag)
+
+        self.assertEqual(len(jobs), 2)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate', {'voting': True}) not in jobs)
+
+    def test_copy_skip_unmatched_tag(self):
+        tag = 'tag_1'
+        project = 'project_1'
+
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            project: {
+                tag: [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, project, 'any')
+
+        self.assertEqual(len(jobs), 2)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate', {'voting': True}) not in jobs)
+
+    def test_copy_unset_job_option(self):
+        tag = 'tag_1'
+        project = 'project_1'
+
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check', {'voting': True})
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            project: {
+                tag: [{
+                    job2.name: {
+                        'from': 'check',
+                        'to': 'gate',
+                        'voting': None
+                    }
+                }]
+            }
+        })
+
+        copy_jobs(jobs, project, tag)
+
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(ZuulJob('job1', 'check') in jobs)
+        self.assertTrue(ZuulJob('job2', 'check', {'voting': True}) in jobs)
+        self.assertTrue(ZuulJob('job2', 'gate') in jobs)
+
+    def test_copy_bad_entry(self):
+        job1 = ZuulJob('job1', 'check')
+        job2 = ZuulJob('job2', 'check')
+
+        jobs = [job1, job2]
+
+        copy_map.update({
+            '/.*/': {
+                '/.*/': [{
+                    job2.name: {
+                        'voting': True
+                    }
+                }]
+            }
+        })
+
+        self.assertRaises(SystemExit, copy_jobs, jobs, 'any', 'any')
