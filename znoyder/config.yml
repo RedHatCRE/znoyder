@@ -167,6 +167,12 @@ add:
         pipeline:
           - 'gate'
 
+  'openstack-tempest':
+    'osp-17.0':
+      'osp-tox-py39':
+        pipeline:
+          - 'gate'
+
   'openstack-heat-agents':
     'osp-17.0':
       'osp-tox-py39':
