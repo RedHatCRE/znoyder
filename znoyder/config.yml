@@ -171,7 +171,7 @@ add:
     'osp-17.0':
       'osp-tox-py39':
         pipeline:
-          - 'gate'
+          - 'check'
 
   'openstack-heat-agents':
     'osp-17.0':
