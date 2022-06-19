@@ -31,7 +31,7 @@ add_map = CONFIG.get('add', {})
 override_map = CONFIG.get('override', {})
 copy_map = CONFIG.get('copy', {})
 
-UPSTREAM_CONFIGS_DIR = 'jobs-upstream/'
-GENERATED_CONFIGS_DIR = 'jobs-generated/'
+UPSTREAM_CONFIGS_DIR = 'files-upstream/'
+GENERATED_CONFIGS_DIR = 'files-generated/'
 GENERATED_CONFIG_PREFIX = 'cre-'
 GENERATED_CONFIG_EXTENSION = '.yaml'
