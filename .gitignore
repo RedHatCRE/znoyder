@@ -2,8 +2,8 @@
 /*.egg-info/
 /.tox/
 __pycache__/
-jobs-upstream/
-jobs-generated/
+files-upstream/
+files-generated/
 .coverage
 .eggs
 znoyder_output.log
