@@ -50,6 +50,10 @@ def cleanup_generated_jobs_dir() -> None:
                                          'osp-internal-jobs', 'zuul.d')
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
+    destination_directory = os.path.join(GENERATED_CONFIGS_DIR,
+                                         'sf-config', 'resources')
+    Path(destination_directory).mkdir(parents=True, exist_ok=True)
+
 
 def fetch_templates_directory():
     templates_repository = 'https://opendev.org/openstack/openstack-zuul-jobs'
@@ -199,8 +203,24 @@ def generate_projects_config(projects_pipelines_dict: dict) -> None:
     )
 
 
+def generate_resources_config(projects_pipelines_dict: dict) -> None:
+    projects = list(projects_pipelines_dict.keys())
+    config_dest = os.path.join(
+        GENERATED_CONFIGS_DIR,
+        'sf-config', 'resources',
+        'osp-internal' + GENERATED_CONFIG_EXTENSION
+    )
+
+    templater.generate_zuul_resources_config(
+        path=config_dest,
+        projects=projects,
+        prefix=GENERATED_CONFIG_PREFIX
+    )
+
+
 def main(args) -> None:
     cleanup_generated_jobs_dir()
     projects_pipelines_dict = generate_projects_pipleines_dict(args)
     generate_projects_templates(projects_pipelines_dict)
     generate_projects_config(projects_pipelines_dict)
+    generate_resources_config(projects_pipelines_dict)

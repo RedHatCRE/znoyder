@@ -65,6 +65,17 @@ def generate_zuul_projects_config(path: str, projects: list, prefix: str):
         file.write('\n')
 
 
+def generate_zuul_resources_config(path: str, projects: list, prefix: str):
+    template = j2env.get_template('zuul-resources.j2')
+
+    config = template.render(projects=projects, prefix=prefix)
+    config = config.strip()
+
+    with open(path, 'w') as file:
+        file.write(config)
+        file.write('\n')
+
+
 def main(args) -> None:
     LOG.info('Available templates:')
     for template in j2env.list_templates():

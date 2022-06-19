@@ -1,0 +1,34 @@
+---
+resources:
+   tenants:
+      osp-internal:
+         description: OSP Internal tenant – hosting Component CI jobs
+         url: https://sf.hosted.upshift.rdu2.redhat.com/manage
+         default-connection: code.engineering.redhat.com
+         tenant-options:
+            zuul/max-job-timeout: 21600
+            zuul/web-root: https://sf.hosted.upshift.rdu2.redhat.com/zuul/t/osp-internal/
+            zuul/report-build-page: true
+
+   projects:
+      osp-internal:
+         tenant: osp-internal
+         description: OSP Internal tenant – hosting Component CI jobs
+         contacts:
+           - rhos-cre@redhat.com
+         source-repositories:
+         {%- for project in projects | sort %}
+           - {{ project }}:
+               zuul/include: []
+               repoxplorer/skip: true
+               hound/skip: true
+         {%- endfor %}
+           - zuul/zuul-jobs:
+               connection: opendev.org
+               repoxplorer/skip: true
+               hound/skip: true
+           - osp-dfg-compute/segritary:
+               zuul/config-project: True
+               connection: gitlab.cee
+               repoxplorer/skip: true
+               hound/skip: true
