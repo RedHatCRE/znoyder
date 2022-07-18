@@ -35,7 +35,7 @@ branches:
 include:
   'osp-17.0':
     'openstack-tox-pep8': 'osp-tox-pep8'
-    'openstack-tox-py39': 'osp-tox-py39'
+    'openstack-tox-py39': 'osp-rpm-py39'
     'openstack-tox-functional-py39': 'osp-tox-functional-py39'
     'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
     'nova-tox-functional-py39': 'nova-tox-functional-py39'
@@ -59,78 +59,8 @@ include:
 #     'osp-17.0':
 #       'osp-tox-py37': 'Python 3.7 is not available in our repos'
 #
-exclude:
-  'cinder':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
+exclude: {}
 
-  'glance':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'glance_store':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'manila':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'manila-ui':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-cinderclient':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-cinderlib':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-glanceclient':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-manilaclient':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-os-brick':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'python-swiftclient':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
-
-  'swift':  # OSPCRE-22
-    'osp-17.0':
-      'osp-tox-pep8': 'Storage DFG decided to opt-out for now'
-      'osp-tox-py39': 'Storage DFG decided to opt-out for now'
-      'osp-tox-functional-py39': 'Storage DFG decided to opt-out for now'
 
 #
 # Add map: specify custom jobs to add in the generated result
@@ -156,77 +86,73 @@ add:
 
   'keystone':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'check'
           - 'gate'
 
   'openstack-barbican':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
 
   'openstack-tempest':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'check'
 
   'openstack-heat-agents':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
 
   'openstack-tripleo-common':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
 
   'python-castellan':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
 
   'python-keystoneauth1':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
 
   'python-keystonemiddleware':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'check'
           - 'gate'
 
   'python-openstacksdk':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'check'
           - 'gate'
 
   'python-tripleoclient':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'gate'
-        vars:
-          rhos_release_args: '17.0'
 
   'python-zaqarclient':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         pipeline:
           - 'check'
           - 'gate'
-        vars:
-          rhos_release_args: '17.0'
 
 
 #
@@ -250,107 +176,227 @@ override:
       'osp-tox-pep8':
         voting: true
         required-projects: ~
-      'osp-tox-py39':
-        voting: true
+      'osp-rpm-py39':
+        voting: false
         required-projects: ~
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'aodh':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false  # problem with running mysqld in centos container
         vars:
           rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
 
   'ceilometer':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'ironic':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'ironic-prometheus-exporter':
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
   'keystone':  # rhbz#2052499
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
   'nova':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
-  'ovn-octavia-provider':  # rhbz#2069526
+  'openstack-barbican':
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
-      'osp-tox-py39':
-        voting: false
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'openstack-designate':  # rhbz#2069553
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
   'openstack-ec2-api':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'openstack-ironic-python-agent':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'openstack-tripleo-common':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'openstack-tripleo-heat-templates':
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'openstack-tripleo-image-elements':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'os-net-config':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
         voting: false
 
   'oslo.messaging':
     'osp-17.0':
-      'osp-tox-pep8':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
         voting: false
-      'osp-tox-py39':
+      'osp-tox-pep8':
         voting: false
 
   'oslo.middleware':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
         voting: false
+
+  'oslo.service':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'oslo.utils':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'oslo.vmware':
     'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+        voting: false
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
-        voting: false
+
+  'ovn-octavia-provider':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+        voting: false  # rhbz#2069526
+      'osp-tox-pep8':
+        voting: false  # rhbz#2069526
 
   'python-aodhclient':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'python-automaton':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-barbicanclient':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'python-castellan':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-dracclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-heatclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-ironic-lib':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-ironicclient':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
   'python-keystoneclient':
@@ -360,11 +406,24 @@ override:
 
   'python-kuryr-lib':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'python-metalsmith':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-neutron-lib':
     'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
       'osp-tox-pep8':
         voting: false
 
@@ -372,27 +431,125 @@ override:
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'python-octaviaclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-openstacksdk':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
+
+  'python-os-ken':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-cache':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-config':
     'osp-17.0':
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
-  'python-ovsdbapp':  # rhos release provides the openvswitch package
+  'python-oslo-context':
     'osp-17.0':
-      'osp-tox-pep8':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-db':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-policy':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-privsep':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-upgradecheck':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-oslo-versionedobjects':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-ovsdbapp':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+      'osp-tox-pep8':  # rhos release provides the openvswitch package
         vars:
           rhos_release_args: '17.0'
-      'osp-tox-py39':
+
+  'python-stevedore':
+    'osp-17.0':
+      'osp-rpm-py39':
         vars:
+          allow_test_requirements_txt: true
           rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-sushy':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-sushy-oem-idrac':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-proliantutils':
     'osp-17.0':
@@ -404,16 +561,14 @@ override:
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false  # one test expects to be run as non-root user
-        vars:
-          rhos_release_args: '17.0'
 
   'tripleo-ansible':
     'osp-17.0':
       'osp-tox-pep8':
         voting: false
-      'osp-tox-py39':
+      'osp-rpm-py39':
         voting: false
 
 
@@ -445,6 +600,6 @@ copy:
       - 'osp-tox-pep8':
           from: 'check'
           to: 'weekly'
-      - 'osp-tox-py39':
+      - 'osp-rpm-py39':
           from: 'check'
           to: 'weekly'
