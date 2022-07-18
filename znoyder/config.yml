@@ -21,7 +21,7 @@
 #
 branches:
   'osp-17.0':
-    downstream: '^rhos-17.*$'
+    downstream: '^rhos-17.0-trunk-patches$'
     upstream: 'stable/wallaby'
 
 
