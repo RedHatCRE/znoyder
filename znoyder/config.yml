@@ -106,6 +106,10 @@ add:
   'openstack-heat-agents':
     'osp-17.0':
       'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-testrepository'
+            - 'dnf reinstall -y platform-python-setuptools'
         pipeline:
           - 'gate'
 
