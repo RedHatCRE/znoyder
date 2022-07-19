@@ -427,6 +427,17 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
+  'python-networking-baremetal':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-neutron-lib-tests'
+      'osp-tox-pep8':
+        voting: false
+
   'python-neutron-lib':
     'osp-17.0':
       'osp-rpm-py39':
