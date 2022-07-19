@@ -102,6 +102,11 @@ add:
       'osp-rpm-py39':
         pipeline:
           - 'check'
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-hacking'
 
   'openstack-heat-agents':
     'osp-17.0':
