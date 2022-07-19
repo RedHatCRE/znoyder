@@ -365,6 +365,12 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-coverage python3-stestr python3-requests-mock openstack-dashboard'
+            # yamllint disable-line rule:line-length
+            - 'ln -s /usr/share/openstack-dashboard/ /usr/lib/python3.9/site-packages/'
 
   'python-castellan':
     'osp-17.0':
