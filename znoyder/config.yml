@@ -225,6 +225,15 @@ override:
       'osp-rpm-py39':
         voting: false
 
+  'neutron':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-neutron-lib-tests python3-hacking'
+
   'nova':
     'osp-17.0':
       'osp-rpm-py39':
