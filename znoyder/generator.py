@@ -148,6 +148,11 @@ def generate_projects_pipleines_dict(args):
             filters=ospinfo_filters,
         )
 
+        if not projects:
+            LOG.warning('Did not find any projects using following filters: '
+                        f'{ospinfo_filters}.')
+            continue
+
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             templates_directory))
 

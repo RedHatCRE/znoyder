@@ -99,7 +99,7 @@ def include_jobs(jobs, tag) -> list:
 
     for job in upstream_jobs:
         if job.name not in jobs_to_collect:
-            LOG.warning(f'Ignoring job: {job.name}')
+            LOG.warning(f'Ignoring job: {job.name} ({job.pipeline})')
             continue
 
         if jobs_to_collect.get(job.name) is not None:

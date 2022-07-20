@@ -143,4 +143,4 @@ def main(args) -> None:
 
     if results:
         for result in results:
-            print(' '.join([result.get(key, 'None') for key in output]))
+            print(' '.join([str(result.get(key, 'None')) for key in output]))
