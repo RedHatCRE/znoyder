@@ -458,5 +458,11 @@ class ZuulJob(object):
         return type(other) is type(self) and (
             self.name == other.name
             and self.pipeline == other.pipeline
+        )
+
+    def really_equal(self, other) -> bool:
+        return type(other) is type(self) and (
+            self.name == other.name
+            and self.pipeline == other.pipeline
             and self.parameters == other.parameters
         )
