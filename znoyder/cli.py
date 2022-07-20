@@ -192,21 +192,18 @@ def extend_parser_finder(parser) -> None:
 
 
 def extend_parser_generator(parser) -> None:
-    parser.add_argument(
-        '-c', '--component',
-        dest='component',
-        help='OSP component name to filter projects'
-    )
-    parser.add_argument(
-        '-n', '--name',
-        dest='name',
-        help='OSP package name to filter projects'
-    )
-    parser.add_argument(
-        '-t', '--tag',
-        dest='tag',
-        help='OSP release tag to filter projects'
-    )
+    parser.add_argument('--component', dest='component',
+                        help='OSP component name to filter projects')
+    parser.add_argument('--name', dest='name',
+                        help='package name to filter projects')
+    parser.add_argument('--osp-name', dest='osp_name',
+                        help='OSP package name to filter projects')
+    parser.add_argument('--osp-project', dest='osp_project',
+                        help='OSP project name to filter projects')
+    parser.add_argument('--project', dest='project',
+                        help='project name to filter projects')
+    parser.add_argument('--tag', dest='tag',
+                        help='OSP release tag to filter projects')
 
 
 def extend_parser_templater(parser) -> None:

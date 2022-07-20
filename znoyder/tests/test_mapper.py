@@ -26,20 +26,12 @@ from znoyder.mapper import copy_map
 from znoyder.mapper import copy_jobs
 from znoyder.mapper import exclude_map
 from znoyder.mapper import exclude_jobs
-from znoyder.mapper import match
 from znoyder.mapper import override_map
 from znoyder.mapper import override_jobs
 from znoyder.lib.zuul import ZuulJob
 
 
 logging.disable(logging.CRITICAL)
-
-
-class TestMatcher(TestCase):
-    def test_match(self):
-        self.assertTrue(match('foobar', 'foobar'))
-        self.assertFalse(match('foobar', 'foo'))
-        self.assertTrue(match('foobar', '/foo/'))
 
 
 class TestJobsGeneratorFromMapEntry(TestCase):

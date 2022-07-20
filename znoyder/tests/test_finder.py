@@ -43,22 +43,21 @@ EXAMPLE_ZUUL_CONFIG = """
       jobs:
         - job1
         - job2
+        - job4
 
 - project-template:
-    template1:
     name: template1
     check:
       jobs:
         - job1
         - job2
+
 - project-template:
-    template2:
     name: template2
     check:
       jobs:
         - job1
-        - job2
-
+        - job3
 """
 
 
@@ -93,15 +92,36 @@ class TestFinder(TestCase):
 
         self.assertRaises(PipelineError, find_pipelines, pipeline)
 
-    def test_find_jobs(self):
+    def test_find_jobs_in_project(self):
         """Test find_jobs."""
 
         output = find_jobs(self.dest_dir, [], [ZuulPipeline.CHECK])
-        self.assertEqual(len(output), 2)
+        self.assertEqual(len(output), 3)
+
+        output.sort(key=lambda job: job.name)
         self.assertEqual(output[0].name, "job1")
         self.assertEqual(output[0].pipeline, "check")
         self.assertEqual(output[1].name, "job2")
         self.assertEqual(output[1].pipeline, "check")
+        self.assertEqual(output[2].name, "job4")
+        self.assertEqual(output[2].pipeline, "check")
+
+    def test_find_jobs_in_project_with_templates(self):
+        """Test find_jobs."""
+
+        templates = find_templates(self.dest_dir, [ZuulPipeline.CHECK])
+        output = find_jobs(self.dest_dir, templates, [ZuulPipeline.CHECK])
+        self.assertEqual(len(output), 4)
+
+        output.sort(key=lambda job: job.name)
+        self.assertEqual(output[0].name, "job1")
+        self.assertEqual(output[0].pipeline, "check")
+        self.assertEqual(output[1].name, "job2")
+        self.assertEqual(output[1].pipeline, "check")
+        self.assertEqual(output[2].name, "job3")
+        self.assertEqual(output[2].pipeline, "check")
+        self.assertEqual(output[3].name, "job4")
+        self.assertEqual(output[3].pipeline, "check")
 
     def test_find_templates(self):
         """Test find_teamplates."""
@@ -115,7 +135,7 @@ class TestFinder(TestCase):
         self.assertEqual(template1.template_jobs[1].pipeline, "check")
         self.assertEqual(template2.template_name, "template2")
         self.assertEqual(template2.template_jobs[0].name, "job1")
-        self.assertEqual(template2.template_jobs[1].name, "job2")
+        self.assertEqual(template2.template_jobs[1].name, "job3")
         self.assertEqual(template2.template_jobs[0].pipeline, "check")
         self.assertEqual(template2.template_jobs[1].pipeline, "check")
 
@@ -128,13 +148,15 @@ class TestFinder(TestCase):
         setattr(args_mock, "templates", self.dest_dir)
         setattr(args_mock, "pipeline", "check")
         main(args_mock)
-        calls = [call("check: job1"), call("check: job2"),
+        calls = [call("check: job1"),
+                 call("check: job2"),
+                 call("check: job4"),
                  call("check: job1 in template template1"),
                  call("check: job2 in template template1"),
                  call("check: job1 in template template2"),
-                 call("check: job2 in template template2")]
+                 call("check: job3 in template template2")]
         mock_print.assert_has_calls(calls)
-        self.assertEqual(mock_print.call_count, 6)
+        self.assertEqual(mock_print.call_count, 7)
 
     @patch('znoyder.finder._cli_find_jobs')
     def test_main_raises(self, mock_func):
