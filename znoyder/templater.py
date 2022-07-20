@@ -16,6 +16,7 @@
 #    under the License.
 #
 
+import math
 import os
 
 from jinja2 import Environment
@@ -46,6 +47,7 @@ def generate_zuul_project_template(path: str, name: str, pipelines: dict):
         Dumper=NestedDumper,
         default_flow_style=False,
         sort_keys=False,
+        width=math.inf,
     )
     config = config.strip()
 
