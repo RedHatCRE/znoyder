@@ -30,17 +30,18 @@ LOG = logger.LOG
 
 def find_jobs(directory, templates, pipelines):
     LOG.debug('Directory: %s' % directory)
+    zuul_jobs = set()
 
     project = zuul.ZuulProject(project_path=directory,
                                templates=templates)
 
-    zuul_jobs = project.get_list_of_jobs(pipelines)
+    zuul_jobs.update(project.get_list_of_jobs(pipelines))
 
     project_templates = project.get_list_of_used_templates()
-    for template in project_templates:
-        zuul_jobs.extend(template.get_jobs(pipelines))
+    for template in reversed(project_templates):
+        zuul_jobs.update(template.get_jobs(pipelines))
 
-    return zuul_jobs
+    return list(zuul_jobs)
 
 
 def find_templates(directories, pipelines):
