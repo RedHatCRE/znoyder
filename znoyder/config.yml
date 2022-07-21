@@ -88,7 +88,6 @@ add:
     'osp-17.0':
       'osp-rpm-py39':
         pipeline:
-          - 'check'
           - 'gate'
 
   'openstack-barbican':
@@ -96,17 +95,6 @@ add:
       'osp-rpm-py39':
         pipeline:
           - 'gate'
-
-  'openstack-tempest':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'check'
-        vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
-          extra_commands:
-            - 'dnf install -y python3-hacking'
 
   'openstack-heat-agents':
     'osp-17.0':
@@ -117,6 +105,15 @@ add:
             - 'dnf reinstall -y platform-python-setuptools'
         pipeline:
           - 'gate'
+
+  'openstack-tempest':
+    'osp-17.0':
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-hacking'
 
   'openstack-tripleo-common':
     'osp-17.0':
@@ -162,6 +159,10 @@ add:
         pipeline:
           - 'check'
           - 'gate'
+        vars:
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
 
 
 #
@@ -195,10 +196,8 @@ override:
   'aodh':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false  # problem with running mysqld in centos container
+        voting: false  # rhbz#2052498 problem to run mysqld in centos container
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
@@ -208,21 +207,28 @@ override:
       'osp-rpm-py39':
         voting: false
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
             # yamllint disable-line rule:line-length
             - 'pip install os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
 
+  'cinder':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - "sed -i -r 's/requires = virtualenv>=20.4.2/requires = virtualenv>=20.4.2,<20.8/' {{ zuul.project.src_dir }}/tox.ini"
+          tox_install_bindep: false
+
   'ironic':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'ironic-prometheus-exporter':
     'osp-17.0':
@@ -242,8 +248,6 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
@@ -252,8 +256,6 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             - 'dnf install -y python3-neutron-lib-tests python3-hacking'
 
@@ -267,8 +269,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'openstack-designate':  # rhbz#2069553
     'osp-17.0':
@@ -287,84 +287,81 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'openstack-tripleo-common':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
+            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
+            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
+            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
+            - "head {{ zuul.project.src_dir }}/tox.ini"
 
   'openstack-tripleo-heat-templates':
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
+            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
+            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
+            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
+            - "head {{ zuul.project.src_dir }}/tox.ini"
+      'osp-tox-pep8':
+        voting: false
+        vars:
+          tox_install_bindep: false
 
   'openstack-tripleo-image-elements':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'os-net-config':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
-        voting: false
 
   'oslo.messaging':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
-        voting: false
       'osp-tox-pep8':
-        voting: false
+        vars:
+          tox_install_bindep: false
 
   'oslo.middleware':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
-        voting: false
 
   'oslo.service':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'oslo.utils':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'oslo.vmware':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
         voting: false
       'osp-tox-pep8':
         voting: false
@@ -374,8 +371,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
         voting: false  # rhbz#2069526
       'osp-tox-pep8':
         voting: false  # rhbz#2069526
@@ -390,8 +385,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-barbicanclient':
     'osp-17.0':
@@ -409,37 +402,45 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-cliff':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
 
   'python-dracclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-heatclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-ironic-inspector-client':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-coverage python3-osc-lib-tests'
 
   'python-ironic-lib':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-ironicclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest python3-osc-lib-tests'
 
   'python-keystoneclient':
     'osp-17.0':
@@ -456,15 +457,11 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-mistralclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
@@ -474,8 +471,6 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             - 'dnf install -y python3-neutron-lib-tests'
 
@@ -484,25 +479,38 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
       'osp-tox-pep8':
         voting: false
 
   'python-neutronclient':  # rhbz#2059099
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - 'pip install osprofiler>=1.4.0'
+      'osp-tox-pep8':
+        voting: false
+        vars:
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
+
+  'python-novaclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false  # rhbz#2109541
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
+            - 'dnf install -y python3-requests-mock python3-ddt'
+            - 'dnf install -y python3-testscenarios'
 
   'python-octaviaclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-openstacksdk':
     'osp-17.0':
@@ -514,15 +522,11 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-os-win':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-pycodestyle python3-hacking'
@@ -532,8 +536,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-config':
     'osp-17.0':
@@ -545,56 +547,42 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-db':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-policy':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-privsep':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-upgradecheck':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-oslo-versionedobjects':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-ovsdbapp':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
       'osp-tox-pep8':  # rhos release provides the openvswitch package
         vars:
           rhos_release_args: '17.0'
@@ -609,51 +597,42 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-sushy':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-sushy-oem-idrac':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
   'python-swiftclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             - 'dnf install -y python3-stestr python3-mock'
       'osp-tox-pep8':
-        voting: false
         vars:
           tox_install_bindep: false
 
   'python-tripleoclient':
     'osp-17.0':
+      'osp-rpm-py39':
+        voting: false  # one test expects to be run as non-root user
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
-      'osp-rpm-py39':
-        voting: false  # one test expects to be run as non-root user
 
   'tripleo-ansible':
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
       'osp-rpm-py39':
+        voting: false
+      'osp-tox-pep8':
         voting: false
 
 
