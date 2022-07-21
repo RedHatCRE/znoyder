@@ -614,6 +614,19 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
+  'python-swiftclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-mock'
+      'osp-tox-pep8':
+        voting: false
+        vars:
+          tox_install_bindep: false
+
   'python-proliantutils':
     'osp-17.0':
       'osp-tox-pep8':
