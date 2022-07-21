@@ -466,7 +466,9 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
-            - 'dnf install -y python3-neutron-lib-tests'
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
+            - 'pip install osprofiler>=1.4.0'
 
   'python-networking-baremetal':
     'osp-17.0':
@@ -475,9 +477,7 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
-            # yamllint disable-line rule:line-length
-            - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
-            - 'pip install osprofiler>=1.4.0'
+            - 'dnf install -y python3-neutron-lib-tests'
 
   'python-neutron-lib':
     'osp-17.0':
