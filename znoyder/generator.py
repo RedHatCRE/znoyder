@@ -129,10 +129,16 @@ def generate_projects_pipleines_dict(args):
         downstream_branch = branches_map.get(osp_tag, {}).get('downstream')
 
         ospinfo_filters = {'tag': osp_tag}
-        if args.name:
-            ospinfo_filters['name'] = args.name
         if args.component:
             ospinfo_filters['component'] = args.component
+        if args.name:
+            ospinfo_filters['name'] = args.name
+        if args.osp_name:
+            ospinfo_filters['osp_name'] = args.osp_name
+        if args.osp_project:
+            ospinfo_filters['osp_project'] = args.osp_project
+        if args.project:
+            ospinfo_filters['project'] = args.project
 
         LOG.info('Downloading Zuul configuration from upstream...')
         LOG.info(f'Zuul configuration files: {UPSTREAM_CONFIGS_DIR}')
@@ -141,6 +147,11 @@ def generate_projects_pipleines_dict(args):
             branch=upstream_branch,
             filters=ospinfo_filters,
         )
+
+        if not projects:
+            LOG.warning('Did not find any projects using following filters: '
+                        f'{ospinfo_filters}.')
+            continue
 
         path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
                                             templates_directory))

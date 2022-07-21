@@ -17,7 +17,6 @@
 #
 
 from copy import deepcopy
-import re
 import sys
 
 from znoyder.config import add_map
@@ -27,47 +26,13 @@ from znoyder.config import include_map
 from znoyder.config import override_map
 from znoyder.lib import logger
 from znoyder.lib.zuul import ZuulJob
+from znoyder.utils import drop_nones_from_dict
+from znoyder.utils import match
+from znoyder.utils import merge_dicts
+from znoyder.utils import sort_dict_by_keys
 
 
 LOG = logger.LOG
-
-
-def match(string: str, specifier: str) -> bool:
-    '''Function checks if a given string is matched by a given specifier.
-
-    The match is performed in the awk-inspired fashion:
-    – if the specifier starts and ends with the forward slash (/), e.g. /foo/,
-      then the content between slashes is treated as regular expression,
-    – otherwise it is a value that should fully match the input string.
-
-    Parameters
-    ----------
-    string : str
-        The string that should be tested against specifier.
-    specifier : str
-        The expected value or regular expression to be matched against.
-
-    Returns
-    -------
-    matched : bool
-        True if given string matches the specifier, False otherwise.
-
-    Examples
-    --------
-    >>> match('foobar', 'foobar')
-    True
-    >>> match('foobar', 'foo')
-    False
-    >>> match('foobar', '/foo/')
-    True
-    '''
-
-    if specifier.startswith('/') and specifier.endswith('/'):
-        regex = re.compile(specifier[1:-2])
-        return bool(regex.search(string))
-    else:
-        regex = re.compile(specifier)
-        return bool(regex.fullmatch(string))
 
 
 def new_jobs_from_map_entry(entry: dict) -> ZuulJob:
@@ -82,17 +47,14 @@ def new_jobs_from_map_entry(entry: dict) -> ZuulJob:
 
 
 def update_jobs_from_map_entry(jobs: list, entry: dict) -> list:
-    job_name, job_options = entry
+    job_name, job_options = deepcopy(entry)
     pipeline = job_options.pop('pipeline', '/.*/')  # any pipeline by default
 
     for index, job in enumerate(jobs):
-        if (match(job.name, job_name)
-                and match(job.pipeline, pipeline)):
-            jobs[index].parameters.update(job_options)
-
-            for key, value in jobs[index].parameters.copy().items():
-                if value is None:
-                    del jobs[index].parameters[key]
+        if match(job.name, job_name) and match(job.pipeline, pipeline):
+            merge_dicts(jobs[index].parameters, job_options, override=True)
+            drop_nones_from_dict(jobs[index].parameters)
+            sort_dict_by_keys(jobs[index].parameters)
 
     return jobs
 
@@ -113,11 +75,10 @@ def copy_jobs_from_map_entry(jobs: list, entry: dict) -> list:
     for index, job in enumerate(jobs):
         if match(job.name, job_name) and match(job.pipeline, pipeline):
             new_job = deepcopy(job)
-            new_job.parameters.update(job_options)
 
-            for key, value in new_job.parameters.copy().items():
-                if value is None:
-                    del new_job.parameters[key]
+            merge_dicts(new_job.parameters, job_options, override=True)
+            drop_nones_from_dict(new_job.parameters)
+            sort_dict_by_keys(new_job.parameters)
 
             if new_name:
                 new_job.name = new_name
@@ -138,7 +99,7 @@ def include_jobs(jobs, tag) -> list:
 
     for job in upstream_jobs:
         if job.name not in jobs_to_collect:
-            LOG.warning(f'Ignoring job: {job.name}')
+            LOG.warning(f'Ignoring job: {job.name} ({job.pipeline})')
             continue
 
         if jobs_to_collect.get(job.name) is not None:

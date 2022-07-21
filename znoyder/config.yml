@@ -36,15 +36,15 @@ include:
   'osp-17.0':
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py39': 'osp-rpm-py39'
-    'openstack-tox-functional-py39': 'osp-tox-functional-py39'
-    'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
-    'nova-tox-functional-py39': 'nova-tox-functional-py39'
-    'placement-nova-tox-functional-py39': 'placement-nova-tox-functional-py39'
+    # 'openstack-tox-functional-py39': 'osp-tox-functional-py39'
+    # 'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
+    # 'nova-tox-functional-py39': 'nova-tox-functional-py39'
+    # 'placement-nova-tox-functional-py39': 'placement-nova-tox-functional-py39'
     # yamllint disable-line rule:line-length
-    'glance-tox-functional-py39-cursive-tips': 'glance-tox-functional-py39-cursive-tips'
+    # 'glance-tox-functional-py39-cursive-tips': 'glance-tox-functional-py39-cursive-tips'
     # yamllint disable-line rule:line-length
-    'glance-tox-functional-py39-rbac-defaults': 'glance-tox-functional-py39-rbac-defaults'
-    'openstack-tox-functional': 'osp-tox-functional'
+    # 'glance-tox-functional-py39-rbac-defaults': 'glance-tox-functional-py39-rbac-defaults'
+    # 'openstack-tox-functional': 'osp-tox-functional'
 
 
 #
@@ -102,6 +102,11 @@ add:
       'osp-rpm-py39':
         pipeline:
           - 'check'
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-hacking'
 
   'openstack-heat-agents':
     'osp-17.0':
@@ -202,6 +207,14 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
+            # yamllint disable-line rule:line-length
+            - 'pip install os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
 
   'ironic':
     'osp-17.0':
@@ -224,6 +237,25 @@ override:
         voting: false
       'osp-rpm-py39':
         voting: false
+
+  'manila':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+
+  'neutron':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-neutron-lib-tests python3-hacking'
 
   'nova':
     'osp-17.0':
@@ -427,7 +459,7 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
-  'python-networking-baremetal':
+  'python-mistralclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
@@ -435,8 +467,17 @@ override:
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
           extra_commands:
             - 'dnf install -y python3-neutron-lib-tests'
-      'osp-tox-pep8':
-        voting: false
+
+  'python-networking-baremetal':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
+            - 'pip install osprofiler>=1.4.0'
 
   'python-neutron-lib':
     'osp-17.0':
@@ -475,6 +516,16 @@ override:
           allow_test_requirements_txt: true
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+
+  'python-os-win':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-pycodestyle python3-hacking'
 
   'python-oslo-cache':
     'osp-17.0':
@@ -548,6 +599,11 @@ override:
         vars:
           rhos_release_args: '17.0'
 
+  'python-proliantutils':
+    'osp-17.0':
+      'osp-tox-pep8':
+        voting: false
+
   'python-stevedore':
     'osp-17.0':
       'osp-rpm-py39':
@@ -572,10 +628,18 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
 
-  'python-proliantutils':
+  'python-swiftclient':
     'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-mock'
       'osp-tox-pep8':
         voting: false
+        vars:
+          tox_install_bindep: false
 
   'python-tripleoclient':
     'osp-17.0':
