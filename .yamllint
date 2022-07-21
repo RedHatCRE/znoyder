@@ -1,0 +1,5 @@
+extends: default
+ignore: |
+  .tox
+rules:
+  line-length: disable

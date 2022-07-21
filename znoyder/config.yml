@@ -40,9 +40,7 @@ include:
     # 'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
     # 'nova-tox-functional-py39': 'nova-tox-functional-py39'
     # 'placement-nova-tox-functional-py39': 'placement-nova-tox-functional-py39'
-    # yamllint disable-line rule:line-length
     # 'glance-tox-functional-py39-cursive-tips': 'glance-tox-functional-py39-cursive-tips'
-    # yamllint disable-line rule:line-length
     # 'glance-tox-functional-py39-rbac-defaults': 'glance-tox-functional-py39-rbac-defaults'
     # 'openstack-tox-functional': 'osp-tox-functional'
 
@@ -161,7 +159,6 @@ add:
           - 'gate'
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
 
 
@@ -208,9 +205,7 @@ override:
         voting: false
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
-            # yamllint disable-line rule:line-length
             - 'pip install os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
 
   'cinder':
@@ -249,7 +244,6 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
 
   'neutron':
@@ -294,7 +288,6 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
             - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
             - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
@@ -307,7 +300,6 @@ override:
         voting: false
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
             - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
             - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
@@ -392,9 +384,7 @@ override:
         voting: false
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-coverage python3-stestr python3-requests-mock openstack-dashboard'
-            # yamllint disable-line rule:line-length
             - 'ln -s /usr/share/openstack-dashboard/ /usr/lib/python3.9/site-packages/'
 
   'python-castellan':
@@ -463,7 +453,6 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
             - 'pip install osprofiler>=1.4.0'
 
@@ -493,7 +482,6 @@ override:
         voting: false
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
 
   'python-novaclient':
@@ -528,7 +516,6 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
             - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-pycodestyle python3-hacking'
 
   'python-oslo-cache':
