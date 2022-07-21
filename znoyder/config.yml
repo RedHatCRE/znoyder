@@ -470,6 +470,15 @@ override:
             - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
             - 'pip install osprofiler>=1.4.0'
 
+  'python-networking-baremetal':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          extra_commands:
+            - 'dnf install -y python3-neutron-lib-tests'
+
   'python-neutron-lib':
     'osp-17.0':
       'osp-rpm-py39':
@@ -590,6 +599,11 @@ override:
         vars:
           rhos_release_args: '17.0'
 
+  'python-proliantutils':
+    'osp-17.0':
+      'osp-tox-pep8':
+        voting: false
+
   'python-stevedore':
     'osp-17.0':
       'osp-rpm-py39':
@@ -626,11 +640,6 @@ override:
         voting: false
         vars:
           tox_install_bindep: false
-
-  'python-proliantutils':
-    'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
 
   'python-tripleoclient':
     'osp-17.0':
