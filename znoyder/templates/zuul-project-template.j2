@@ -9,7 +9,7 @@
             branches: {{ job.branch }}
             voting: {{ job.voting }}
             {%- for key, value in job.parameters | dictsort %}
-            {{ key }}: {{ value }}
+            {{ key }}: {{ value | tojson }}
             {%- endfor -%}
         {%- endfor -%}
     {%- endfor -%}

@@ -21,6 +21,8 @@ import os.path
 from pathlib import Path
 from shutil import rmtree
 
+from yaml.parser import ParserError
+
 from znoyder import browser
 from znoyder.config import branches_map
 from znoyder.config import GENERATED_CONFIGS_DIR
@@ -192,11 +194,15 @@ def generate_projects_templates(projects_pipelines_dict: dict) -> None:
             GENERATED_CONFIG_PREFIX + project_name + GENERATED_CONFIG_EXTENSION
         )
 
-        templater.generate_zuul_project_template(
-            path=config_dest,
-            name=GENERATED_CONFIG_PREFIX + project_name,
-            pipelines=pipelines
-        )
+        try:
+            templater.generate_zuul_project_template(
+                path=config_dest,
+                name=GENERATED_CONFIG_PREFIX + project_name,
+                pipelines=pipelines
+            )
+        except ParserError as e:
+            LOG.error(f'Problem processing {project_name}')
+            raise e
 
 
 def generate_projects_config(projects_pipelines_dict: dict) -> None:
