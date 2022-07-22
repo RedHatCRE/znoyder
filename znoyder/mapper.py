@@ -65,7 +65,8 @@ def copy_jobs_from_map_entry(jobs: list, entry: dict) -> list:
     new_pipeline = job_options.pop('to', None)
     new_name = job_options.pop('as', job_name)
 
-    if job_name == new_name and not new_pipeline:
+    if all([job_name == new_name, not new_pipeline,
+            'branches' not in job_options]):
         LOG.error(f'Bad entry definition: {entry}')
         LOG.error('Target pipeline or unique new name shall be specified.')
         sys.exit(1)
