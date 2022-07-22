@@ -648,9 +648,20 @@ override:
 copy:
   /.*/:  # every project
     /.*/:  # every tag
+      - 'osp-rpm-py39':
+          from: 'check'
+          to: 'weekly'
       - 'osp-tox-pep8':
           from: 'check'
           to: 'weekly'
       - 'osp-rpm-py39':
-          from: 'check'
-          to: 'weekly'
+          as: 'osp-rpm-py39'
+          branches: '^rhos-17.1-trunk-patches$'
+          vars:
+            rhos_release_args: '17.1'
+            rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew'
+          voting: false
+      - 'osp-tox-pep8':
+          as: 'osp-tox-pep8'
+          branches: '^rhos-17.1-trunk-patches$'
+          voting: false
