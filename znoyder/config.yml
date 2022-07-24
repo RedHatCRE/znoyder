@@ -161,6 +161,13 @@ add:
           extra_commands:
             - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
 
+  'swift':
+    'osp-17.0':
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'
+          - 'gate'
+
 
 #
 # Override map: change options of all the jobs collected so far
@@ -180,15 +187,15 @@ add:
 override:
   /.*/:  # every project
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: true
-        required-projects: ~
       'osp-rpm-py39':
-        voting: false
+        voting: true
         required-projects: ~
         vars:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+      'osp-tox-pep8':
+        voting: true
+        required-projects: ~
 
   'aodh':
     'osp-17.0':
@@ -216,8 +223,40 @@ override:
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - "sed -i -r 's/requires = virtualenv>=20.4.2/requires = virtualenv>=20.4.2,<20.8/' {{ zuul.project.src_dir }}/tox.ini"
+            - dnf install -y wget
+            - wget https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt -O /tmp/upper-constraints.txt
+            - sed -i -r "s+oslo.vmware===3.8.1+oslo.vmware===3.10.0+" /tmp/upper-constraints.txt
+            - sed -i -r "s+https://releases.openstack.org/constraints/upper/wallaby+/tmp/upper-constraints.txt+" {{ zuul.project.src_dir }}/tox.ini
           tox_install_bindep: false
+
+  'glance':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'glance_store':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+      'osp-tox-pep8':
+        voting: false
+
+  'heat':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-hacking python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
+            - 'pip install python-zunclient'
+            - 'pip install python-monascaclient'
+            - 'pip install python-blazarclient'
+            - 'pip install vitrage'
+            - 'pip install python-vitrageclient'
+
+  'horizon':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
 
   'ironic':
     'osp-17.0':
@@ -227,17 +266,26 @@ override:
 
   'ironic-prometheus-exporter':
     'osp-17.0':
-      'osp-tox-pep8':
+      'osp-rpm-py39':
         voting: false
+
+  'ironic-ui':
+    'osp-17.0':
       'osp-rpm-py39':
         voting: false
 
   'keystone':  # rhbz#2052499
     'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - 'sudo dnf install -y python3-stestr python3-webtest python3-freezegun python3-testresources python3-pycodestyle python3-testscenarios python3-hacking python3-oslotest'
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - 'sudo dnf install -y openldap-devel'
+          tox_install_bindep: false
 
   'manila':
     'osp-17.0':
@@ -245,6 +293,16 @@ override:
         vars:
           extra_commands:
             - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+
+  'manila-ui':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'networking-bgpvpn':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
 
   'neutron':
     'osp-17.0':
@@ -266,8 +324,13 @@ override:
 
   'openstack-designate':  # rhbz#2069553
     'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
       'osp-tox-pep8':
         voting: false
+
+  'openstack-designate-ui':
+    'osp-17.0':
       'osp-rpm-py39':
         voting: false
 
@@ -276,11 +339,42 @@ override:
       'osp-rpm-py39':
         voting: false
 
+  'openstack-heat-agents':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'openstack-heat-ui':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'openstack-ironic-inspector':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-testscenarios python3-testresources'
+            - 'dnf install -y python3-requests-mock python3-ddt python3-oslotest'
+
   'openstack-ironic-python-agent':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+
+  'openstack-neutron-dynamic-routing':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-neutron-tests'
+            - 'dnf install -y python3-neutron-lib-tests'
+
+  'openstack-octavia-ui':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
 
   'openstack-tripleo-common':
     'osp-17.0':
@@ -297,7 +391,6 @@ override:
   'openstack-tripleo-heat-templates':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
@@ -306,7 +399,6 @@ override:
             - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
             - "head {{ zuul.project.src_dir }}/tox.ini"
       'osp-tox-pep8':
-        voting: false
         vars:
           tox_install_bindep: false
 
@@ -315,6 +407,13 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+
+  'openstack-tripleo-puppet-elements':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - "dnf install -y python3-stestr"
 
   'os-net-config':
     'osp-17.0':
@@ -354,7 +453,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-        voting: false
       'osp-tox-pep8':
         voting: false
 
@@ -363,9 +461,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-        voting: false  # rhbz#2069526
-      'osp-tox-pep8':
-        voting: false  # rhbz#2069526
 
   'python-aodhclient':
     'osp-17.0':
@@ -393,6 +488,18 @@ override:
         vars:
           allow_test_requirements_txt: true
 
+  'python-ceilometermiddleware':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest python3-betamax'
+
+  'python-cinderclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
   'python-cliff':
     'osp-17.0':
       'osp-rpm-py39':
@@ -405,6 +512,14 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+
+  'python-glanceclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-testscenarios'
+            - 'dnf install -y python3-requests-mock python3-ddt'
 
   'python-heatclient':
     'osp-17.0':
@@ -437,7 +552,17 @@ override:
       'osp-tox-pep8':
         voting: false
 
+  'python-keystonemiddleware':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
   'python-kuryr-lib':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'python-manilaclient':
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
@@ -463,23 +588,24 @@ override:
           extra_commands:
             - 'dnf install -y python3-neutron-lib-tests'
 
+  'python-networking-sfc':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
   'python-neutron-lib':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-      'osp-tox-pep8':
-        voting: false
 
   'python-neutronclient':  # rhbz#2059099
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - 'pip install osprofiler>=1.4.0'
       'osp-tox-pep8':
-        voting: false
         vars:
           extra_commands:
             - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
@@ -494,15 +620,44 @@ override:
             - 'dnf install -y python3-requests-mock python3-ddt'
             - 'dnf install -y python3-testscenarios'
 
+  'python-octavia-lib':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          allow_test_requirements_txt: true
+          extra_commands:
+            - 'dnf remove -y python3-pbr'
+            - 'pip install oslo.serialization'
+
   'python-octaviaclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
 
+  'python-openstackclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+
   'python-openstacksdk':
     'osp-17.0':
       'osp-rpm-py39':
+        voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-ddt python3-hacking'
+            - 'dnf install -y python3-jsonschema python3-oslo-config'
+            - 'dnf install -y python3-prometheus_client python3-testscenarios'
+            - 'dnf install -y python3-requests-mock python3-oslotest'
+
+  'python-os-brick':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+      'osp-tox-pep8':
         voting: false
 
   'python-os-ken':
@@ -510,6 +665,11 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+
+  'python-os-vif':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
 
   'python-os-win':
     'osp-17.0':
@@ -528,6 +688,10 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest python3-oslo-sphinx python3-docutils python3-requests-mock python3-testscenarios python3-oslo-log'
+            - 'pip install sphinx'
 
   'python-oslo-context':
     'osp-17.0':
@@ -579,6 +743,16 @@ override:
       'osp-tox-pep8':
         voting: false
 
+  'python-saharaclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
+  'python-scciclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+
   'python-stevedore':
     'osp-17.0':
       'osp-rpm-py39':
@@ -614,6 +788,20 @@ override:
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
+
+  'python-troveclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+      'osp-tox-pep8':
+        voting: false
+
+  'swift':
+    'osp-17.0':
+      'osp-rpm-py39':
+        voting: false
+      'osp-tox-pep8':
+        voting: false
 
   'tripleo-ansible':
     'osp-17.0':
