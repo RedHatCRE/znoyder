@@ -498,7 +498,9 @@ override:
   'python-cinderclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        voting: true
+        vars:
+          allow_test_requirements_txt: true
 
   'python-cliff':
     'osp-17.0':
