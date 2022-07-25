@@ -806,7 +806,16 @@ override:
   'tripleo-ansible':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        voting: true
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: rhelosp-17.0-trunk-brew
+          allow_test_requirements_txt: true
+          extra_commands:
+            - 'dnf remove -y python3-pbr'
+            - 'pip install python-heatclient python-glanceclient'
+            - 'pip install python-ironicclient python-novaclient'
+            - 'pip install tripleo-common'
       'osp-tox-pep8':
         voting: false
 
