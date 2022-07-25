@@ -817,7 +817,7 @@ override:
             - 'pip install python-ironicclient python-novaclient'
             - 'pip install tripleo-common'
       'osp-tox-pep8':
-        voting: true
+        voting: false
 
 
 #
