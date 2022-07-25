@@ -751,7 +751,12 @@ override:
   'python-scciclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        voting: true
+        vars:
+          allow_test_requirements_txt: true
+          extra_commands:
+            - 'dnf remove -y python3-pbr'
+            - 'pip install oslo.serialization'
 
   'python-stevedore':
     'osp-17.0':
