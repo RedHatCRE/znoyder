@@ -819,9 +819,15 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-requests-mock python3-httplib2'
       'osp-tox-pep8':
         voting: false
-
+        vars:
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - "sed -i -r 's/PrettyTable<0.8,>=0.7.2 # BSD/PrettyTable>=3.3.0 # BSD/' {{ zuul.project.src_dir }}/requirements.txt"
   'swift':
     'osp-17.0':
       'osp-rpm-py39':
