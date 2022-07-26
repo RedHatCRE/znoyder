@@ -670,6 +670,8 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          allow_test_requirements_txt: true
       'osp-tox-pep8':
         voting: false
 
