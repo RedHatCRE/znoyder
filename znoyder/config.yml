@@ -591,7 +591,14 @@ override:
   'python-networking-sfc':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        voting: true
+        vars:
+          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf remove -y python3-neutron
+            - dnf remove -y python3-neutronclient
+            - pip install neutron
+            - pip install python-neutronclient
 
   'python-neutron-lib':
     'osp-17.0':
