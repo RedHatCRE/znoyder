@@ -232,7 +232,9 @@ override:
   'glance':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        voting: true
+        vars:
+          allow_test_requirements_txt: true
 
   'glance_store':
     'osp-17.0':
