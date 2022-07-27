@@ -232,7 +232,7 @@ override:
   'glance':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
 
@@ -500,7 +500,7 @@ override:
   'python-cinderclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
 
@@ -569,7 +569,7 @@ override:
   'python-manilaclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
 
@@ -597,7 +597,7 @@ override:
   'python-networking-sfc':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
           extra_commands:
@@ -761,7 +761,7 @@ override:
   'python-saharaclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
           extra_commands:
@@ -774,7 +774,7 @@ override:
   'python-scciclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
           extra_commands:
@@ -840,7 +840,7 @@ override:
   'tripleo-ansible':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: true
+        voting: false
         vars:
           allow_test_requirements_txt: true
           extra_commands:
