@@ -240,8 +240,16 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: rhelosp-17.0-trunk-brew
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest python3-retrying python3-boto3 python3-swiftclient python-oslo-vmware python3-requests-mock'
       'osp-tox-pep8':
         voting: false
+        vars:
+          extra_commands:
+            - "sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini"
 
   'heat':
     'osp-17.0':
