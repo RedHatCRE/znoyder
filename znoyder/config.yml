@@ -712,9 +712,7 @@ override:
       'osp-rpm-py39':
         voting: false
         vars:
-          extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-oslo-sphinx python3-docutils python3-requests-mock python3-testscenarios python3-oslo-log'
-            - 'pip install sphinx'
+          allow_test_requirements_txt: true
 
   'python-oslo-context':
     'osp-17.0':
