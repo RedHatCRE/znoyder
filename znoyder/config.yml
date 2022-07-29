@@ -490,7 +490,7 @@ override:
         vars:
           extra_commands:
             - 'dnf install -y python3-coverage python3-stestr python3-requests-mock openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/ /usr/lib/python3.9/site-packages/'
+            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
 
   'python-castellan':
     'osp-17.0':
