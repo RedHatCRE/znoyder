@@ -187,11 +187,11 @@ add:
           - ^(api-ref|etc|examples|releasenotes)/.*$
           - ^doc/(requirements.txt|(saio|s3api|source)/.*)$
         vars:
-         rhos_release_args: '17.0'
-           rhos_release_extra_repos: rhelosp-17.0-trunk-brew
-           extra_commands:
-           # yamllint disable-line rule:line-length
-             - 'dnf install -y python3-swift python3-nose python3-mock liberasurecode-devel'
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: rhelosp-17.0-trunk-brew
+          extra_commands:
+            # yamllint disable-line rule:line-length
+            - 'dnf install -y python3-swift python3-nose python3-mock liberasurecode-devel'
 
 
 #
