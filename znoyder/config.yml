@@ -178,7 +178,7 @@ add:
             # yamllint disable-line rule:line-length
             - "sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf"
             # yamllint disable-line rule:line-length
-            - "sed -i -r '1788d' /root/src/code.engineering.redhat.com/swift/test/unit/common/test_utils.py"
+            - "sed -i -r '/self.assertEqual(expected_args, syslog_handler_args)/d' /root/src/code.engineering.redhat.com/swift/test/unit/common/test_utils.py"
       'osp-tox-pep8':
         branches: ^rhos-17.0-trunk-patches$
         voting: false
