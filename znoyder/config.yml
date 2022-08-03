@@ -137,7 +137,6 @@ add:
         pipeline:
           - 'check'
           - 'gate'
-
   'python-openstacksdk':
     'osp-17.0':
       'osp-rpm-py39':
@@ -358,6 +357,17 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-testscenarios'
+            - 'dnf install -y python3-requests-mock python3-ddt'
+            - 'dnf install -y python3-ironicclient python3-mock'
+            - 'dnf install -y python3-oslotest python3-osprofiler'
+            - 'dnf install -y python3-testresources'
+            - 'dnf install -y python3-pycodestyle'
+            - 'dnf install -y python3-pypowervm'
+            - 'dnf install -y python3-wsgi_intercept'
+            - 'dnf install -y python3-zvmconnector'
 
   'openstack-barbican':
     'osp-17.0':
@@ -613,6 +623,8 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          allow_test_requirements_txt: true
 
   'python-kuryr-lib':
     'osp-17.0':
