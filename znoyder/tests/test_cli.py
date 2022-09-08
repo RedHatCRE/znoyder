@@ -24,7 +24,12 @@ from unittest import TestCase
 from znoyder.cli import process_arguments
 
 
-logging.disable(logging.CRITICAL)
+def setUpModule() -> None:
+    logging.disable(logging.CRITICAL)
+
+
+def tearDownModule() -> None:
+    logging.disable(logging.NOTSET)
 
 
 class TestCli(TestCase):

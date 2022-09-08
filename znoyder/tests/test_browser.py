@@ -31,7 +31,12 @@ from znoyder.browser import get_releases
 from znoyder.browser import main
 
 
-logging.disable(logging.CRITICAL)
+def setUpModule() -> None:
+    logging.disable(logging.CRITICAL)
+
+
+def tearDownModule() -> None:
+    logging.disable(logging.NOTSET)
 
 
 def days_to_seconds(days):

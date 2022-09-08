@@ -31,7 +31,12 @@ from znoyder.mapper import override_jobs
 from znoyder.lib.zuul import ZuulJob
 
 
-logging.disable(logging.CRITICAL)
+def setUpModule() -> None:
+    logging.disable(logging.CRITICAL)
+
+
+def tearDownModule() -> None:
+    logging.disable(logging.NOTSET)
 
 
 class TestJobsGeneratorFromMapEntry(TestCase):
