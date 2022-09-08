@@ -26,6 +26,8 @@ from znoyder.mapper import copy_map
 from znoyder.mapper import copy_jobs
 from znoyder.mapper import exclude_map
 from znoyder.mapper import exclude_jobs
+from znoyder.mapper import include_map
+from znoyder.mapper import include_jobs
 from znoyder.mapper import override_map
 from znoyder.mapper import override_jobs
 from znoyder.lib.zuul import ZuulJob
@@ -105,6 +107,43 @@ class TestJobsGeneratorFromMapEntry(TestCase):
             self.assertEqual(job_name, result[i].name)
             self.assertEqual(job_types[i], result[i].pipeline)
             self.assertEqual(job_parameters, result[i].parameters)
+
+
+class TestIncludeJobs(TestCase):
+    def setUp(self) -> None:
+        include_map.clear()
+        include_map.update({
+            'release1': {
+                'job1': 'name1',
+                'job2': 'name2',
+                'job3': 'name3',
+            },
+            'release2': {
+                'job4': 'name4',
+                'job5': 'name5',
+            },
+        })
+
+        self.upstream_jobs = [
+            ZuulJob('job1', 'check'),
+            ZuulJob('job2', 'check'),
+            ZuulJob('job3', 'check'),
+            ZuulJob('job4', 'check'),
+            ZuulJob('job5', 'check'),
+        ]
+
+    def test_happy_path(self):
+        self.assertEqual([], include_jobs([], 'any'))
+
+    def test_include_by_tag(self):
+        tag = 'release2'
+
+        wanted_job1 = ZuulJob('name4', 'check')
+        wanted_job2 = ZuulJob('name5', 'check')
+        self.assertEqual(
+            [wanted_job1, wanted_job2],
+            include_jobs(self.upstream_jobs, tag)
+        )
 
 
 class TestExcludeJobs(TestCase):
