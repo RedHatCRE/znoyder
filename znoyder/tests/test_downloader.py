@@ -32,7 +32,12 @@ from znoyder.downloader import (CONTENT_ENDPOINT, GITHUB_API_URL,
                                 get_raw_url_files_in_repository, main)
 
 
-logging.disable(logging.CRITICAL)
+def setUpModule() -> None:
+    logging.disable(logging.CRITICAL)
+
+
+def tearDownModule() -> None:
+    logging.disable(logging.NOTSET)
 
 
 @dataclass

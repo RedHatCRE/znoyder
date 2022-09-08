@@ -113,7 +113,6 @@ def get_releases(**kwargs):
 
 
 def main(args) -> None:
-
     if args.command == 'components':
         results = get_components(**vars(args))
         default_output = ['name']

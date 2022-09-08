@@ -31,7 +31,12 @@ from znoyder.lib.exceptions import PathError
 from znoyder.lib.zuul import ZuulPipeline
 
 
-logging.disable(logging.CRITICAL)
+def setUpModule() -> None:
+    logging.disable(logging.CRITICAL)
+
+
+def tearDownModule() -> None:
+    logging.disable(logging.NOTSET)
 
 
 EXAMPLE_ZUUL_CONFIG = """
