@@ -117,7 +117,7 @@ def discover_jobs(project_name, osp_tag, directory,
     return jobs
 
 
-def generate_projects_pipleines_dict(args):
+def generate_projects_pipelines_dict(args):
     # The scheme is: projects{} -> pipelines{} -> jobs[]
     projects_pipelines_dict = defaultdict(lambda: defaultdict(list))
 
@@ -237,7 +237,7 @@ def generate_resources_config(projects_pipelines_dict: dict) -> None:
 
 def main(args) -> None:
     cleanup_generated_jobs_dir()
-    projects_pipelines_dict = generate_projects_pipleines_dict(args)
+    projects_pipelines_dict = generate_projects_pipelines_dict(args)
     generate_projects_templates(projects_pipelines_dict)
     generate_projects_config(projects_pipelines_dict)
     generate_resources_config(projects_pipelines_dict)
