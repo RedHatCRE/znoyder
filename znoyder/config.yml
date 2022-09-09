@@ -86,42 +86,10 @@ add:
       'osp-tox-pep8':
         pipeline:
           - 'check'
-          - 'gate'
     'osp-17.1':
       'osp-tox-pep8':
         pipeline:
           - 'check'
-          - 'gate'
-
-  'keystone':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-
-  'openstack-barbican':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-
-  'openstack-heat-agents':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
 
   'openstack-tempest':
     'osp-17.0':
@@ -139,76 +107,31 @@ add:
           extra_commands:
             - 'dnf install -y python3-hacking'
 
-  'openstack-tripleo-common':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-
-  'python-castellan':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-
-  'python-keystoneauth1':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-
   'python-keystonemiddleware':
     'osp-17.0':
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
     'osp-17.1':
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
 
   'python-openstacksdk':
     'osp-17.0':
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
     'osp-17.1':
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
-
-  'python-tripleoclient':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'gate'
 
   'python-zaqarclient':
     'osp-17.0':
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
         vars:
           extra_commands:
             - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
@@ -216,7 +139,6 @@ add:
       'osp-rpm-py39':
         pipeline:
           - 'check'
-          - 'gate'
         vars:
           extra_commands:
             - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
@@ -1508,7 +1430,13 @@ copy:
     /.*/:  # every tag
       - 'osp-rpm-py39':
           from: 'check'
+          to: 'gate'
+      - 'osp-rpm-py39':
+          from: 'check'
           to: 'weekly'
+      - 'osp-tox-pep8':
+          from: 'check'
+          to: 'gate'
       - 'osp-tox-pep8':
           from: 'check'
           to: 'weekly'
