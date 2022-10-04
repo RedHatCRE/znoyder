@@ -500,21 +500,23 @@ override:
 
   'openstack-designate':
     'osp-17.0':
-      'osp-rpm-py39':  # rhbz-2069553
-        voting: false
+      'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
             - pip install monasca-statsd
+            - sudo dnf remove -y python3-dns --noautoremove
+            - pip install 'dnspython===1.16.0'
       'osp-tox-pep8':  # rhbz-2132082
         voting: false
     'osp-17.1':
-      'osp-rpm-py39':  # rhbz-2069553
-        voting: false
+      'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
             - pip install monasca-statsd
+            - sudo dnf remove -y python3-dns --noautoremove
+            - pip install 'dnspython===1.16.0'
       'osp-tox-pep8':  # rhbz-2132082
         voting: false
 
@@ -549,18 +551,14 @@ override:
   'openstack-heat-agents':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-testrepository'
-            - 'dnf reinstall -y platform-python-setuptools'
+            - 'dnf install -y hostname python3-testrepository'
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-testrepository'
-            - 'dnf reinstall -y platform-python-setuptools'
+            - 'dnf install -y hostname python3-testrepository'
 
   'openstack-heat-ui':
     'osp-17.0':
