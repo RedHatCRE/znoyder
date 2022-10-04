@@ -206,6 +206,18 @@ override:
         voting: true
         required-projects: ~
 
+  'ansible-tripleo-ipa':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest'
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-stestr python3-oslotest'
+
   'aodh':
     'osp-17.0':
       'osp-rpm-py39':
@@ -323,10 +335,12 @@ override:
   'horizon':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          allow_test_requirements_txt: true
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          allow_test_requirements_txt: true
 
   'ironic':
     'osp-17.0':
@@ -341,18 +355,22 @@ override:
   'ironic-ui':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'keystone':  # rhbz#2052499
     'osp-17.0':
@@ -393,26 +411,40 @@ override:
   'manila-ui':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'networking-bgpvpn':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y openstack-dashboard python3-stestr python3-neutron-tests python3-neutron-lib-tests python3-networking-bagpipe'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          extra_commands:
+            - 'dnf install -y openstack-dashboard python3-stestr python3-neutron-tests python3-neutron-lib-tests python3-networking-bagpipe'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'neutron':
     'osp-17.0':
@@ -481,18 +513,22 @@ override:
   'openstack-designate-ui':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'openstack-ec2-api':
     'osp-17.0':
@@ -521,18 +557,22 @@ override:
   'openstack-heat-ui':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'openstack-ironic-inspector':
     'osp-17.0':
@@ -575,18 +615,22 @@ override:
   'openstack-octavia-ui':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
+          allow_test_requirements_txt: true
           extra_commands:
             - 'dnf install -y openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'openstack-tripleo-common':
     'osp-17.0':
@@ -1321,13 +1365,17 @@ override:
   'python-tripleoclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false  # one test expects to be run as non-root user
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr'
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false  # one test expects to be run as non-root user
+        vars:
+          extra_commands:
+            - 'dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr'
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
