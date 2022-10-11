@@ -1011,7 +1011,8 @@ override:
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - sed -i -r 's/self.auth_token = ""/self.auth_token = ""  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py
+            # NOTE: full quote required due to hash character within the string
+            - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
     'osp-17.1':
       'osp-rpm-py39':
         vars:
@@ -1020,7 +1021,8 @@ override:
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - sed -i -r 's/self.auth_token = ""/self.auth_token = ""  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py
+            # NOTE: full quote required due to hash character within the string
+            - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
 
   'python-novaclient':
     'osp-17.0':
@@ -1098,7 +1100,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-stestr
+            - dnf install -y python3-castellan python3-ddt python3-oslo-vmware python3-stestr
       'osp-tox-pep8':
         vars:
           extra_commands:
