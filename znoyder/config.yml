@@ -98,14 +98,14 @@ add:
           - 'check'
         vars:
           extra_commands:
-            - 'dnf install -y python3-hacking'
+            - dnf install -y python3-hacking
     'osp-17.1':
       'osp-rpm-py39':
         pipeline:
           - 'check'
         vars:
           extra_commands:
-            - 'dnf install -y python3-hacking'
+            - dnf install -y python3-hacking
 
   'python-keystonemiddleware':
     'osp-17.0':
@@ -134,14 +134,14 @@ add:
           - 'check'
         vars:
           extra_commands:
-            - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
     'osp-17.1':
       'osp-rpm-py39':
         pipeline:
           - 'check'
         vars:
           extra_commands:
-            - 'dnf install -y python3-pbr python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
 
   'swift':
     'osp-17.0':
@@ -151,10 +151,10 @@ add:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: rhelosp-17.0-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-swift-tests python3-nose-1.3.7 python3-dns python3-coverage python3-mock python3-requests-mock liberasurecode-devel'
-            - 'cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf'
-            - "sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf"
-            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py"
+            - dnf install -y liberasurecode-devel python3-coverage python3-dns python3-mock python3-nose-1.3.7 python3-requests-mock python3-swift-tests
+            - cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf
+            - sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf
+            - sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py
     'osp-17.1':
       'osp-rpm-py39':
         branches: ^rhos-17.1-trunk-patches$
@@ -162,10 +162,10 @@ add:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: rhelosp-17.1-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-swift-tests python3-nose-1.3.7 python3-dns python3-coverage python3-mock python3-requests-mock liberasurecode-devel'
-            - 'cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf'
-            - "sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf"
-            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py"
+            - dnf install -y liberasurecode-devel python3-coverage python3-dns python3-mock python3-nose-1.3.7 python3-requests-mock python3-swift-tests
+            - cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf
+            - sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf
+            - sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py
 
 
 #
@@ -211,12 +211,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest'
+            - dnf install -y python3-oslotest python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest'
+            - dnf install -y python3-oslotest python3-stestr
 
   'aodh':
     'osp-17.0':
@@ -237,18 +237,16 @@ override:
   'ceilometer':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
+            - dnf install -y python3-oslotest python3-stestr python3-testscenarios
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
+            - dnf install -y python3-oslotest python3-stestr python3-testscenarios
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
 
   'cinder':
     'osp-17.0':
@@ -293,22 +291,22 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: rhelosp-17.0-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-retrying python3-boto3 python3-swiftclient python-oslo-vmware python3-requests-mock'
+            - dnf install -y python3-boto3 python3-oslotest python-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - "sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini"
+            - sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: rhelosp-17.1-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-retrying python3-boto3 python3-swiftclient python-oslo-vmware python3-requests-mock'
+            - dnf install -y python3-boto3 python3-oslotest python-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - "sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini"
+            - sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
 
   'heat':
     'osp-17.0':
@@ -350,7 +348,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -359,7 +357,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -370,22 +368,22 @@ override:
         voting: false
         vars:
           extra_commands:
-            - 'sudo dnf install -y python3-stestr python3-webtest python3-freezegun python3-testresources python3-pycodestyle python3-testscenarios python3-hacking python3-oslotest'
+            - dnf install -y python3-freezegun python3-hacking python3-oslotest python3-pycodestyle python3-stestr python3-testresources python3-testscenarios python3-webtest
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - 'sudo dnf install -y openldap-devel'
+            - dnf install -y openldap-devel
           tox_install_bindep: false
     'osp-17.1':
       'osp-rpm-py39':
         voting: false
         vars:
           extra_commands:
-            - 'sudo dnf install -y python3-stestr python3-webtest python3-freezegun python3-testresources python3-pycodestyle python3-testscenarios python3-hacking python3-oslotest'
+            - dnf install -y python3-freezegun python3-hacking python3-oslotest python3-pycodestyle python3-stestr python3-testresources python3-testscenarios python3-webtest
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - 'sudo dnf install -y openldap-devel'
+            - dnf install -y openldap-devel
           tox_install_bindep: false
 
   'manila':
@@ -393,12 +391,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-oslotest python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-oslotest python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
 
   'manila-ui':
     'osp-17.0':
@@ -406,7 +404,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -415,7 +413,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -425,7 +423,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y openstack-dashboard python3-stestr python3-neutron-tests python3-neutron-lib-tests python3-networking-bagpipe'
+            - dnf install -y openstack-dashboard python3-networking-bagpipe python3-neutron-tests python3-neutron-lib-tests python3-stestr
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -433,7 +431,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y openstack-dashboard python3-stestr python3-neutron-tests python3-neutron-lib-tests python3-networking-bagpipe'
+            - dnf install -y openstack-dashboard python3-networking-bagpipe python3-neutron-tests python3-neutron-lib-tests python3-stestr
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -443,12 +441,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-lib-tests python3-hacking'
+            - dnf install -y python3-hacking python3-neutron-lib-tests
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-lib-tests python3-hacking'
+            - dnf install -y python3-hacking python3-neutron-lib-tests
 
   'nova':
     'osp-17.0':
@@ -480,19 +478,23 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - sudo dnf remove -y python3-dns --noautoremove
+            - dnf remove -y python3-dns --noautoremove
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
-      'osp-tox-pep8':  # rhbz-2132082
-        voting: false
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - sudo dnf remove -y python3-dns --noautoremove
+            - dnf remove -y python3-dns --noautoremove
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
-      'osp-tox-pep8':  # rhbz-2132082
-        voting: false
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
 
   'openstack-designate-ui':
     'osp-17.0':
@@ -500,7 +502,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -509,7 +511,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -527,12 +529,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y hostname python3-testrepository'
+            - dnf install -y hostname python3-testrepository
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y hostname python3-testrepository'
+            - dnf install -y hostname python3-testrepository
 
   'openstack-heat-ui':
     'osp-17.0':
@@ -540,7 +542,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -549,7 +551,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -559,14 +561,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios python3-testresources'
-            - 'dnf install -y python3-requests-mock python3-ddt python3-oslotest'
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-testresources python3-testscenarios python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios python3-testresources'
-            - 'dnf install -y python3-requests-mock python3-ddt python3-oslotest'
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-testresources python3-testscenarios python3-stestr
 
   'openstack-ironic-python-agent':
     'osp-17.0':
@@ -583,14 +583,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-tests'
-            - 'dnf install -y python3-neutron-lib-tests'
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-tests'
-            - 'dnf install -y python3-neutron-lib-tests'
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests
 
   'openstack-octavia-ui':
     'osp-17.0':
@@ -598,7 +596,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -607,7 +605,7 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y openstack-dashboard'
+            - dnf install -y openstack-dashboard
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -618,32 +616,23 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
-            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "head {{ zuul.project.src_dir }}/tox.ini"
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
-            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "head {{ zuul.project.src_dir }}/tox.ini"
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini
 
   'openstack-tripleo-heat-templates':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
-            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "head {{ zuul.project.src_dir }}/tox.ini"
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
@@ -651,11 +640,8 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - "sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini"
-            - "sed -i -r 's/libselinux-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "sed -i -r 's/libsemanage-python//' {{ zuul.project.src_dir }}/bindep.txt"
-            - "head {{ zuul.project.src_dir }}/tox.ini"
+            - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - sed -i -r 's/tox-extra>=0.0.0//' {{ zuul.project.src_dir }}/tox.ini
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
@@ -675,12 +661,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - "dnf install -y python3-stestr"
+            - dnf install -y python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - "dnf install -y python3-stestr"
+            - dnf install -y python3-stestr
 
   'os-net-config':
     'osp-17.0':
@@ -762,9 +748,15 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - dnf install -y python3-devel  # uWSGI requires
     'osp-17.1':
       'osp-rpm-py39':
         voting: false
+        vars:
+          extra_commands:
+            - dnf install -y python3-devel  # uWSGI requires
 
   'python-automaton':
     'osp-17.0':
@@ -779,18 +771,20 @@ override:
   'python-barbicanclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-coverage python3-stestr python3-requests-mock openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+            - dnf install -y openstack-dashboard python3-coverage python3-requests-mock python3-stestr
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-coverage python3-stestr python3-requests-mock openstack-dashboard'
-            - 'ln -s /usr/share/openstack-dashboard/openstack_dashboard /usr/lib/python3.9/site-packages/'
+            - dnf install -y openstack-dashboard python3-coverage python3-requests-mock python3-stestr
+          tox_environment:
+            PYTHONPATH: /usr/share/openstack-dashboard
+            TOX_TESTENV_PASSENV: PYTHONPATH
 
   'python-castellan':
     'osp-17.0':
@@ -807,12 +801,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-betamax'
+            - dnf install -y python3-betamax python3-oslotest python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-betamax'
+            - dnf install -y python3-betamax python3-oslotest python3-stestr
 
   'python-cinderclient':
     'osp-17.0':
@@ -829,12 +823,20 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
+            - dnf install -y python3-docutils python3-pbr python3-stestr
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - cd {{ zuul.project.src_dir }} && git fetch https://review.opendev.org/openstack/cliff refs/changes/77/852177/1 && git cherry-pick FETCH_HEAD
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
+            - dnf install -y python3-docutils python3-pbr python3-stestr
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - cd {{ zuul.project.src_dir }} && git fetch https://review.opendev.org/openstack/cliff refs/changes/77/852177/1 && git cherry-pick FETCH_HEAD
 
   'python-dracclient':
     'osp-17.0':
@@ -873,12 +875,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-coverage python3-osc-lib-tests'
+            - dnf install -y python3-coverage python3-osc-lib-tests python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-coverage python3-osc-lib-tests'
+            - dnf install -y python3-coverage python3-osc-lib-tests python3-stestr
 
   'python-ironic-lib':
     'osp-17.0':
@@ -895,12 +897,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-osc-lib-tests'
+            - dnf install -y python3-osc-lib-tests python3-oslotest python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-osc-lib-tests'
+            - dnf install -y python3-osc-lib-tests python3-oslotest python3-stestr
 
   'python-keystoneclient':
     'osp-17.0':
@@ -957,26 +959,24 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
+            - dnf install -y python3-oslotest python3-osprofiler python3-requests-mock python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
+            - dnf install -y python3-oslotest python3-osprofiler python3-requests-mock python3-stestr
 
   'python-networking-baremetal':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-lib-tests'
+            - dnf install -y python3-neutron-lib-tests
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-neutron-lib-tests'
+            - dnf install -y python3-neutron-lib-tests
 
   'python-networking-sfc':
     'osp-17.0':
@@ -984,17 +984,13 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - dnf remove -y python3-neutron
-            - dnf remove -y python3-neutronclient
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt neutron python-neutronclient
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-neutronclient-tests
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - dnf remove -y python3-neutron
-            - dnf remove -y python3-neutronclient
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt neutron python-neutronclient
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-neutronclient-tests
 
   'python-neutron-lib':
     'osp-17.0':
@@ -1006,43 +1002,37 @@ override:
         vars:
           allow_test_requirements_txt: true
 
-  'python-neutronclient':  # rhbz#2059099
+  'python-neutronclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
+            - dnf install -y python3-osprofiler
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
+            - sed -i -r 's/self.auth_token = ""/self.auth_token = ""  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
+            - dnf install -y python3-osprofiler
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - "sed -i -r 's/self.auth_token = \"\"/self.auth_token = \"\"  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py"
+            - sed -i -r 's/self.auth_token = ""/self.auth_token = ""  # nosec bandit B105/' {{ zuul.project.src_dir }}/neutronclient/client.py
 
   'python-novaclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false  # rhbz#2109541
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
-            - 'dnf install -y python3-requests-mock python3-ddt'
-            - 'dnf install -y python3-testscenarios'
+            - dnf install -y python3-ddt python3-docutils python3-osprofiler python3-requests-mock python3-stestr python3-testscenarios
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false  # rhbz#2109541
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-pbr python3-docutils'
-            - 'dnf install -y python3-requests-mock python3-ddt'
-            - 'dnf install -y python3-testscenarios'
+            - dnf install -y python3-ddt python3-docutils python3-osprofiler python3-requests-mock python3-stestr python3-testscenarios
 
   'python-octavia-lib':
     'osp-17.0':
@@ -1050,15 +1040,13 @@ override:
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
+            - dnf install -y python3-hacking python3-oslotest python3-stes
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
+            - dnf install -y python3-hacking python3-oslotest python3-stes
 
   'python-octaviaclient':
     'osp-17.0':
@@ -1075,12 +1063,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-osc-lib-tests python3-ddt python3-oslotest python3-testresources python3-requests-mock python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
 
   'python-openstacksdk':
     'osp-17.0':
@@ -1088,35 +1076,33 @@ override:
         voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-hacking'
-            - 'dnf install -y python3-jsonschema python3-oslo-config'
-            - 'dnf install -y python3-prometheus_client python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-oslotest'
+            - dnf install -y python3-ddt python3-hacking python3-jsonschema python3-oslo-config python3-oslotest python3-prometheus_client python3-requests-mock python3-stestr python3-testscenarios
     'osp-17.1':
       'osp-rpm-py39':
         voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-hacking'
-            - 'dnf install -y python3-jsonschema python3-oslo-config'
-            - 'dnf install -y python3-prometheus_client python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-oslotest'
+            - dnf install -y python3-ddt python3-hacking python3-jsonschema python3-oslo-config python3-oslotest python3-prometheus_client python3-requests-mock python3-stestr python3-testscenarios
 
   'python-os-brick':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-castellan python3-ddt python3-oslo-vmware python3-stestr
       'osp-tox-pep8':
-        voting: false
+        vars:
+          extra_commands:
+            - sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-stestr
       'osp-tox-pep8':
-        voting: false
+        vars:
+          extra_commands:
+            - sed -i -r '/ignore_basepython_conflict/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
 
   'python-os-ken':
     'osp-17.0':
@@ -1141,12 +1127,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-oslotest python3-pycodestyle python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-ddt python3-oslotest python3-pycodestyle python3-hacking'
+            - dnf install -y python3-ddt python3-hacking python3-oslotest python3-pycodestyle python3-stestr
 
   'python-oslo-cache':
     'osp-17.0':
@@ -1256,33 +1242,25 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - dnf remove -y python3-pbr
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt keystoneauth1 osc-lib oslo.log oslo.serialization
+            - dnf install -y python3-hacking python3-osc-lib-tests python3-requests-mock python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - dnf remove -y python3-pbr
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt keystoneauth1 osc-lib oslo.log oslo.serialization
+            - dnf install -y python3-hacking python3-osc-lib-tests python3-requests-mock python3-stestr
 
   'python-scciclient':
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
+            - dnf install -y python3-requests-mock python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
+            - dnf install -y python3-requests-mock python3-stestr
 
   'python-stevedore':
     'osp-17.0':
@@ -1319,7 +1297,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-mock'
+            - dnf install -y python3-mock python3-stestr
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
@@ -1327,7 +1305,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-mock'
+            - dnf install -y python3-mock python3-stestr
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
@@ -1337,7 +1315,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr'
+            - dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
@@ -1345,7 +1323,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr'
+            - dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr
       'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
@@ -1355,27 +1333,24 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-requests-mock python3-httplib2'
+            - dnf install -y python3-httplib2 python3-requests-mock python3-stestr
       'osp-tox-pep8':
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
-            - "sed -i -r 's/PrettyTable<0.8,>=0.7.2 # BSD/PrettyTable>=3.3.0 # BSD/' {{ zuul.project.src_dir }}/requirements.txt"
+            - sed -i -r 's/PrettyTable<0.8,>=0.7.2/PrettyTable>=3.3.0/' {{ zuul.project.src_dir }}/requirements.txt
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-requests-mock python3-httplib2'
+            - dnf install -y python3-httplib2 python3-requests-mock python3-stestr
       'osp-tox-pep8':
         vars:
           extra_commands:
-            # yamllint disable-line rule:line-length
-            - "sed -i -r 's/PrettyTable<0.8,>=0.7.2 # BSD/PrettyTable>=3.3.0 # BSD/' {{ zuul.project.src_dir }}/requirements.txt"
+            - sed -i -r 's/PrettyTable<0.8,>=0.7.2/PrettyTable>=3.3.0/' {{ zuul.project.src_dir }}/requirements.txt
 
   'swift':
     'osp-17.0':
       'osp-tox-pep8':
-        branches: ^rhos-17.0-trunk-patches$
         irrelevant-files:
           - ^(api-ref|etc|examples|releasenotes)/.*$
           - ^doc/(requirements.txt|(saio|s3api|source)/.*)$
@@ -1383,10 +1358,9 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: rhelosp-17.0-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-swift python3-nose python3-mock liberasurecode-devel'
+            - dnf install -y liberasurecode-devel python3-mock python3-nose python3-swift
     'osp-17.1':
       'osp-tox-pep8':
-        branches: ^rhos-17.1-trunk-patches$
         irrelevant-files:
           - ^(api-ref|etc|examples|releasenotes)/.*$
           - ^doc/(requirements.txt|(saio|s3api|source)/.*)$
@@ -1394,7 +1368,7 @@ override:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: rhelosp-17.1-trunk-brew
           extra_commands:
-            - 'dnf install -y python3-swift python3-nose python3-mock liberasurecode-devel'
+            - dnf install -y liberasurecode-devel python3-mock python3-nose python3-swift
 
   'tripleo-ansible':
     'osp-17.0':
