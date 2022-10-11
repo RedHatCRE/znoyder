@@ -154,7 +154,7 @@ add:
             - 'dnf install -y python3-swift-tests python3-nose-1.3.7 python3-dns python3-coverage python3-mock python3-requests-mock liberasurecode-devel'
             - 'cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf'
             - "sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf"
-            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' /root/src/code.engineering.redhat.com/swift/test/unit/common/test_utils.py"
+            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py"
     'osp-17.1':
       'osp-rpm-py39':
         branches: ^rhos-17.1-trunk-patches$
@@ -165,7 +165,7 @@ add:
             - 'dnf install -y python3-swift-tests python3-nose-1.3.7 python3-dns python3-coverage python3-mock python3-requests-mock liberasurecode-devel'
             - 'cp /usr/lib/python3.9/site-packages/swift/test/sample.conf /etc/swift/test.conf'
             - "sed -i -r 's/swift_hash_path_suffix = %SWIFT_HASH_PATH_SUFFIX%/swift_hash_path_suffix = testing/' /etc/swift/swift.conf"
-            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' /root/src/code.engineering.redhat.com/swift/test/unit/common/test_utils.py"
+            - "sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py"
 
 
 #
@@ -315,22 +315,14 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-hacking python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - 'pip install python-zunclient'
-            - 'pip install python-monascaclient'
-            - 'pip install python-blazarclient'
-            - 'pip install vitrage'
-            - 'pip install python-vitrageclient'
+            - dnf install -y python3-ddt python3-hacking python3-monascaclient python3-testscenarios python3-stestr
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-hacking python3-testscenarios python3-stestr python3-ddt python3-oslotest python3-requests-mock'
-            - 'pip install python-zunclient'
-            - 'pip install python-monascaclient'
-            - 'pip install python-blazarclient'
-            - 'pip install vitrage'
-            - 'pip install python-vitrageclient'
+            - dnf install -y python3-ddt python3-hacking python3-monascaclient python3-testscenarios python3-stestr
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
 
   'horizon':
     'osp-17.0':
@@ -461,32 +453,16 @@ override:
   'nova':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-ddt'
-            - 'dnf install -y python3-ironicclient python3-mock'
-            - 'dnf install -y python3-oslotest python3-osprofiler'
-            - 'dnf install -y python3-testresources'
-            - 'dnf install -y python3-pycodestyle'
-            - 'dnf install -y python3-pypowervm'
-            - 'dnf install -y python3-wsgi_intercept'
-            - 'dnf install -y python3-zvmconnector'
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-ddt'
-            - 'dnf install -y python3-ironicclient python3-mock'
-            - 'dnf install -y python3-oslotest python3-osprofiler'
-            - 'dnf install -y python3-testresources'
-            - 'dnf install -y python3-pycodestyle'
-            - 'dnf install -y python3-pypowervm'
-            - 'dnf install -y python3-wsgi_intercept'
-            - 'dnf install -y python3-zvmconnector'
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
 
   'openstack-barbican':
     'osp-17.0':
@@ -877,14 +853,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-ddt'
+            - dnf install -y python3-ddt python3-requests-mock python3-stestr python3-testscenarios
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'dnf install -y python3-stestr python3-testscenarios'
-            - 'dnf install -y python3-requests-mock python3-ddt'
+            - dnf install -y python3-ddt python3-requests-mock python3-stestr python3-testscenarios
 
   'python-heatclient':
     'osp-17.0':
@@ -933,22 +907,24 @@ override:
   'python-keystoneclient':
     'osp-17.0':
       'osp-tox-pep8':
-        voting: false
+        vars:
+          tox_install_bindep: false
     'osp-17.1':
       'osp-tox-pep8':
-        voting: false
+        vars:
+          tox_install_bindep: false
 
   'python-keystonemiddleware':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-oslotest python3-oslo-messaging python3-requests-mock python3-stestr python3-testresources python3-webtest
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-oslotest python3-oslo-messaging python3-requests-mock python3-stestr python3-testresources python3-webtest
 
   'python-kuryr-lib':
     'osp-17.0':
@@ -1189,12 +1165,10 @@ override:
   'python-oslo-config':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           allow_test_requirements_txt: true
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           allow_test_requirements_txt: true
 
@@ -1436,25 +1410,19 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install python-heatclient python-glanceclient'
-            - 'pip install python-ironicclient python-novaclient'
-            - 'pip install tripleo-common'
+            - dnf install -y python3-mock python3-oslotest python3-stestr
       'osp-tox-pep8':
-        voting: false
+        vars:
+          tox_install_bindep: false
     'osp-17.1':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - 'dnf remove -y python3-pbr'
-            - 'pip install python-heatclient python-glanceclient'
-            - 'pip install python-ironicclient python-novaclient'
-            - 'pip install tripleo-common'
+            - dnf install -y python3-mock python3-oslotest python3-stestr
       'osp-tox-pep8':
-        voting: false
+        vars:
+          tox_install_bindep: false
 
 
 #
