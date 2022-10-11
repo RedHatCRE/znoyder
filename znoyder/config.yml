@@ -241,14 +241,14 @@ override:
         vars:
           extra_commands:
             - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
-            - 'pip install os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
     'osp-17.1':
       'osp-rpm-py39':
         voting: false
         vars:
           extra_commands:
             - 'dnf install -y python3-stestr python3-oslotest python3-testscenarios'
-            - 'pip install os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo'
 
   'cinder':
     'osp-17.0':
@@ -480,9 +480,8 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - pip install monasca-statsd
             - sudo dnf remove -y python3-dns --noautoremove
-            - pip install 'dnspython===1.16.0'
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
       'osp-tox-pep8':  # rhbz-2132082
         voting: false
     'osp-17.1':
@@ -490,9 +489,8 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - pip install monasca-statsd
             - sudo dnf remove -y python3-dns --noautoremove
-            - pip install 'dnspython===1.16.0'
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
       'osp-tox-pep8':  # rhbz-2132082
         voting: false
 
@@ -960,13 +958,13 @@ override:
         vars:
           extra_commands:
             - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
-            - 'pip install osprofiler>=1.4.0'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - 'dnf install -y python3-stestr python3-oslotest python3-requests-mock'
-            - 'pip install osprofiler>=1.4.0'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
 
   'python-networking-baremetal':
     'osp-17.0':
@@ -988,8 +986,7 @@ override:
           extra_commands:
             - dnf remove -y python3-neutron
             - dnf remove -y python3-neutronclient
-            - pip install neutron
-            - pip install python-neutronclient
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt neutron python-neutronclient
     'osp-17.1':
       'osp-rpm-py39':
         vars:
@@ -997,8 +994,7 @@ override:
           extra_commands:
             - dnf remove -y python3-neutron
             - dnf remove -y python3-neutronclient
-            - pip install neutron
-            - pip install python-neutronclient
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt neutron python-neutronclient
 
   'python-neutron-lib':
     'osp-17.0':
@@ -1015,7 +1011,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'pip install osprofiler>=1.4.0'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -1024,7 +1020,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - 'pip install osprofiler>=1.4.0'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt osprofiler>=1.4.0'
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -1055,14 +1051,14 @@ override:
           allow_test_requirements_txt: true
           extra_commands:
             - 'dnf remove -y python3-pbr'
-            - 'pip install oslo.serialization'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
             - 'dnf remove -y python3-pbr'
-            - 'pip install oslo.serialization'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
 
   'python-octaviaclient':
     'osp-17.0':
@@ -1263,20 +1259,14 @@ override:
           allow_test_requirements_txt: true
           extra_commands:
             - dnf remove -y python3-pbr
-            - pip install oslo.serialization
-            - pip install keystoneauth1
-            - pip install osc-lib
-            - pip install oslo.log
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt keystoneauth1 osc-lib oslo.log oslo.serialization
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
             - dnf remove -y python3-pbr
-            - pip install oslo.serialization
-            - pip install keystoneauth1
-            - pip install osc-lib
-            - pip install oslo.log
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt keystoneauth1 osc-lib oslo.log oslo.serialization
 
   'python-scciclient':
     'osp-17.0':
@@ -1285,14 +1275,14 @@ override:
           allow_test_requirements_txt: true
           extra_commands:
             - 'dnf remove -y python3-pbr'
-            - 'pip install oslo.serialization'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
           extra_commands:
             - 'dnf remove -y python3-pbr'
-            - 'pip install oslo.serialization'
+            - 'pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt oslo.serialization'
 
   'python-stevedore':
     'osp-17.0':
