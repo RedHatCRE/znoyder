@@ -854,11 +854,19 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-requests-mock python3-stestr python3-testscenarios
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-requests-mock python3-stestr python3-testscenarios
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
 
   'python-heatclient':
     'osp-17.0':
@@ -1119,10 +1127,16 @@ override:
   'python-os-vif':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          extra_commands:
+            - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
+            - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
+        vars:
+          extra_commands:
+            - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
+            - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
 
   'python-os-win':
     'osp-17.0':
