@@ -256,10 +256,7 @@ override:
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - dnf install -y wget
-            - wget https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt -O /tmp/upper-constraints.txt
-            - sed -i -r "s+oslo.vmware===3.8.1+oslo.vmware===3.10.0+" /tmp/upper-constraints.txt
-            - sed -i -r "s+https://releases.openstack.org/constraints/upper/wallaby+/tmp/upper-constraints.txt+" {{ zuul.project.src_dir }}/tox.ini
+            - sed -i -r "s!requires = virtualenv>=20.4.2!requires = virtualenv>=20.4.2,<20.8!" {{ zuul.project.src_dir }}/tox.ini
           tox_install_bindep: false
     'osp-17.1':
       'osp-rpm-py39':
@@ -268,10 +265,7 @@ override:
       'osp-tox-pep8':
         vars:
           extra_commands:
-            - dnf install -y wget
-            - wget https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt -O /tmp/upper-constraints.txt
-            - sed -i -r "s+oslo.vmware===3.8.1+oslo.vmware===3.10.0+" /tmp/upper-constraints.txt
-            - sed -i -r "s+https://releases.openstack.org/constraints/upper/wallaby+/tmp/upper-constraints.txt+" {{ zuul.project.src_dir }}/tox.ini
+            - sed -i -r "s!requires = virtualenv>=20.4.2!requires = virtualenv>=20.4.2,<20.8!" {{ zuul.project.src_dir }}/tox.ini
           tox_install_bindep: false
 
   'glance':
