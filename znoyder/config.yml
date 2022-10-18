@@ -1048,15 +1048,13 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - dnf install -y python3-hacking python3-oslotest python3-stes
+            - dnf install -y python3-hacking python3-oslotest python3-stestr
     'osp-17.1':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
           extra_commands:
-            - dnf install -y python3-hacking python3-oslotest python3-stes
+            - dnf install -y python3-hacking python3-oslotest python3-stestr
 
   'python-octaviaclient':
     'osp-17.0':
