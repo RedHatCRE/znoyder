@@ -221,14 +221,12 @@ override:
   'aodh':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false  # rhbz#2052498 problem to run mysqld in centos container
         vars:
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false  # rhbz#2052498 problem to run mysqld in centos container
         vars:
           tox_envlist: 'py39-mysql'
           tox_environment:
@@ -356,10 +354,9 @@ override:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
 
-  'keystone':  # rhbz#2052499
+  'keystone':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - dnf install -y python3-freezegun python3-hacking python3-oslotest python3-pycodestyle python3-stestr python3-testresources python3-testscenarios python3-webtest
@@ -370,7 +367,6 @@ override:
           tox_install_bindep: false
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - dnf install -y python3-freezegun python3-hacking python3-oslotest python3-pycodestyle python3-stestr python3-testresources python3-testscenarios python3-webtest
@@ -509,14 +505,6 @@ override:
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
-
-  'openstack-ec2-api':
-    'osp-17.0':
-      'osp-rpm-py39':
-        voting: false
-    'osp-17.1':
-      'osp-rpm-py39':
-        voting: false
 
   'openstack-heat-agents':
     'osp-17.0':
@@ -930,14 +918,6 @@ override:
           extra_commands:
             - dnf install -y python3-oslotest python3-oslo-messaging python3-requests-mock python3-stestr python3-testresources python3-webtest
 
-  'python-kuryr-lib':
-    'osp-17.0':
-      'osp-rpm-py39':
-        voting: false
-    'osp-17.1':
-      'osp-rpm-py39':
-        voting: false
-
   'python-manilaclient':
     'osp-17.0':
       'osp-rpm-py39':
@@ -1077,13 +1057,11 @@ override:
   'python-openstacksdk':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-hacking python3-jsonschema python3-oslo-config python3-oslotest python3-prometheus_client python3-requests-mock python3-stestr python3-testscenarios
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-hacking python3-jsonschema python3-oslo-config python3-oslotest python3-prometheus_client python3-requests-mock python3-stestr python3-testscenarios
@@ -1229,24 +1207,16 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-      'osp-tox-pep8':  # rhos release provides the openvswitch package
+      'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-      'osp-tox-pep8':  # rhos release provides the openvswitch package
+      'osp-tox-pep8':
         vars:
           rhos_release_args: '17.0'
-
-  'python-proliantutils':
-    'osp-17.0':
-      'osp-tox-pep8':
-        voting: false
-    'osp-17.1':
-      'osp-tox-pep8':
-        voting: false
 
   'python-saharaclient':
     'osp-17.0':
