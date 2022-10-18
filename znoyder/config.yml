@@ -741,16 +741,18 @@ override:
   'python-aodhclient':
     'osp-17.0':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - dnf install -y python3-devel  # uWSGI requires
+            - dnf install -y postgresql-server python3-devel
+            - sed -i '/\.\[test\]/a \ \ \ \ MarkupSafe===1.1.1' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i 's!aodh-master.tar.gz!aodh-stable-wallaby.tar.gz!' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
-        voting: false
         vars:
           extra_commands:
-            - dnf install -y python3-devel  # uWSGI requires
+            - dnf install -y postgresql-server python3-devel
+            - sed -i '/\.\[test\]/a \ \ \ \ MarkupSafe===1.1.1' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i 's!aodh-master.tar.gz!aodh-stable-wallaby.tar.gz!' {{ zuul.project.src_dir }}/tox.ini
 
   'python-automaton':
     'osp-17.0':
