@@ -107,16 +107,6 @@ add:
           extra_commands:
             - dnf install -y python3-hacking
 
-  'python-keystonemiddleware':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'check'
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'check'
-
   'python-openstacksdk':
     'osp-17.0':
       'osp-rpm-py39':
