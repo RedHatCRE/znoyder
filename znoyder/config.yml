@@ -222,15 +222,21 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
+          extra_commands:
+            - setcap -r /usr/libexec/mysqld
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
+          tox_install_bindep: true
     'osp-17.1':
       'osp-rpm-py39':
         vars:
+          extra_commands:
+            - setcap -r /usr/libexec/mysqld
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
+          tox_install_bindep: true
 
   'ceilometer':
     'osp-17.0':
