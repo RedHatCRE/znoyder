@@ -140,6 +140,7 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         voting: true
+        branches: ~
         required-projects: ~
         vars:
           rhos_release_args: '17.0'
@@ -150,6 +151,7 @@ override:
     'osp-17.1':
       'osp-rpm-py39':
         voting: true
+        branches: ~
         required-projects: ~
         vars:
           rhos_release_args: '17.1'
