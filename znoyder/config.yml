@@ -38,11 +38,11 @@ branches:
 include:
   'osp-17.0':
     'openstack-tox-pep8': 'osp-tox-pep8'
-    'openstack-tox-py39': 'osp-rpm-py39'
+    'openstack-tox-py38': 'osp-rpm-py39'
     'swift-tox-py39': 'osp-rpm-py39'
   'osp-17.1':
     'openstack-tox-pep8': 'osp-tox-pep8'
-    'openstack-tox-py39': 'osp-rpm-py39'
+    'openstack-tox-py38': 'osp-rpm-py39'
     'swift-tox-py39': 'osp-rpm-py39'
     # 'openstack-tox-functional-py39': 'osp-tox-functional-py39'
     # 'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
@@ -109,7 +109,7 @@ add:
           extra_commands:
             - dnf install -y python3-hacking
 
-  'python-openstacksdk':
+  'python-scciclient':
     'osp-17.0':
       'osp-rpm-py39':
         pipeline:
@@ -118,22 +118,6 @@ add:
       'osp-rpm-py39':
         pipeline:
           - 'check'
-
-  'python-zaqarclient':
-    'osp-17.0':
-      'osp-rpm-py39':
-        pipeline:
-          - 'check'
-        vars:
-          extra_commands:
-            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
-    'osp-17.1':
-      'osp-rpm-py39':
-        pipeline:
-          - 'check'
-        vars:
-          extra_commands:
-            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
 
 
 #
@@ -1303,6 +1287,18 @@ override:
         vars:
           extra_commands:
             - sed -i -r 's/PrettyTable<0.8,>=0.7.2/PrettyTable>=3.3.0/' {{ zuul.project.src_dir }}/requirements.txt
+
+  'python-zaqarclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-hacking python3-osc-lib-tests python3-oslotest python3-pbr python3-pycodestyle python3-requests-mock python3-stestr python3-testresources
 
   'swift':
     'osp-17.0':
