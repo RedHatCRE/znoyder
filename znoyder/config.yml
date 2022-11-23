@@ -386,6 +386,18 @@ override:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
 
+  'networking-l2gw':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-neutronclient-tests vim
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-neutronclient-tests vim
+
   'neutron':
     'osp-17.0':
       'osp-rpm-py39':
@@ -709,10 +721,18 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
 
   'python-barbicanclient':
     'osp-17.0':
@@ -784,6 +804,18 @@ override:
           extra_commands:
             - cd {{ zuul.project.src_dir }} && git fetch https://review.opendev.org/openstack/cliff refs/changes/77/852177/1 && git cherry-pick FETCH_HEAD
 
+  'python-designateclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-requests-mock python3-stestr
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-requests-mock python3-stestr
+
   'python-dracclient':
     'osp-17.0':
       'osp-rpm-py39':
@@ -850,6 +882,18 @@ override:
           extra_commands:
             - dnf install -y python3-osc-lib-tests python3-oslotest python3-stestr
 
+  'python-keystoneauth1':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-betamax python3-hacking python3-gssapi python3-kerberos python3-lxml python3-oauthlib python3-oslo-config python3-oslo-utils python3-pycodestyle python3-requests-kerberos python3-requests-mock python3-stestr
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-betamax python3-hacking python3-gssapi python3-kerberos python3-lxml python3-oauthlib python3-oslo-config python3-oslo-utils python3-pycodestyle python3-requests-kerberos python3-requests-mock python3-stestr
+
   'python-keystoneclient':
     'osp-17.0':
       'osp-tox-pep8':
@@ -871,6 +915,18 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-oslotest python3-oslo-messaging python3-requests-mock python3-stestr python3-testresources python3-webtest
+
+  'python-magnumclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-openstackclient
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-openstackclient
 
   'python-manilaclient':
     'osp-17.0':
@@ -1172,6 +1228,18 @@ override:
         vars:
           rhos_release_args: '17.0'
 
+  'python-proliantutils':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-mock python3-stestr
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-mock python3-stestr
+
   'python-saharaclient':
     'osp-17.0':
       'osp-rpm-py39':
@@ -1244,6 +1312,28 @@ override:
         vars:
           tox_install_bindep: false
 
+  'python-tooz':
+    'osp-17.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-etcd3gw python3-kazoo python3-pymemcache python3-PyMySQL python3-stestr python3-sysv_ipc
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt etcd3
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
+    'osp-17.1':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-etcd3gw python3-kazoo python3-pymemcache python3-PyMySQL python3-stestr python3-sysv_ipc
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt etcd3
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
+
   'python-tripleoclient':
     'osp-17.0':
       'osp-rpm-py39':
@@ -1252,6 +1342,8 @@ override:
             - dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr
       'osp-tox-pep8':
         vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
           rhos_release_args: '17.0'
     'osp-17.1':
       'osp-rpm-py39':
@@ -1260,6 +1352,8 @@ override:
             - dnf install -y python3-osc-lib-tests python3-testscenarios python3-stestr
       'osp-tox-pep8':
         vars:
+          extra_commands:
+            - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
           rhos_release_args: '17.0'
 
   'python-troveclient':
