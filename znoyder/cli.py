@@ -49,7 +49,8 @@ class OverridenSubparserAction(_SubParsersAction):
 
         super().__init__(option_strings=option_strings, prog=prog,
                          parser_class=parser_class, dest=dest,
-                         required=required, help=help, metavar=metavar)
+                         help=help, metavar=metavar)
+        self.required = required
 
     def _find_argument_option_strings(self, argument_dest, parser):
         for action in parser._actions:
@@ -102,8 +103,8 @@ class OverridenSubparserAction(_SubParsersAction):
 
 
 def extend_parser_browser(parser) -> None:
-    subparsers = parser.add_subparsers(dest='command', metavar='command',
-                                       required=True)
+    subparsers = parser.add_subparsers(dest='command', metavar='command')
+    subparsers.required = True
 
     common = ArgumentParser(add_help=False)
     common.add_argument('--debug', dest='debug',
