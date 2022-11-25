@@ -1,4 +1,5 @@
 colorlog
 distroinfo
+importlib_resources; python_version < '3.7'
 jinja2
 PyYAML

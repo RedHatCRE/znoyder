@@ -16,7 +16,10 @@
 #    under the License.
 #
 
-import importlib.resources as pkg_resources
+try:
+    import importlib.resources as pkg_resources
+except ImportError:  # Fallback for Python < 3.7
+    import importlib_resources as pkg_resources
 
 import yaml
 
