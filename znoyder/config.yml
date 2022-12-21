@@ -243,7 +243,7 @@ override:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: rhelosp-17.0-trunk-brew
           extra_commands:
-            - dnf install -y python3-boto3 python3-oslotest python-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
+            - dnf install -y python3-boto3 python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -254,7 +254,7 @@ override:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: rhelosp-17.1-trunk-brew
           extra_commands:
-            - dnf install -y python3-boto3 python3-oslotest python-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
+            - dnf install -y python3-boto3 python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -921,12 +921,12 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-openstackclient
+            - dnf install -y python3-openstackclient python3-osprofiler
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-openstackclient
+            - dnf install -y python3-openstackclient python3-osprofiler
 
   'python-manilaclient':
     'osp-17.0':
