@@ -3,17 +3,17 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     container:
-      image: alpine:latest
+      image: python:3.10
     steps:
       - name: Packages
-        run: apk add --no-cache git python3 py3-pip && pip3 install tox
+        run: pip install 'tox<4'
       - name: Checkout
         uses: actions/checkout@v3
       - name: Tox
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           tox -v
 
