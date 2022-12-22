@@ -37,20 +37,21 @@ branches:
 #
 include:
   'osp-17.0':
+    'nova-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py38': 'osp-rpm-functional-py39'
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py38': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
     'swift-tox-py39': 'osp-rpm-py39'
   'osp-17.1':
+    'nova-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py38': 'osp-rpm-functional-py39'
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py38': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
     'swift-tox-py39': 'osp-rpm-py39'
-    # 'openstack-tox-functional-py39': 'osp-tox-functional-py39'
-    # 'cinder-tox-functional-py39': 'cinder-tox-functional-py39'
-    # 'nova-tox-functional-py39': 'nova-tox-functional-py39'
-    # 'placement-nova-tox-functional-py39': 'placement-nova-tox-functional-py39'
-    # 'glance-tox-functional-py39-cursive-tips': 'glance-tox-functional-py39-cursive-tips'
-    # 'glance-tox-functional-py39-rbac-defaults': 'glance-tox-functional-py39-rbac-defaults'
-    # 'openstack-tox-functional': 'osp-tox-functional'
 
 
 #
@@ -145,8 +146,16 @@ override:
         vars:
           rhos_release_args: '17.0'
           rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+      'osp-rpm-functional-py39':
+        voting: true
+        branches: ~
+        required-projects: ~
+        vars:
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
       'osp-tox-pep8':
         voting: true
+        branches: ~
         required-projects: ~
     'osp-17.1':
       'osp-rpm-py39':
@@ -156,8 +165,16 @@ override:
         vars:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew'
+      'osp-rpm-functional-py39':
+        voting: true
+        branches: ~
+        required-projects: ~
+        vars:
+          rhos_release_args: '17.1'
+          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew'
       'osp-tox-pep8':
         voting: true
+        branches: ~
         required-projects: ~
 
   'ansible-tripleo-ipa':
@@ -208,6 +225,9 @@ override:
 
   'cinder':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          tox_envlist: functional
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -217,6 +237,9 @@ override:
             - sed -i -r "s!requires = virtualenv>=20.4.2!requires = virtualenv>=20.4.2,<20.8!" {{ zuul.project.src_dir }}/tox.ini
           tox_install_bindep: false
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          tox_envlist: functional
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -228,10 +251,18 @@ override:
 
   'glance':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-oslotest python3-stestr python3-swiftclient python3-testresources python3-testscenarios
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-oslotest python3-stestr python3-swiftclient python3-testresources python3-testscenarios
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -412,6 +443,10 @@ override:
 
   'nova':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -419,6 +454,10 @@ override:
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
             - dnf remove -y libguestfs libvirt-client
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -514,11 +553,19 @@ override:
 
   'openstack-ironic-inspector':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-stestr python3-testresources python3-testscenarios
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-oslotest python3-requests-mock python3-testresources python3-testscenarios python3-stestr
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-stestr python3-testresources python3-testscenarios
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -526,10 +573,18 @@ override:
 
   'openstack-ironic-python-agent':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-stestr
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-stestr
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -565,6 +620,18 @@ override:
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
+
+  'openstack-placement':
+    'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-testresources python3-testscenarios
+    'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-testresources python3-testscenarios
 
   'openstack-tripleo-common':
     'osp-17.0':
@@ -850,11 +917,19 @@ override:
 
   'python-ironic-inspector-client':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-osc-lib-tests python3-stestr
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-coverage python3-osc-lib-tests python3-stestr
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-osc-lib-tests python3-stestr
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -1214,6 +1289,10 @@ override:
 
   'python-ovsdbapp':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y autoconf automake libtool python3-stestr python3-testscenarios
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -1221,6 +1300,10 @@ override:
         vars:
           rhos_release_args: '17.0'
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y autoconf automake libtool python3-stestr python3-testscenarios
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
