@@ -1293,6 +1293,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y autoconf automake libtool python3-stestr python3-testscenarios
+          tox_envlist: functional
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
@@ -1304,6 +1305,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y autoconf automake libtool python3-stestr python3-testscenarios
+          tox_envlist: functional
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
