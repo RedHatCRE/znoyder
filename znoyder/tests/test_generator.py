@@ -158,9 +158,10 @@ class TestGenerator(TestCase):
 
         projects = fetch_osp_projects('any-tag', {})
 
-        self.assertEqual({'project1': 'organization/repository1',
-                          'project2': 'organization/repository2',
-                          'project3': 'organization/repository3'}, projects)
+        self.assertEqual({'project1': 'any-tag/organization/repository1',
+                          'project2': 'any-tag/organization/repository2',
+                          'project3': 'any-tag/organization/repository3'},
+                         projects)
 
     @patch('znoyder.mapper.copy_jobs')
     @patch('znoyder.mapper.override_jobs')
@@ -234,14 +235,14 @@ class TestGenerator(TestCase):
         args.osp_project = None
         args.project = None
 
-        mock_branches_map.get.return_value = {'upstream': 'non-relevant',
+        mock_branches_map.get.return_value = {'upstream': 'upstream1',
                                               'downstream': 'branch1'}
         mock_gen_templates.return_value = 'organization/templates'
         mock_gen_projects.side_effect = [
             # tag1
-            {'project1': 'organization/repository1',
-             'project2': 'organization/repository2',
-             'project3': 'organization/repository3'},
+            {'project1': 'upstream1/organization/repository1',
+             'project2': 'upstream1/organization/repository2',
+             'project3': 'upstream1/organization/repository3'},
             # tag2
             {}
         ]
@@ -278,9 +279,12 @@ class TestGenerator(TestCase):
             ('INFO:znoyderLogger:Generating new downstream'
              ' configuration files...'),
             'INFO:znoyderLogger:Output path: files-generated/',
-            'INFO:znoyderLogger:Processing: project1',
-            'INFO:znoyderLogger:Processing: project2',
-            'INFO:znoyderLogger:Processing: project3',
+            ('INFO:znoyderLogger:Processing: project1'
+             ' (upstream1/organization/repository1)'),
+            ('INFO:znoyderLogger:Processing: project2'
+             ' (upstream1/organization/repository2)'),
+            ('INFO:znoyderLogger:Processing: project3'
+             ' (upstream1/organization/repository3)'),
             ('INFO:znoyderLogger:Downloading Zuul configuration'
              ' from upstream...'),
             'INFO:znoyderLogger:Zuul configuration files: files-upstream/',
