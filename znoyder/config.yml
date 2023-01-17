@@ -1547,6 +1547,12 @@ override:
 copy:
   /.*/:  # every project
     /.*/:  # every tag
+      - 'osp-rpm-functional-py39':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-functional-py39':
+          from: 'check'
+          to: 'weekly'
       - 'osp-rpm-py39':
           from: 'check'
           to: 'gate'
