@@ -76,19 +76,20 @@ def fetch_templates_directory():
 
 def fetch_osp_projects(branch: str, filters: dict) -> list:
     projects = {package.get('osp-project'): package.get('upstream')
-                for package in browser.get_packages(**filters)}
+                for package in browser.get_packages(**filters)
+                if package.get('osp-project')}
 
     for osp_name, repository in projects.items():
         project_urls = downloader.download_zuul_config(
             repository=repository,
             branch=branch,
-            destination=UPSTREAM_CONFIGS_DIR,
+            destination=os.path.join(UPSTREAM_CONFIGS_DIR, branch),
             errors_fatal=False,
             skip_existing=True
         )
 
         for directory in project_urls.keys():
-            projects[osp_name] = directory
+            projects[osp_name] = os.path.join(branch, directory)
 
     return projects
 
@@ -165,12 +166,12 @@ def generate_projects_pipelines_dict(args):
         LOG.info(f'Output path: {GENERATED_CONFIGS_DIR}')
 
         for project_name, directory in projects.items():
-            LOG.info(f'Processing: {project_name}')
+            LOG.info(f'Processing: {project_name} ({directory})')
             jobs = discover_jobs(project_name, osp_tag, directory,
                                  templates, pipelines)
 
             if not jobs:
-                projects_pipelines_dict[project_name] = {}
+                projects_pipelines_dict[project_name] = defaultdict(list)
 
             for job in jobs:
                 projects_pipelines_dict[project_name][job.pipeline].append(
