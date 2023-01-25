@@ -170,7 +170,7 @@ def generate_projects_pipelines_dict(args):
             jobs = discover_jobs(project_name, osp_tag, directory,
                                  templates, pipelines)
 
-            if not jobs:
+            if not jobs and project_name not in projects_pipelines_dict:
                 projects_pipelines_dict[project_name] = defaultdict(list)
 
             for job in jobs:
