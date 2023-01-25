@@ -25,6 +25,7 @@ from yaml.parser import ParserError
 
 from znoyder import browser
 from znoyder.config import branches_map
+from znoyder.config import extra_projects
 from znoyder.config import GENERATED_CONFIGS_DIR
 from znoyder.config import GENERATED_CONFIG_PREFIX
 from znoyder.config import GENERATED_CONFIG_EXTENSION
@@ -78,6 +79,10 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
     projects = {package.get('osp-project'): package.get('upstream')
                 for package in browser.get_packages(**filters)
                 if package.get('osp-project')}
+
+    for project in extra_projects:
+        if project not in projects:
+            projects[project] = extra_projects[project]
 
     for osp_name, repository in projects.items():
         project_urls = downloader.download_zuul_config(

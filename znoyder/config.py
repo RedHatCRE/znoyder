@@ -28,6 +28,7 @@ with pkg_resources.open_text(__package__, 'config.yml') as file:
     CONFIG = yaml.load(file, Loader=yaml.FullLoader)
 
 branches_map = CONFIG.get('branches', {})
+extra_projects = CONFIG.get('extra_projects', {})
 include_map = CONFIG.get('include', {})
 exclude_map = CONFIG.get('exclude', {})
 add_map = CONFIG.get('add', {})

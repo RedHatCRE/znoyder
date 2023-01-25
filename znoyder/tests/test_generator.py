@@ -23,6 +23,7 @@ from unittest.mock import patch
 
 from yaml.parser import ParserError
 
+from znoyder.config import extra_projects
 from znoyder.config import UPSTREAM_CONFIGS_DIR
 from znoyder.generator import cleanup_generated_jobs_dir
 from znoyder.generator import fetch_templates_directory
@@ -133,6 +134,9 @@ class TestGenerator(TestCase):
     @patch('znoyder.downloader.download_zuul_config')
     @patch('znoyder.browser.get_packages')
     def test_fetch_osp_projects(self, mock_browser, mock_downloader):
+        extra_projects.clear()
+        extra_projects.update({'additional-project': 'url-to-additional-repo'})
+
         mock_browser.return_value = [
             {
                 'osp-project': 'project1',
@@ -154,13 +158,15 @@ class TestGenerator(TestCase):
             {'organization/repository1': ['url-to-yaml-file1']},
             {'organization/repository2': ['url-to-yaml-file2']},
             {'organization/repository3': ['url-to-yaml-file3']},
+            {'additional/project1': ['url-to-yaml-file4']},
         ]
 
         projects = fetch_osp_projects('any-tag', {})
 
         self.assertEqual({'project1': 'any-tag/organization/repository1',
                           'project2': 'any-tag/organization/repository2',
-                          'project3': 'any-tag/organization/repository3'},
+                          'project3': 'any-tag/organization/repository3',
+                          'additional-project': 'any-tag/additional/project1'},
                          projects)
 
     @patch('znoyder.mapper.copy_jobs')

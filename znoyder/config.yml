@@ -29,6 +29,13 @@ branches:
 
 
 #
+# Additional projects to be covered
+#
+extra_projects:
+  python-neutron-tests-tempest: https://opendev.org/openstack/neutron-tempest-plugin.git
+
+
+#
 # Include map: specify which upstream jobs to collect
 #
 # Format:
