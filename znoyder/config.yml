@@ -157,6 +157,7 @@ override:
       'osp-rpm-py36':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-8.2'
         required-projects: ~
         vars:
           rhos_release_args: '16.1-cdn'
@@ -164,11 +165,13 @@ override:
       'osp-tox-pep8':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-8.2'
         required-projects: ~
     'osp-16.2':
       'osp-rpm-py36':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-8.4'
         required-projects: ~
         vars:
           rhos_release_args: '16.2-cdn'
@@ -176,11 +179,13 @@ override:
       'osp-tox-pep8':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-8.4'
         required-projects: ~
     'osp-17.0':
       'osp-rpm-py39':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.0'
         required-projects: ~
         vars:
           rhos_release_args: '17.0'
@@ -188,6 +193,7 @@ override:
       'osp-rpm-functional-py39':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.0'
         required-projects: ~
         vars:
           rhos_release_args: '17.0'
@@ -195,11 +201,13 @@ override:
       'osp-tox-pep8':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.0'
         required-projects: ~
     'osp-17.1':
       'osp-rpm-py39':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.2'
         required-projects: ~
         vars:
           rhos_release_args: '17.1'
@@ -207,6 +215,7 @@ override:
       'osp-rpm-functional-py39':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.2'
         required-projects: ~
         vars:
           rhos_release_args: '17.1'
@@ -214,6 +223,7 @@ override:
       'osp-tox-pep8':
         voting: true
         branches: ~
+        nodeset: 'pod-rhel-9.2'
         required-projects: ~
 
   'ansible-tripleo-ipa':
@@ -1607,6 +1617,7 @@ copy:
       - 'osp-rpm-py39':
           as: 'osp-rpm-py36'
           from: 'weekly'
+          nodeset: 'pod-rhel-8.4'
       - 'osp-tox-pep8':
           from: 'check'
           to: 'gate'
