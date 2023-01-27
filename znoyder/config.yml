@@ -1604,6 +1604,9 @@ copy:
       - 'osp-rpm-py39':
           from: 'check'
           to: 'weekly'
+      - 'osp-rpm-py39':
+          as: 'osp-rpm-py36'
+          from: 'weekly'
       - 'osp-tox-pep8':
           from: 'check'
           to: 'gate'
