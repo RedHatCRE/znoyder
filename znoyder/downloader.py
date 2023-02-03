@@ -20,6 +20,7 @@ from functools import partial
 import json
 from multiprocessing import cpu_count
 from multiprocessing import Pool
+from os import getenv
 import os.path
 from pathlib import Path
 from sys import exit
@@ -44,8 +45,13 @@ def get_raw_url_files_in_repository(repository: str,
                                     errors_fatal: bool = True) -> dict:
     if 'opendev.org' in repository:
         ENDPOINT = (OPENDEV_API_URL + REPO_ENDPOINT + CONTENT_ENDPOINT)
+        AUTH = None
     elif 'github.com' in repository:
         ENDPOINT = (GITHUB_API_URL + REPO_ENDPOINT + CONTENT_ENDPOINT)
+        AUTH = None
+
+        if getenv('GITHUB_USERNAME') and getenv('GITHUB_TOKEN'):
+            AUTH = (getenv('GITHUB_USERNAME'), getenv('GITHUB_TOKEN'))
     else:
         LOG.error('Unrecognized or unsupported repository host.')
         LOG.error('The tool supports github.com and opendev.org repositories.')
@@ -57,7 +63,8 @@ def get_raw_url_files_in_repository(repository: str,
     project_name = '/'.join(repository.split('/')[-2:])
     response = requests.get(url=ENDPOINT.format(project=project_name,
                                                 path='.',
-                                                gitref=branch))
+                                                gitref=branch),
+                            auth=AUTH)
 
     LOG.info(f'Requested: {response.url}')
     if response.status_code != 200:
@@ -83,7 +90,8 @@ def get_raw_url_files_in_repository(repository: str,
         if file_name in data_required['directories']:
             response = requests.get(url=ENDPOINT.format(project=project_name,
                                                         path=file_name,
-                                                        gitref=branch))
+                                                        gitref=branch),
+                                    auth=AUTH)
 
             for directory_file_information in json.loads(response.text):
                 if directory_file_information['type'] != 'file':

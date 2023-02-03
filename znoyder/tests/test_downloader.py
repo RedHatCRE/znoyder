@@ -104,7 +104,7 @@ class TestDownloader(TestCase):
 
         data = get_raw_url_files_in_repository(repo, {}, errors_fatal=False)
         self.assertEqual(data, {repo: []})
-        patched_get.assert_called_with(url=url)
+        patched_get.assert_called_with(url=url, auth=None)
 
     @patch("requests.get")
     def test_get_raw_url_get_files(self, patched_get):
