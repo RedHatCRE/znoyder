@@ -167,6 +167,8 @@ override:
         branches: ~
         nodeset: 'pod-rhel-8.2'
         required-projects: ~
+        vars:
+          rhos_release_extra_repos: 'rhosp-rhel-8.2-crb'
     'osp-16.2':
       'osp-rpm-py36':
         voting: true
@@ -181,6 +183,8 @@ override:
         branches: ~
         nodeset: 'pod-rhel-8.4'
         required-projects: ~
+        vars:
+          rhos_release_extra_repos: 'rhosp-rhel-8.4-crb'
     'osp-17.0':
       'osp-rpm-py39':
         voting: true
@@ -203,6 +207,8 @@ override:
         branches: ~
         nodeset: 'pod-rhel-9.0'
         required-projects: ~
+        vars:
+          rhos_release_extra_repos: 'rhosp-rhel-9.0-crb'
     'osp-17.1':
       'osp-rpm-py39':
         voting: true
@@ -225,6 +231,8 @@ override:
         branches: ~
         nodeset: 'pod-rhel-9.2'
         required-projects: ~
+        vars:
+          rhos_release_extra_repos: 'rhosp-rhel-9.2-crb'
 
   'ansible-tripleo-ipa':
     'osp-17.0':
