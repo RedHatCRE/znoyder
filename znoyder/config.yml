@@ -595,7 +595,7 @@ override:
         nodeset: 'pod-rhel-8.2'
         required-projects: ~
         vars:
-          rhos_release_args: '16.1-cdn'
+          rhos_release_args: '16.1'
           rhos_release_extra_repos: 'rhelosp-16.1-unittest'
       'osp-rpm-py36':
         voting: true
@@ -603,7 +603,7 @@ override:
         nodeset: 'pod-rhel-8.2'
         required-projects: ~
         vars:
-          rhos_release_args: '16.1-cdn'
+          rhos_release_args: '16.1'
           rhos_release_extra_repos: 'rhelosp-16.1-unittest'
       'osp-tox-pep8':
         voting: true
@@ -619,7 +619,7 @@ override:
         nodeset: 'pod-rhel-8.4'
         required-projects: ~
         vars:
-          rhos_release_args: '16.2-cdn'
+          rhos_release_args: '16.2'
           rhos_release_extra_repos: 'rhelosp-16.2-unittest'
       'osp-rpm-py36':
         voting: true
@@ -627,7 +627,7 @@ override:
         nodeset: 'pod-rhel-8.4'
         required-projects: ~
         vars:
-          rhos_release_args: '16.2-cdn'
+          rhos_release_args: '16.2'
           rhos_release_extra_repos: 'rhelosp-16.2-unittest'
       'osp-tox-pep8':
         voting: true
@@ -2051,6 +2051,12 @@ override:
 copy:
   /.*/:  # every project
     /.*/:  # every tag
+      - 'osp-rpm-functional-py36':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-functional-py36':
+          from: 'check'
+          to: 'weekly'
       - 'osp-rpm-functional-py39':
           from: 'check'
           to: 'gate'
