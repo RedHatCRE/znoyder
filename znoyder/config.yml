@@ -286,6 +286,44 @@ add:
         pipeline:
           - 'check'
 
+  'nova':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept python3-os-xenapi
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt pypowervm zVMCloudConnector
+            - dnf remove -y libguestfs libvirt-client
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept python3-os-xenapi
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt pypowervm zVMCloudConnector
+            - dnf remove -y libguestfs libvirt-client
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
   'octavia':
     'osp-16.1':
       'osp-rpm-py36':
