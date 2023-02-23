@@ -611,7 +611,8 @@ override:
         nodeset: 'pod-rhel-8.2'
         required-projects: ~
         vars:
-          rhos_release_extra_repos: 'rhosp-rhel-8.2-crb'
+          rhos_release_args: '16.1'
+          rhos_release_extra_repos: 'rhelosp-16.1-unittest'
     'osp-16.2':
       'osp-rpm-functional-py36':
         voting: true
@@ -635,7 +636,8 @@ override:
         nodeset: 'pod-rhel-8.4'
         required-projects: ~
         vars:
-          rhos_release_extra_repos: 'rhosp-rhel-8.4-crb'
+          rhos_release_args: '16.2'
+          rhos_release_extra_repos: 'rhelosp-16.2-unittest'
     'osp-17.0':
       'osp-rpm-py39':
         voting: true
@@ -659,7 +661,8 @@ override:
         nodeset: 'pod-rhel-9.0'
         required-projects: ~
         vars:
-          rhos_release_extra_repos: 'rhosp-rhel-9.0-crb'
+          rhos_release_args: '17.0'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
     'osp-17.1':
       'osp-rpm-py39':
         voting: true
@@ -683,7 +686,8 @@ override:
         nodeset: 'pod-rhel-9.2'
         required-projects: ~
         vars:
-          rhos_release_extra_repos: 'rhosp-rhel-9.2-crb'
+          rhos_release_args: '17.1'
+          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew'
 
   'ansible-tripleo-ipa':
     'osp-17.0':
@@ -1801,9 +1805,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-      'osp-tox-pep8':
-        vars:
-          rhos_release_args: '17.0'
     'osp-17.1':
       'osp-rpm-functional-py39':
         vars:
@@ -1813,9 +1814,6 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
-      'osp-tox-pep8':
-        vars:
-          rhos_release_args: '17.0'
 
   'python-proliantutils':
     'osp-17.0':
@@ -1933,7 +1931,6 @@ override:
         vars:
           extra_commands:
             - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
-          rhos_release_args: '17.0'
     'osp-17.1':
       'osp-rpm-py39':
         vars:
@@ -1943,7 +1940,6 @@ override:
         vars:
           extra_commands:
             - sed -i 's#https://gitlab.com/PyCQA/flake8#https://github.com/PyCQA/flake8#i' {{ zuul.project.src_dir }}/.pre-commit-config.yaml
-          rhos_release_args: '17.0'
 
   'python-troveclient':
     'osp-17.0':
@@ -1988,8 +1984,6 @@ override:
             - sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py
       'osp-tox-pep8':
         vars:
-          rhos_release_args: '17.0'
-          rhos_release_extra_repos: rhelosp-17.0-trunk-brew
           extra_commands:
             - dnf install -y liberasurecode-devel python3-mock python3-nose python3-swift
     'osp-17.1':
@@ -2002,8 +1996,6 @@ override:
             - sed -i '/self.assertEqual(expected_args, syslog_handler_args)/d' {{ zuul.project.src_dir }}/test/unit/common/test_utils.py
       'osp-tox-pep8':
         vars:
-          rhos_release_args: '17.1'
-          rhos_release_extra_repos: rhelosp-17.1-trunk-brew
           extra_commands:
             - dnf install -y liberasurecode-devel python3-mock python3-nose python3-swift
 
