@@ -611,7 +611,7 @@ override:
         required-projects: ~
         vars:
           rhos_release_args: '16.1'
-          rhos_release_extra_repos: 'rhelosp-16.1-unittest'
+          rhos_release_extra_repos: 'rhelosp-16.1-unittest rhosp-rhel-8.2-crb'
     'osp-16.2':
       'osp-rpm-functional-py36':
         voting: true
@@ -636,7 +636,7 @@ override:
         required-projects: ~
         vars:
           rhos_release_args: '16.2'
-          rhos_release_extra_repos: 'rhelosp-16.2-unittest'
+          rhos_release_extra_repos: 'rhelosp-16.2-unittest rhosp-rhel-8.4-crb'
     'osp-17.0':
       'osp-rpm-py39':
         voting: true
@@ -661,7 +661,7 @@ override:
         required-projects: ~
         vars:
           rhos_release_args: '17.0'
-          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew'
+          rhos_release_extra_repos: 'rhelosp-17.0-trunk-brew rhosp-rhel-9.0-crb'
     'osp-17.1':
       'osp-rpm-py39':
         voting: true
@@ -686,7 +686,7 @@ override:
         required-projects: ~
         vars:
           rhos_release_args: '17.1'
-          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew'
+          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew rhosp-rhel-9.2-crb'
 
   'ansible-tripleo-ipa':
     'osp-17.0':
