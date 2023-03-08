@@ -59,6 +59,7 @@ include:
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py38': 'osp-rpm-py39'
     'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py37': 'osp-rpm-functional-py39'
     'swift-tox-py39': 'osp-rpm-py39'
   'osp-17.1':
     'nova-tox-functional-py38': 'osp-rpm-functional-py39'
@@ -67,6 +68,7 @@ include:
     'openstack-tox-pep8': 'osp-tox-pep8'
     'openstack-tox-py38': 'osp-rpm-py39'
     'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py37': 'osp-rpm-functional-py39'
     'swift-tox-py39': 'osp-rpm-py39'
 
 
@@ -567,6 +569,58 @@ add:
         pipeline:
           - 'check'
         vars:
+          tox_install_bindep: false
+
+  'swift':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-os-testr python3-swiftclient
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt boto
+          tox_envlist: func-py3
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-fixtures python3-mock python3-nose python3-requests-mock python3-unittest2
+            - ln -sf /usr/bin/nosetests-3 /usr/local/bin/nosetests
+            - sudo -u zuul pip3 install --user {{ zuul.project.src_dir }}
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y liberasurecode-devel man
+            - sed -i -r 's/basepython = python2.7/basepython = python3.6/' {{ zuul.project.src_dir }}/tox.ini
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto3 python3-mock python3-os-testr python3-swiftclient
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt boto
+          tox_envlist: func-py3
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-fixtures python3-mock python3-nose python3-requests-mock python3-unittest2
+            - ln -sf /usr/bin/nosetests-3 /usr/local/bin/nosetests
+            - sudo -u zuul pip3 install --user {{ zuul.project.src_dir }}
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y liberasurecode-devel man
+            - sed -i -r 's/basepython = python2.7/basepython = python3.6/' {{ zuul.project.src_dir }}/tox.ini
           tox_install_bindep: false
 
 
@@ -1974,6 +2028,11 @@ override:
 
   'swift':
     'osp-17.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto python3-boto3 python3-mock python3-os-testr python3-swiftclient
+          tox_envlist: func-py3
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -1986,6 +2045,11 @@ override:
           extra_commands:
             - dnf install -y liberasurecode-devel python3-mock python3-nose python3-swift
     'osp-17.1':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto python3-boto3 python3-mock python3-os-testr python3-swiftclient
+          tox_envlist: func-py3
       'osp-rpm-py39':
         vars:
           extra_commands:
