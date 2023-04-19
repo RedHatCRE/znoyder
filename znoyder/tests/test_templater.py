@@ -150,6 +150,11 @@ class TestTemplater(TestCase):
                            zuul/include: []
                            repoxplorer/skip: true
                            hound/skip: true
+                       - RedHatCRE/znoyder:
+                           connection: github.com
+                           zuul/include: []
+                           repoxplorer/skip: true
+                           hound/skip: true
                        - zuul/zuul-jobs:
                            connection: opendev.org
                            repoxplorer/skip: true

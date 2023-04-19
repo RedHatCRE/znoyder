@@ -23,6 +23,11 @@ resources:
                repoxplorer/skip: true
                hound/skip: true
          {%- endfor %}
+           - RedHatCRE/znoyder:
+               connection: github.com
+               zuul/include: []
+               repoxplorer/skip: true
+               hound/skip: true
            - zuul/zuul-jobs:
                connection: opendev.org
                repoxplorer/skip: true
