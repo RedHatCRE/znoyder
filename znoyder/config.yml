@@ -772,7 +772,7 @@ override:
         required-projects: ~
         vars:
           rhos_release_args: '17.1'
-          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew rhosp-rhel-9.2-beta-crb'
+          rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew rhosp-rhel-9.2-crb'
 
   'ansible-tripleo-ipa':
     'osp-17.0':
