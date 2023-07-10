@@ -32,6 +32,9 @@ branches:
   'osp-17.1':
     downstream: '^rhos-17.1-trunk-patches$'
     upstream: 'stable/wallaby'
+  'osp-18.0':
+    downstream: '^rhos-18.0-trunk-patches$'
+    upstream: 'stable/2023.1'
 
 
 #
@@ -1217,6 +1220,17 @@ override:
             - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
             - dnf remove -y libguestfs libvirt-client
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
+            - dnf remove -y libguestfs libvirt-client
+    'osp-18.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -2867,7 +2881,6 @@ override:
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
-
 
 #
 # Copy map: duplicate a job entry from one pipeline/project to another
