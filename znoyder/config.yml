@@ -77,6 +77,15 @@ include:
     'swift-tox-func-py37': 'osp-rpm-functional-py39'
     'swift-tox-py36': 'osp-rpm-py36'
     'swift-tox-py39': 'osp-rpm-py39'
+  'osp-18.0':
+    'nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py39': 'osp-rpm-functional-py39'
+    'openstack-tox-pep8': 'osp-tox-pep8'
+    'openstack-tox-py39': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py39': 'osp-rpm-functional-py39'
+    'swift-tox-py39': 'osp-rpm-py39'
 
 
 #
@@ -776,6 +785,31 @@ override:
         vars:
           rhos_release_args: '17.1'
           rhos_release_extra_repos: 'rhelosp-17.1-trunk-brew rhosp-rhel-9.2-crb'
+    'osp-18.0':
+      'osp-rpm-py39':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-9.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '18.0'
+          rhos_release_extra_repos: 'rhelosp-18.0-trunk-brew'
+      'osp-rpm-functional-py39':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-9.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '18.0'
+          rhos_release_extra_repos: 'rhelosp-18.0-trunk-brew'
+      'osp-tox-pep8':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-9.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '18.0'
+          rhos_release_extra_repos: 'rhelosp-18.0-trunk-brew rhosp-rhel-9.2-crb'
 
   'ansible-tripleo-ipa':
     'osp-17.0':
@@ -2881,6 +2915,7 @@ override:
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
+
 
 #
 # Copy map: duplicate a job entry from one pipeline/project to another
