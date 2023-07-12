@@ -866,6 +866,15 @@ override:
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
           tox_install_bindep: true
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - setcap -r /usr/libexec/mysqld
+          tox_envlist: 'py39-mysql'
+          tox_environment:
+            AODH_TEST_DRIVERS: 'mysql'
+          tox_install_bindep: true
 
   'ceilometer':
     'osp-17.0':
