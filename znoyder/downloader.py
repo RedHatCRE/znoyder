@@ -108,22 +108,23 @@ def download_file(url: str, destination_directory: str,
                   skip_existing: bool = False) -> None:
     file_name = url.split('/')[-1]
     file_path = f'{destination_directory}/{file_name}'
+    LOG.info(f'Processing: {url} -> {file_path}')
 
     if os.path.exists(file_path):
-        LOG.warning(f'File already exists: {file_name}')
+        LOG.warning(f'File already exists: {file_path}')
 
         if skip_existing:
-            LOG.info(f'Skipping the download of file: {file_name}')
+            LOG.info(f'Skipping the download of file: {file_path}')
             return
 
     try:
-        LOG.info(f'Downloading new file: {file_name}')
+        LOG.info(f'Downloading new file: {file_path}')
         data = requests.get(url)
         with open(file_path, 'wb') as file:
             file.write(data.content)
 
     except Exception as e:
-        LOG.error(f'Error downloading file: {file_name}.\nDetails: {repr(e)}')
+        LOG.error(f'Error downloading file: {file_path}.\nDetails: {repr(e)}')
         exit(1)
 
 
