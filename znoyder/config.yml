@@ -1238,6 +1238,11 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-hacking python3-neutron-lib-tests
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking python3-neutron-lib-tests
 
   'nova':
     'osp-17.0':
