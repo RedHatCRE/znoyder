@@ -385,6 +385,16 @@ add:
           extra_commands:
             - dnf install -y python3-hacking
 
+  'python-cinder-tests-tempest':
+    'osp-17.0':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-17.1':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
   'python-cinderclient':
     'osp-16.1':
       'osp-rpm-py36':
