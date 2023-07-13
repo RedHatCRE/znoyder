@@ -2318,6 +2318,11 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-hacking python3-oslotest python3-stestr
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking python3-oslotest python3-stestr
 
   'python-octaviaclient':
     'osp-17.0':
