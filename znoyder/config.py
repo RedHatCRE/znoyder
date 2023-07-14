@@ -23,9 +23,17 @@ except ImportError:  # Fallback for Python < 3.7
 
 import yaml
 
+from znoyder.utils import merge_dicts
+
 
 with pkg_resources.open_text(__package__, 'config.yml') as file:
     CONFIG = yaml.load(file, Loader=yaml.FullLoader)
+
+configd_files = sorted(pkg_resources.files(__package__).glob('config.d/*.yml'))
+for configd_file in configd_files:
+    with open(configd_file, 'r') as file:
+        additional_config = yaml.load(file, Loader=yaml.FullLoader)
+        merge_dicts(CONFIG, additional_config, override=True)
 
 branches_map = CONFIG.get('branches', {})
 extra_projects = CONFIG.get('extra_projects', {})
