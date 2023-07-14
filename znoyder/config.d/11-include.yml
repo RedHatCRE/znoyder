@@ -1,0 +1,35 @@
+---
+include:
+  # 'osp-16.1': ~  # we intentionally do not include anything for OSP 16 here
+  # 'osp-16.2': ~  # we intentionally do not include anything for OSP 16 here
+  'osp-17.0':
+    'nova-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-pep8': 'osp-tox-pep8'
+    'openstack-tox-py36': 'osp-rpm-py36'
+    'openstack-tox-py38': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py37': 'osp-rpm-functional-py39'
+    'swift-tox-py36': 'osp-rpm-py36'
+    'swift-tox-py39': 'osp-rpm-py39'
+  'osp-17.1':
+    'nova-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py38': 'osp-rpm-functional-py39'
+    'openstack-tox-pep8': 'osp-tox-pep8'
+    'openstack-tox-py36': 'osp-rpm-py36'
+    'openstack-tox-py38': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py37': 'osp-rpm-functional-py39'
+    'swift-tox-py36': 'osp-rpm-py36'
+    'swift-tox-py39': 'osp-rpm-py39'
+  'osp-18.0':
+    'nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'openstack-tox-functional': 'osp-rpm-functional-py39'
+    'openstack-tox-functional-py39': 'osp-rpm-functional-py39'
+    'openstack-tox-pep8': 'osp-tox-pep8'
+    'openstack-tox-py39': 'osp-rpm-py39'
+    'placement-nova-tox-functional-py39': 'osp-rpm-functional-py39'
+    'swift-tox-func-py39': 'osp-rpm-functional-py39'
+    'swift-tox-py39': 'osp-rpm-py39'
