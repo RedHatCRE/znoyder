@@ -1,0 +1,34 @@
+---
+copy:
+  /.*/:  # every project
+    /.*/:  # every tag
+      - 'osp-rpm-functional-py36':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-functional-py36':
+          from: 'check'
+          to: 'weekly'
+      - 'osp-rpm-functional-py39':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-functional-py39':
+          from: 'check'
+          to: 'weekly'
+      - 'osp-rpm-py36':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-py36':
+          from: 'check'
+          to: 'weekly'
+      - 'osp-rpm-py39':
+          from: 'check'
+          to: 'gate'
+      - 'osp-rpm-py39':
+          from: 'check'
+          to: 'weekly'
+      - 'osp-tox-pep8':
+          from: 'check'
+          to: 'gate'
+      - 'osp-tox-pep8':
+          from: 'check'
+          to: 'weekly'

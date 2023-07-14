@@ -1,0 +1,4 @@
+---
+extra_projects:
+  networking-ovn: https://opendev.org/openstack/networking-ovn
+  python-neutron-tests-tempest: https://opendev.org/openstack/neutron-tempest-plugin.git

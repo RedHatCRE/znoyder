@@ -1,0 +1,59 @@
+---
+add:
+  'gnocchi':
+    'osp-17.0':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-17.1':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'openstack-tempest':
+    'osp-17.0':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking
+    'osp-17.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-hacking
+
+  'python-cinder-tests-tempest':
+    'osp-17.0':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-17.1':
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'python-scciclient':
+    'osp-17.0':
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'
+    'osp-17.1':
+      'osp-rpm-py39':
+        pipeline:
+          - 'check'

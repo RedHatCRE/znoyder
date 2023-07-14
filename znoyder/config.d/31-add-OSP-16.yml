@@ -1,0 +1,486 @@
+---
+add:
+  'cinder':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        vars:
+          tox_envlist: functional
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - ln -s /usr/bin/python3 /usr/bin/python
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        vars:
+          tox_envlist: functional
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - ln -s /usr/bin/python3 /usr/bin/python
+          tox_install_bindep: false
+
+  'glance':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-stestr python3-testresources python3-testscenarios
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-stestr python3-testresources python3-testscenarios
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'glance_store':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto3 python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto3 python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+
+  'manila':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-requests-mock python3-stestr python3-testresources
+            - pip3 install pep8
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - ln -s /usr/bin/python3 /usr/bin/python
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-requests-mock python3-stestr python3-testresources
+            - pip3 install pep8
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - ln -s /usr/bin/python3 /usr/bin/python
+
+  'neutron':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-neutron-lib-tests
+            - dnf remove -y python3-flake8
+            - pip3 install 'flake8<3.0' 'hacking'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-neutron-lib-tests
+            - dnf remove -y python3-flake8
+            - pip3 install 'flake8<3.0' 'hacking'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+
+  'networking-ovn':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-neutron-lib-tests python3-neutron-tests python3-os-testr
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-neutron-lib-tests python3-neutron-tests python3-os-testr
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'nova':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept python3-os-xenapi
+            - dnf remove -y libguestfs libvirt-client
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept python3-os-xenapi
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt pypowervm zVMCloudConnector
+            - dnf remove -y libguestfs libvirt-client
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'octavia':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'python-cinderclient':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          allow_test_requirements_txt: true
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+
+  'python-cinderlib':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+
+  'python-glanceclient':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-requests-mock python3-stestr python3-testscenarios
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-requests-mock python3-stestr python3-testscenarios
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+
+  'python-manilaclient':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-mock python3-stestr pythone3-tempest
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-ddt python3-mock python3-stestr python3-tempest
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+
+  'python-neutron-lib':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-stestr python3-testresources python3-testscenarios
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r 's#https://opendev.org/openstack/requirements/raw/branch/master/upper-constraints.txt#https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt#g' {{ zuul.project.src_dir }}/tox.ini
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-oslotest python3-stestr python3-testresources python3-testscenarios
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r 's#https://opendev.org/openstack/requirements/raw/branch/master/upper-constraints.txt#https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt#g' {{ zuul.project.src_dir }}/tox.ini
+
+  'python-neutron-tests-tempest':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r 's#tempest>=17.1.0#tempest>=17.1.0,<=22.1.0#g' {{ zuul.project.src_dir }}/requirements.txt
+            - sed -i -r 's#hacking<0.13,>=0.12.0#hacking#g' {{ zuul.project.src_dir }}/test-requirements.txt
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r 's#tempest>=17.1.0#tempest>=17.1.0,<=22.1.0#g' {{ zuul.project.src_dir }}/requirements.txt
+            - sed -i -r 's#hacking<0.13,>=0.12.0#hacking#g' {{ zuul.project.src_dir }}/test-requirements.txt
+
+  'python-os-brick':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-castellan python3-ddt python3-mock python3-oslo-vmware python3-stestr
+      'osp-tox-pep8':
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-castellan python3-ddt python3-mock python3-oslo-vmware python3-stestr
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+
+  'python-swiftclient':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-stestr
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-mock python3-stestr
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+
+  'swift':
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto3 python3-mock python3-os-testr python3-swiftclient
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt boto
+          tox_envlist: func-py3
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-fixtures python3-mock python3-nose python3-requests-mock python3-unittest2
+            - ln -sf /usr/bin/nosetests-3 /usr/local/bin/nosetests
+            - sudo -u zuul pip3 install --user {{ zuul.project.src_dir }}
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y liberasurecode-devel man
+            - sed -i -r 's/basepython = python2.7/basepython = python3.6/' {{ zuul.project.src_dir }}/tox.ini
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-boto3 python3-mock python3-os-testr python3-swiftclient
+            - pip3 install -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt boto
+          tox_envlist: func-py3
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-coverage python3-fixtures python3-mock python3-nose python3-requests-mock python3-unittest2
+            - ln -sf /usr/bin/nosetests-3 /usr/local/bin/nosetests
+            - sudo -u zuul pip3 install --user {{ zuul.project.src_dir }}
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y liberasurecode-devel man
+            - sed -i -r 's/basepython = python2.7/basepython = python3.6/' {{ zuul.project.src_dir }}/tox.ini
+          tox_install_bindep: false

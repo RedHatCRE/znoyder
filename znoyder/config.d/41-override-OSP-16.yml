@@ -1,0 +1,53 @@
+---
+override:
+  /.*/:  # every project
+    'osp-16.1':
+      'osp-rpm-functional-py36':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.1'
+          rhos_release_extra_repos: 'rhelosp-16.1-unittest'
+      'osp-rpm-py36':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.1'
+          rhos_release_extra_repos: 'rhelosp-16.1-unittest'
+      'osp-tox-pep8':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.2'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.1'
+          rhos_release_extra_repos: 'rhelosp-16.1-unittest rhosp-rhel-8.2-crb'
+    'osp-16.2':
+      'osp-rpm-functional-py36':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.4'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.2'
+          rhos_release_extra_repos: 'rhelosp-16.2-unittest'
+      'osp-rpm-py36':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.4'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.2'
+          rhos_release_extra_repos: 'rhelosp-16.2-unittest'
+      'osp-tox-pep8':
+        voting: true
+        branches: ~
+        nodeset: 'pod-rhel-8.4'
+        required-projects: ~
+        vars:
+          rhos_release_args: '16.2'
+          rhos_release_extra_repos: 'rhelosp-16.2-unittest rhosp-rhel-8.4-crb'
