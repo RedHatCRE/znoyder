@@ -148,7 +148,8 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y openstack-dashboard python3-networking-bagpipe python3-neutron-tests python3-neutron-lib-tests python3-stestr
+            - dnf install -y openstack-dashboard python3-neutron-tests python3-neutron-lib-tests python3-stestr
+            - rm -rf {{ zuul.project.src_dir }}/networking_bgpvpn/tests/unit/services/bagpipe  # we skip bagpipe tests as in spec file
           tox_environment:
             PYTHONPATH: /usr/share/openstack-dashboard
             TOX_TESTENV_PASSENV: PYTHONPATH
@@ -192,7 +193,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios python3-webtest
 
   'openstack-designate-ui':
     'osp-18.0':
@@ -306,6 +307,20 @@ override:
         vars:
           allow_test_requirements_txt: true
 
+  'oslo.concurrency':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-eventlet
+
+  'oslo.log':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-stestr
+
   'oslo.messaging':
     'osp-18.0':
       'osp-rpm-py39':
@@ -343,7 +358,8 @@ override:
     'osp-18.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-hacking python3-neutron-tests
 
   'python-aodhclient':
     'osp-18.0':
@@ -495,7 +511,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-neutron-lib-tests
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-stestr
 
   'python-networking-sfc':
     'osp-18.0':
@@ -536,7 +552,8 @@ override:
     'osp-18.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-oslotest
 
   'python-openstackclient':
     'osp-18.0':
@@ -596,6 +613,13 @@ override:
         vars:
           allow_test_requirements_txt: true
 
+  'python-oslo-i18n':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-oslotest python3-stestr python3-testscenarios
+
   'python-oslo-policy':
     'osp-18.0':
       'osp-rpm-py39':
@@ -607,6 +631,13 @@ override:
       'osp-rpm-py39':
         vars:
           allow_test_requirements_txt: true
+
+  'python-oslo-reports':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-stestr
 
   'python-oslo-upgradecheck':
     'osp-18.0':
@@ -725,7 +756,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-neutron-tests python3-neutronclient-tests
+            - dnf install -y python3-neutron-tests python3-neutron-lib-tests python3-neutronclient-tests
 
   'taskflow':
     'osp-18.0':
