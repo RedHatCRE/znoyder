@@ -1057,12 +1057,18 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
+            # This project requires stestr to be within the tox environment,
+            # otherwise the tests ends with os_vif.exception.ExternalImport:
+            # Use of this module outside of os_vif is not allowed. (#bz2109536)
             - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
             - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
+            # This project requires stestr to be within the tox environment,
+            # otherwise the tests ends with os_vif.exception.ExternalImport:
+            # Use of this module outside of os_vif is not allowed. (#bz2109536)
             - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
             - sed -i -r 's!constraints/upper/master!constraints/upper/wallaby!' {{ zuul.project.src_dir }}/tox.ini
 
