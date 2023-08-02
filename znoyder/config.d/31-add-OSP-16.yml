@@ -310,7 +310,7 @@ add:
           - 'check'
         vars:
           extra_commands:
-            - dnf install -y python3-ddt python3-mock python3-stestr pythone3-tempest
+            - dnf install -y python3-ddt python3-mock python3-stestr python3-tempest
       'osp-tox-pep8':
         pipeline:
           - 'check'
