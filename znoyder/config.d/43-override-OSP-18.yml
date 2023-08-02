@@ -582,6 +582,16 @@ override:
         vars:
           allow_test_requirements_txt: true
 
+  'python-os-vif':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            # This project requires stestr to be within the tox environment,
+            # otherwise the tests ends with os_vif.exception.ExternalImport:
+            # Use of this module outside of os_vif is not allowed. (#bz2109536)
+            - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
+
   'python-os-win':
     'osp-18.0':
       'osp-rpm-py39':
