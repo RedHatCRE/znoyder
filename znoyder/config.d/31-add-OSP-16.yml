@@ -261,6 +261,10 @@ add:
         vars:
           extra_commands:
             - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i '/deps= -r{toxinidir}\/test-requirements.txt/a\      -r{toxinidir}/test-requirements.txt' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i 's!deps= -r{toxinidir}/test-requirements.txt!deps= -c{env:UPPER_CONSTRAINTS_FILE:https://releases.openstack.org/constraints/upper/train}!' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i 's!git+https://opendev.org/openstack/os-brick#egg=os-brick!os-brick==2.10.7!' {{ zuul.project.src_dir }}/tox.ini
+            - sed -i 's!git+https://opendev.org/openstack/cinder#egg=cinder!git+https://opendev.org/openstack/cinder@train-em#egg=cinder!' {{ zuul.project.src_dir }}/tox.ini
       'osp-tox-pep8':
         pipeline:
           - 'check'
@@ -315,6 +319,8 @@ add:
         pipeline:
           - 'check'
         vars:
+          tox_environment:
+            UPPER_CONSTRAINTS_FILE: https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt
           tox_install_bindep: false
     'osp-16.2':
       'osp-rpm-py36':
