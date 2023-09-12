@@ -230,6 +230,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-oslotest python3-stestr python3-testresources python3-testscenarios
+          tox_envlist: functional
       'osp-rpm-py39':
         vars:
           extra_commands:
@@ -598,6 +599,13 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-hacking python3-oslotest python3-pycodestyle python3-stestr
+
+  'python-osc-placement':
+    'osp-18.0':
+      'osp-rpm-functional-py39':
+        vars:
+          extra_commands:
+            - dnf install -y python3-placement python3-placement-tests python3-testresources python3-testscenarios
 
   'python-oslo-cache':
     'osp-18.0':
