@@ -1098,11 +1098,15 @@ override:
     'osp-17.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-docutils python3-oslo-log python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt sphinx
     'osp-17.1':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-docutils python3-oslo-log python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt sphinx
 
   'python-oslo-context':
     'osp-17.0':
@@ -1391,7 +1395,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-mock python3-oslotest python3-stestr
+            - dnf install -y python3-mock python3-oslotest python3-stestr python3-tripleo-common-tests
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
