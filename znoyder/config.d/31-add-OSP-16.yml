@@ -94,6 +94,34 @@ add:
           extra_commands:
             - sed -i -r '/minversion/a requires = virtualenv<20.8' {{ zuul.project.src_dir }}/tox.ini
 
+  'heat':
+    'osp-16.1':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-testscenarios
+            - sudo -u zuul pip3 install --user -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt python-blazarclient python-monascaclient python-zunclient
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+    'osp-16.2':
+      'osp-rpm-py36':
+        pipeline:
+          - 'check'
+        vars:
+          extra_commands:
+            - dnf install -y python3-testscenarios
+            - sudo -u zuul pip3 install --user -c https://opendev.org/openstack/requirements/raw/branch/stable/train/upper-constraints.txt python-blazarclient python-monascaclient python-zunclient
+      'osp-tox-pep8':
+        pipeline:
+          - 'check'
+        vars:
+          tox_install_bindep: false
+
   'manila':
     'osp-16.1':
       'osp-rpm-py36':
