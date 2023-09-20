@@ -80,7 +80,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-boto3 python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
+            - dnf install -y python3-boto3 python3-ddt python3-oslotest python3-oslo-vmware python3-requests-mock python3-retrying python3-stestr python3-swiftclient
 
   'heat':
     'osp-18.0':
@@ -186,7 +186,8 @@ override:
     'osp-18.0':
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-coverage python3-hacking python3-pykmip python3-oslotest python3-pycodestyle python3-stestr python3-webtest
 
   'openstack-designate':
     'osp-18.0':
@@ -554,7 +555,7 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-oslotest
+            - dnf install -y python3-hacking python3-oslotest
 
   'python-openstackclient':
     'osp-18.0':
@@ -591,6 +592,7 @@ override:
             # This project requires stestr to be within the tox environment,
             # otherwise the tests ends with os_vif.exception.ExternalImport:
             # Use of this module outside of os_vif is not allowed. (#bz2109536)
+            - dnf remove -y python3-stestr
             - echo 'stestr' > {{ zuul.project.src_dir }}/test-requirements.txt
 
   'python-os-win':
