@@ -60,7 +60,13 @@ override:
           tox_envlist: functional
       'osp-rpm-py39':
         vars:
-          allow_test_requirements_txt: true
+          extra_commands:
+            - dnf install -y python3-certifi python3-eventlet python3-sqlalchemy-utils
+            - sed -i '/allowlist_externals =/a \ \ stestr' {{ zuul.project.src_dir }}/tox.ini
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/2023.1/upper-constraints.txt --ignore-installed moto
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/2023.1/upper-constraints.txt --upgrade pyOpenSSL
+          tox_environment:
+            VIRTUALENV_SYSTEM_SITE_PACKAGES: 1
       'osp-tox-pep8':
         vars:
           tox_install_bindep: false
@@ -87,7 +93,9 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y python3-ddt python3-hacking python3-monascaclient python3-testscenarios python3-stestr
+            - dnf install -y python3-ddt python3-hacking python3-magnumclient python3-mistralclient python3-monascaclient python3-testscenarios python3-troveclient python3-stestr
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/2023.1/upper-constraints.txt --ignore-installed python-blazarclient python-saharaclient python-vitrageclient python-zunclient
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/2023.1/upper-constraints.txt --upgrade pyOpenSSL
 
   'horizon':
     'osp-18.0':
@@ -338,6 +346,13 @@ override:
         vars:
           allow_test_requirements_txt: true
 
+  'oslo.rootwrap':
+    'osp-18.0':
+      'osp-rpm-py39':
+        vars:
+          extra_commands:
+            - sudo -u zuul pip install --user {{ zuul.project.src_dir }}
+
   'oslo.service':
     'osp-18.0':
       'osp-rpm-py39':
@@ -368,7 +383,10 @@ override:
       'osp-rpm-py39':
         vars:
           extra_commands:
-            - dnf install -y postgresql-server python3-devel
+            - dnf install -y postgresql-server python3-devel python3-oslo-db python3-sqlalchemy-utils
+            - sed -i 's!aodh-master.tar.gz!aodh-stable-2023.1.tar.gz!' {{ zuul.project.src_dir }}/tox.ini
+          tox_environment:
+            VIRTUALENV_SYSTEM_SITE_PACKAGES: 1
 
   'python-automaton':
     'osp-18.0':
