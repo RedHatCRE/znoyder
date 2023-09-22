@@ -626,6 +626,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-placement python3-placement-tests python3-testresources python3-testscenarios
+            - cp -r {{ zuul.project.src_dir }} /tmp/python-osc-placement && pip install /tmp/python-osc-placement
 
   'python-oslo-cache':
     'osp-18.0':
