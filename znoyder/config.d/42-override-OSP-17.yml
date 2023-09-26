@@ -91,12 +91,14 @@ override:
           extra_commands:
             - dnf install -y python3-oslotest python3-stestr python3-testscenarios
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
+            - dnf remove -y libvirt-libs
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-oslotest python3-stestr python3-testscenarios
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
+            - dnf remove -y libvirt-libs
 
   'cinder':
     'osp-17.0':
