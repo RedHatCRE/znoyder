@@ -52,7 +52,6 @@ override:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-stestr python3-testscenarios
             - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/2023.1/upper-constraints.txt --ignore-installed os-win requests-aws confluent-kafka
-            - dnf remove -y libvirt-libs
 
   'cinder':
     'osp-18.0':
