@@ -103,7 +103,7 @@ class OverridenSubparserAction(_SubParsersAction):
 
 
 def extend_parser_browser(parser) -> None:
-    subparsers = parser.add_subparsers(dest='command', metavar='command')
+    subparsers = parser.add_subparsers(dest='subcommand', metavar='subcommand')
     subparsers.required = True
 
     common = ArgumentParser(add_help=False)
@@ -246,8 +246,8 @@ def process_arguments(argv=None) -> Namespace:
     shared_parser = ArgumentParser(add_help=False)
     shared_parser.add_argument(
         '--log-mode',
-        default="both",
-        choices={"file", "terminal", "both"},
+        default='both',
+        choices={'file', 'terminal', 'both'},
         help='Where to write the output, default is both'
     )
     shared_parser.add_argument(
@@ -264,15 +264,15 @@ def process_arguments(argv=None) -> Namespace:
     # argparse one would override the arguments from the main parser if they
     # were specified there but not in the subparser
     subparsers = parser.add_subparsers(action=OverridenSubparserAction)
-    parser.add_argument('options', nargs=REMAINDER,
-                        help='additional arguments to the selected command')
+    parser.add_argument('command', nargs=REMAINDER,
+                        help='Znoyder command with its additional arguments')
 
     for command_name, command_dict in COMMANDS.items():
         parser_command = subparsers.add_parser(command_name,
                                                parents=[shared_parser])
         parser_command.set_defaults(
             func=getattr(command_dict['module'], 'main'))
-        parser.epilog += "  {}:  {}\n".format(
+        parser.epilog += '  {}:  {}\n'.format(
             command_name, command_dict['help'])
         command_dict['extend_parser_func'](parser_command)
 

@@ -113,13 +113,13 @@ def get_releases(**kwargs):
 
 
 def main(args) -> None:
-    if args.command == 'components':
+    if args.subcommand == 'components':
         results = get_components(**vars(args))
         default_output = ['name']
-    elif args.command == 'packages':
+    elif args.subcommand == 'packages':
         results = get_packages(**vars(args))
         default_output = ['osp-name', 'osp-distgit', 'osp-patches']
-    elif args.command == 'releases':
+    elif args.subcommand == 'releases':
         results = get_releases(**vars(args))
         default_output = ['ospinfo_tag_name', 'git_release_branch']
     else:
