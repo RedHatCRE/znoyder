@@ -42,7 +42,7 @@ class TestCli(TestCase):
     def test_browse_empty(self, mock_argpare_print):
         """Test parsing of znoyder browse arguments."""
         cmd = ["browse-osp"]
-        # this should fail, since browse-osp requires a command
+        # this should fail, since browse-osp requires a subcommand
         self.assertRaises(SystemExit, process_arguments, cmd)
 
     @patch('argparse.ArgumentParser._print_message')
@@ -50,7 +50,7 @@ class TestCli(TestCase):
         """Test parsing of znoyder browse arguments."""
         cmd = "browse-osp components".split()
         args = process_arguments(cmd)
-        self.assertEqual(args.command, "components")
+        self.assertEqual(args.subcommand, "components")
         self.assertFalse(args.debug)
 
     @patch('argparse.ArgumentParser._print_message')
@@ -59,7 +59,7 @@ class TestCli(TestCase):
         cmd = ["browse-osp", "packages", "--component",
                "network", "--tag", "osp-17.0", "--output", "osp-patches"]
         args = process_arguments(cmd)
-        self.assertEqual(args.command, "packages")
+        self.assertEqual(args.subcommand, "packages")
         self.assertFalse(args.debug)
         self.assertEqual(args.component, "network")
         self.assertEqual(args.tag, "osp-17.0")
@@ -70,7 +70,7 @@ class TestCli(TestCase):
         """Test parsing of znoyder browse arguments."""
         cmd = "browse-osp releases --debug".split()
         args = process_arguments(cmd)
-        self.assertEqual(args.command, "releases")
+        self.assertEqual(args.subcommand, "releases")
         self.assertTrue(args.debug)
 
     @patch('argparse.ArgumentParser._print_message')

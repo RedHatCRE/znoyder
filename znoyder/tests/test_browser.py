@@ -433,7 +433,7 @@ class TestMain(TestCase):
         args = Mock()
         print_call = builtins.print = Mock()
 
-        args.command = None
+        args.subcommand = None
         args.debug = False
         args.output = False
         args.header = False
@@ -442,7 +442,7 @@ class TestMain(TestCase):
 
         print_call.assert_not_called()
 
-    def test_components_command(self):
+    def test_components_subcommand(self):
         component = {'name': 'comp_1'}
 
         results = [component]
@@ -451,7 +451,7 @@ class TestMain(TestCase):
         print_call = builtins.print = Mock()
         components_call = znoyder.browser.get_components = Mock()
 
-        args.command = 'components'
+        args.subcommand = 'components'
         args.debug = False
         args.output = False
         args.header = False
@@ -462,7 +462,7 @@ class TestMain(TestCase):
 
         print_call.assert_called_with(component['name'])
 
-    def test_packages_command(self):
+    def test_packages_subcommand(self):
         package = {
             'osp-name': 'pack_1',
             'osp-distgit': 'git_1',
@@ -475,7 +475,7 @@ class TestMain(TestCase):
         print_call = builtins.print = Mock()
         packages_call = znoyder.browser.get_packages = Mock()
 
-        args.command = 'packages'
+        args.subcommand = 'packages'
         args.debug = False
         args.output = False
         args.header = False
@@ -493,7 +493,7 @@ class TestMain(TestCase):
             )
         )
 
-    def test_releases_command(self):
+    def test_releases_subcommand(self):
         release = {
             'ospinfo_tag_name': 'tag_1',
             'git_release_branch': 'branch_1'
@@ -505,7 +505,7 @@ class TestMain(TestCase):
         print_call = builtins.print = Mock()
         releases_call = znoyder.browser.get_releases = Mock()
 
-        args.command = 'releases'
+        args.subcommand = 'releases'
         args.debug = False
         args.output = False
         args.header = False
@@ -526,7 +526,7 @@ class TestMain(TestCase):
     def test_debug_mode(self, print_call):
         args = Mock()
 
-        args.command = None
+        args.subcommand = None
         args.debug = True
         args.output = False
         args.header = False
@@ -551,7 +551,7 @@ class TestMain(TestCase):
         print_call = builtins.print = Mock()
         components_call = znoyder.browser.get_components = Mock()
 
-        args.command = 'components'
+        args.subcommand = 'components'
         args.debug = False
         args.output = '%s,%s' % (output1, output2)
         args.header = False
@@ -571,7 +571,7 @@ class TestMain(TestCase):
         args = Mock()
         print_call = builtins.print = Mock()
 
-        args.command = None
+        args.subcommand = None
         args.debug = False
         args.output = '%s,%s' % (output1, output2)
         args.header = True

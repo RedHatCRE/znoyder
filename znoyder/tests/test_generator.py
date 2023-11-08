@@ -345,7 +345,19 @@ class TestGenerator(TestCase):
 
     @patch('znoyder.templater.generate_zuul_project_template')
     def test_generate_projects_templates(self, mock_templater):
-        generate_projects_templates(self.example_projects_pipelines_dict)
+        with self.assertLogs(LOG) as mock_log:
+            generate_projects_templates(self.example_projects_pipelines_dict)
+
+        expected_log = [
+            'INFO:znoyderLogger:Writing '
+            'files-generated/osp-internal-jobs/zuul.d/cre-project1.yaml',
+            'INFO:znoyderLogger:Writing '
+            'files-generated/osp-internal-jobs/zuul.d/cre-project2.yaml',
+            'INFO:znoyderLogger:Writing '
+            'files-generated/osp-internal-jobs/zuul.d/cre-project3.yaml',
+        ]
+        self.assertEqual(len(mock_log.records), 3)
+        self.assertEqual(mock_log.output, expected_log)
 
         self.assertEqual(mock_templater.call_count, 3)
         mock_templater.assert_any_call(
@@ -390,14 +402,24 @@ class TestGenerator(TestCase):
             generate_projects_templates(self.example_projects_pipelines_dict)
 
         expected_log = [
+            'INFO:znoyderLogger:Writing '
+            'files-generated/osp-internal-jobs/zuul.d/cre-project1.yaml',
             'ERROR:znoyderLogger:Problem processing project1',
         ]
-        self.assertEqual(len(mock_log.records), 1)
+        self.assertEqual(len(mock_log.records), 2)
         self.assertEqual(mock_log.output, expected_log)
 
     @patch('znoyder.templater.generate_zuul_projects_config')
     def test_generate_projects_config(self, mock_templater):
-        generate_projects_config(self.example_projects_pipelines_dict)
+        with self.assertLogs(LOG) as mock_log:
+            generate_projects_config(self.example_projects_pipelines_dict)
+
+        expected_log = [
+            'INFO:znoyderLogger:Writing '
+            'files-generated/osp-internal-jobs-config/zuul.d/cre-projects.yaml'
+        ]
+        self.assertEqual(len(mock_log.records), 1)
+        self.assertEqual(mock_log.output, expected_log)
 
         mock_templater.assert_called_once_with(
             path='files-generated/osp-internal-jobs-config/'
@@ -408,7 +430,15 @@ class TestGenerator(TestCase):
 
     @patch('znoyder.templater.generate_zuul_resources_config')
     def test_generate_resources_config(self, mock_templater):
-        generate_resources_config(self.example_projects_pipelines_dict)
+        with self.assertLogs(LOG) as mock_log:
+            generate_resources_config(self.example_projects_pipelines_dict)
+
+        expected_log = [
+            'INFO:znoyderLogger:Writing '
+            'files-generated/sf-config/resources/osp-internal.yaml'
+        ]
+        self.assertEqual(len(mock_log.records), 1)
+        self.assertEqual(mock_log.output, expected_log)
 
         mock_templater.assert_called_once_with(
             path='files-generated/sf-config/resources/osp-internal.yaml',

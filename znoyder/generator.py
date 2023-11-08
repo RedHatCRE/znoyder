@@ -201,6 +201,7 @@ def generate_projects_templates(projects_pipelines_dict: dict) -> None:
         )
 
         try:
+            LOG.info(f'Writing {config_dest}')
             templater.generate_zuul_project_template(
                 path=config_dest,
                 name=GENERATED_CONFIG_PREFIX + project_name,
@@ -219,6 +220,7 @@ def generate_projects_config(projects_pipelines_dict: dict) -> None:
         GENERATED_CONFIG_PREFIX + 'projects' + GENERATED_CONFIG_EXTENSION
     )
 
+    LOG.info(f'Writing {config_dest}')
     templater.generate_zuul_projects_config(
         path=config_dest,
         projects=projects,
@@ -234,6 +236,7 @@ def generate_resources_config(projects_pipelines_dict: dict) -> None:
         'osp-internal' + GENERATED_CONFIG_EXTENSION
     )
 
+    LOG.info(f'Writing {config_dest}')
     templater.generate_zuul_resources_config(
         path=config_dest,
         projects=projects,
