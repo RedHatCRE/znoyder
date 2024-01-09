@@ -313,6 +313,8 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-hacking python3-neutron-lib-tests
+          required-projects:
+            - python-neutron-lib
 
   'nova':
     'osp-17.0':
