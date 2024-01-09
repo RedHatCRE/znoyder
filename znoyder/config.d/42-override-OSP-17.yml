@@ -313,6 +313,12 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-hacking python3-neutron-lib-tests
+      'osp-tox-pep8':
+        vars:
+          tox_environment:
+            # the following constrains file replaces upstream neutron-lib version
+            # 2.10.2 with 2.10.3, which is the proper value for downstream
+            TOX_CONSTRAINTS_FILE: 'https://file.emea.redhat.com/eolivare/workarounds/osp17.1-upper-constraints.txt'
 
   'nova':
     'osp-17.0':
