@@ -26,10 +26,10 @@ from znoyder.config import include_map
 from znoyder.config import override_map
 from znoyder.lib import logger
 from znoyder.lib.zuul import ZuulJob
-from znoyder.utils import drop_nones_from_dict
-from znoyder.utils import match
-from znoyder.utils import merge_dicts
-from znoyder.utils import sort_dict_by_keys
+from znoyder.lib.utils import drop_nones_from_dict
+from znoyder.lib.utils import match
+from znoyder.lib.utils import merge_dicts
+from znoyder.lib.utils import sort_dict_by_keys
 
 
 LOG = logger.LOG

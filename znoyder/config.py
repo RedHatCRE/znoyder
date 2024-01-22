@@ -23,7 +23,7 @@ except ImportError:  # Fallback for Python < 3.7
 
 import yaml
 
-from znoyder.utils import merge_dicts
+from znoyder.lib.utils import merge_dicts
 
 
 with pkg_resources.open_text(__package__, 'config.yml') as file:
