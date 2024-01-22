@@ -24,17 +24,12 @@ from jinja2 import PackageLoader
 import yaml
 
 from znoyder.lib import logger
+from znoyder.lib.yaml import NestedDumper
 
 
 LOG = logger.LOG
 
 j2env = Environment(loader=PackageLoader('znoyder', 'templates'))
-
-
-class NestedDumper(yaml.Dumper):
-    # by https://stackoverflow.com/a/39681672
-    def increase_indent(self, flow=False, indentless=False):
-        return super(NestedDumper, self).increase_indent(flow, False)
 
 
 def generate_zuul_project_template(path: str, name: str, pipelines: dict):
