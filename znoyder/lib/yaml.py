@@ -23,3 +23,9 @@ class NestedDumper(yaml.Dumper):
     # by https://stackoverflow.com/a/39681672
     def increase_indent(self, flow=False, indentless=False):
         return super(NestedDumper, self).increase_indent(flow, False)
+
+
+class NoAliasDumper(NestedDumper):
+    # by https://ttl255.com/yaml-anchors-and-aliases-and-how-to-disable-them/
+    def ignore_aliases(self, data):
+        return True
