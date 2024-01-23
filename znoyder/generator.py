@@ -32,12 +32,15 @@ from znoyder.config import GENERATED_CONFIG_EXTENSION
 from znoyder.config import UPSTREAM_CONFIGS_DIR
 from znoyder import downloader
 from znoyder import finder
+from znoyder.lib.cache import FileCache
 from znoyder.lib import logger
 from znoyder import mapper
 from znoyder import templater
 
 
 LOG = logger.LOG
+
+cache = FileCache('jobs.db')
 
 
 def cleanup_generated_jobs_dir() -> None:
@@ -58,6 +61,7 @@ def cleanup_generated_jobs_dir() -> None:
     Path(destination_directory).mkdir(parents=True, exist_ok=True)
 
 
+@cache
 def fetch_templates_directory():
     templates_repository = 'https://opendev.org/openstack/openstack-zuul-jobs'
     templates_branch = 'master'
@@ -75,6 +79,7 @@ def fetch_templates_directory():
     return templates_directory
 
 
+@cache
 def fetch_osp_projects(branch: str, filters: dict) -> list:
     projects = {package.get('osp-project'): package.get('upstream')
                 for package in browser.get_packages(**filters)
@@ -99,6 +104,11 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
     return projects
 
 
+@cache
+def discover_upstream_jobs(path, templates, pipelines):
+    return finder.find_jobs(path, templates, pipelines)
+
+
 def discover_jobs(project_name, osp_tag, directory,
                   templates, pipelines) -> list:
     jobs = []
@@ -108,7 +118,7 @@ def discover_jobs(project_name, osp_tag, directory,
                                             directory))
         if os.path.exists(path):
             LOG.info(f'Including from: {directory}')
-            upstream_jobs = finder.find_jobs(path, templates, pipelines)
+            upstream_jobs = discover_upstream_jobs(path, templates, pipelines)
             jobs = mapper.include_jobs(upstream_jobs, osp_tag)
 
     jobs = mapper.exclude_jobs(jobs, project_name, osp_tag)
@@ -246,7 +256,13 @@ def generate_resources_config(projects_pipelines_dict: dict) -> None:
 
 def main(args) -> None:
     cleanup_generated_jobs_dir()
+
     projects_pipelines_dict = generate_projects_pipelines_dict(args)
+
     generate_projects_templates(projects_pipelines_dict)
     generate_projects_config(projects_pipelines_dict)
     generate_resources_config(projects_pipelines_dict)
+
+    if cache.changed:
+        LOG.info('Saving cache file')
+        cache.save()

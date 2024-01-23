@@ -25,6 +25,7 @@ from yaml.parser import ParserError
 
 from znoyder.config import extra_projects
 from znoyder.config import UPSTREAM_CONFIGS_DIR
+from znoyder.generator import cache
 from znoyder.generator import cleanup_generated_jobs_dir
 from znoyder.generator import fetch_templates_directory
 from znoyder.generator import fetch_osp_projects
@@ -40,6 +41,8 @@ from znoyder.lib.zuul import ZuulJob
 
 class TestGenerator(TestCase):
     def setUp(self) -> None:
+        cache.clear()
+
         self.example_projects_pipelines_dict = {
             'project1': {
                 'check': [
@@ -446,17 +449,27 @@ class TestGenerator(TestCase):
             prefix='cre-',
         )
 
+    @patch('znoyder.generator.cache')
     @patch('znoyder.generator.generate_resources_config')
     @patch('znoyder.generator.generate_projects_config')
     @patch('znoyder.generator.generate_projects_templates')
     @patch('znoyder.generator.generate_projects_pipelines_dict')
     @patch('znoyder.generator.cleanup_generated_jobs_dir')
     def test_main(self, mock_cleanup, mock_gen_dict, mock_gen_templates,
-                  mock_gen_projects, mock_gen_resources):
-        main(None)
+                  mock_gen_projects, mock_gen_resources, mock_cache):
+        with self.assertLogs(LOG) as mock_log:
+            mock_cache.changed = True
+            main(None)
 
+        mock_cache.save.assert_called_once()
         mock_cleanup.assert_called_once()
         mock_gen_dict.assert_called_once()
         mock_gen_templates.assert_called_once()
         mock_gen_projects.assert_called_once()
         mock_gen_resources.assert_called_once()
+
+        expected_log = [
+            'INFO:znoyderLogger:Saving cache file'
+        ]
+        self.assertEqual(len(mock_log.records), 1)
+        self.assertEqual(mock_log.output, expected_log)
