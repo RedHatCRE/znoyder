@@ -41,23 +41,31 @@ class FileCache(object):
 
         self.reload()
 
-    def __call__(self, function):
-        @wraps(function)
-        def wrapper(*args, **kwargs):
-            key = function.__qualname__ + '(' + hashlib.sha256(pickle.dumps(
-                (args, kwargs)
-            )).hexdigest() + ')'
+    def __call__(self, arg=None):
+        def decorator(function):
+            @wraps(function)
+            def wrapper(*args, **kwargs):
+                key = function.__qualname__ + '(' + hashlib.sha256(
+                    pickle.dumps(
+                        (args, kwargs)
+                    )
+                ).hexdigest() + ')'
 
-            if key in self._cache:
-                return self._cache[key]
+                if key in self._cache:
+                    return self._cache[key]
 
-            else:
-                result = function(*args, **kwargs)
-                self._cache[key] = result
-                self.changed = True
-                return result
+                else:
+                    result = function(*args, **kwargs)
+                    self._cache[key] = result
+                    self.changed = True
+                    return result
 
-        return wrapper
+            return wrapper
+
+        if callable(arg):
+            return decorator(arg)
+        else:
+            return decorator
 
     def __delitem__(self, key):
         del self._cache[key]
