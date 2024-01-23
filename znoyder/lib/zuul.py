@@ -21,6 +21,7 @@
 import collections
 from copy import deepcopy
 import io
+
 import yaml
 
 from znoyder.lib import logger
@@ -429,7 +430,7 @@ class ZuulProjectTemplate(object):
         return self.template_name
 
 
-class ZuulJob(object):
+class ZuulJob(yaml.YAMLObject):
     """Zuul Job representation
 
     Args:
@@ -437,6 +438,9 @@ class ZuulJob(object):
         pipeline (:obj:`str`): Job pipeline, e.g. check, gate, post
         parameters (:obj:`dict`): JSON job parameters
     """
+    yaml_loader = yaml.SafeLoader
+    yaml_tag = u'!ZuulJob'
+
     def __init__(self, name, pipeline, parameters=None):
         if parameters is None:
             parameters = {}
