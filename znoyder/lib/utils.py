@@ -108,6 +108,12 @@ def get_config_paths(local_path: str) -> list:
     return zuul_config_files
 
 
+def get_args_dict(fn, args, kwargs):
+    # by https://stackoverflow.com/a/40363565
+    args_names = fn.__code__.co_varnames[:fn.__code__.co_argcount]
+    return {**dict(zip(args_names, args)), **kwargs}
+
+
 def match(string: str, specifier: str) -> bool:
     '''Function checks if a given string is matched by a given specifier.
 
