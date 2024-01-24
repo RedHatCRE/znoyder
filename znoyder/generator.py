@@ -114,8 +114,7 @@ def discover_jobs(project_name, osp_tag, directory,
     jobs = []
 
     if directory:
-        path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                            directory))
+        path = os.path.join(UPSTREAM_CONFIGS_DIR, directory)
         if os.path.exists(path):
             LOG.info(f'Including from: {directory}')
             upstream_jobs = discover_upstream_jobs(path, templates, pipelines)
@@ -171,8 +170,7 @@ def generate_projects_pipelines_dict(args):
                         f'{ospinfo_filters}.')
             continue
 
-        path = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                            templates_directory))
+        path = os.path.join(UPSTREAM_CONFIGS_DIR, templates_directory)
 
         pipelines = finder.find_pipelines('check,gate')
         templates = finder.find_templates(path, pipelines)

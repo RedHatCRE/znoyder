@@ -210,8 +210,7 @@ class TestGenerator(TestCase):
         self.assertEqual(len(mock_log.records), 2)
         self.assertEqual(mock_log.output, expected_log)
 
-        expected_dir = os.path.abspath(os.path.join(UPSTREAM_CONFIGS_DIR,
-                                                    directory))
+        expected_dir = os.path.join(UPSTREAM_CONFIGS_DIR, directory)
 
         mock_exists.assert_called_once_with(expected_dir)
         mock_finder.assert_called_once_with(expected_dir, templates, pipelines)
