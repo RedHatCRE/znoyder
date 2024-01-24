@@ -110,7 +110,7 @@ class FileCache(object):
                 self._cache,
                 Dumper=NoAliasDumper,
                 default_flow_style=False,
-                sort_keys=False,
+                sort_keys=True,
                 width=math.inf,
             )
             file.write(data)
