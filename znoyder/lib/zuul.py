@@ -464,6 +464,12 @@ class ZuulJob(yaml.YAMLObject):
             and self.pipeline == other.pipeline
         )
 
+    def __lt__(self, other) -> bool:
+        if self.name == other.name:
+            return self.pipeline < other.pipeline
+
+        return self.name < other.name
+
     def really_equal(self, other) -> bool:
         return type(other) is type(self) and (
             self.name == other.name

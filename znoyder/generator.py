@@ -106,7 +106,7 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
 
 @cache('path', readable=True)
 def discover_upstream_jobs(path, templates, pipelines):
-    return finder.find_jobs(path, templates, pipelines)
+    return sorted(finder.find_jobs(path, templates, pipelines))
 
 
 def discover_jobs(project_name, osp_tag, directory,
