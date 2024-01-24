@@ -16,6 +16,7 @@
 #    under the License.
 #
 
+import inspect
 from unittest import TestCase
 from unittest.mock import mock_open
 from unittest.mock import patch
@@ -69,6 +70,36 @@ class TestFileCache(TestCase):
         self.assertEqual(len(cache), 11)
         self.assertEqual(call1, call2)
         self.assertEqual(call1, call3)
+
+    @patch('znoyder.tests.test_cache._noop')
+    def test_call_selected_parameters_and_readable(self, mock_noop):
+        cache = FileCache()
+
+        @cache('n', readable=True)
+        def fibonacci(n: int, unused: bool = False) -> int:
+            '''Helper function to be decorated in tests.'''
+            _noop()
+            unused = not unused
+            if n < 2:
+                return n
+            return fibonacci(n - 1, unused) + fibonacci(n - 2, unused)
+
+        call1 = fibonacci(10, True)
+        call2 = fibonacci(10, False)
+        call3 = fibonacci(10)
+
+        self.assertEqual(mock_noop.call_count, 11)
+        self.assertEqual(len(cache), 11)
+        self.assertEqual(call1, call2)
+        self.assertEqual(call1, call3)
+
+        uuid = '.'.join([
+            self.__class__.__name__,
+            inspect.currentframe().f_code.co_name,
+            '<locals>',
+            'fibonacci(10)'
+        ])
+        self.assertTrue(uuid in cache._cache)
 
     @patch('znoyder.tests.test_cache._noop')
     def test_clear(self, mock_noop):

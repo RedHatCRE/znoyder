@@ -25,6 +25,7 @@ import pickle
 import yaml
 
 from znoyder.lib import logger
+from znoyder.lib.utils import get_args_dict
 from znoyder.lib.yaml import NoAliasDumper
 
 
@@ -41,29 +42,43 @@ class FileCache(object):
 
         self.reload()
 
-    def __call__(self, arg=None):
+    def __call__(self, *keys, readable=False):
         def decorator(function):
             @wraps(function)
             def wrapper(*args, **kwargs):
-                key = function.__qualname__ + '(' + hashlib.sha256(
-                    pickle.dumps(
-                        (args, kwargs)
-                    )
-                ).hexdigest() + ')'
+                call_args = get_args_dict(function, args, kwargs)
+                args_hash = ''
 
-                if key in self._cache:
-                    return self._cache[key]
+                if call_args:
+                    if keys:  # filter out everything but wanted keys
+                        for key in call_args.copy().keys():
+                            if key not in keys:
+                                del call_args[key]
+
+                    if readable:
+                        args_hash = str(list(call_args.values()))[1:-1]
+
+                    else:
+                        args_hash = hashlib.sha256(
+                            pickle.dumps(call_args)
+                        ).hexdigest()
+
+                uuid = f'{function.__qualname__}({args_hash})'
+
+                if uuid in self._cache:
+                    return self._cache[uuid]
 
                 else:
                     result = function(*args, **kwargs)
-                    self._cache[key] = result
+                    self._cache[uuid] = result
                     self.changed = True
                     return result
 
             return wrapper
 
-        if callable(arg):
-            return decorator(arg)
+        if len(keys) == 1 and callable(keys[0]):
+            function, keys = keys[0], keys[1:]
+            return decorator(function)
         else:
             return decorator
 

@@ -79,7 +79,7 @@ def fetch_templates_directory():
     return templates_directory
 
 
-@cache
+@cache(readable=True)
 def fetch_osp_projects(branch: str, filters: dict) -> list:
     projects = {package.get('osp-project'): package.get('upstream')
                 for package in browser.get_packages(**filters)
@@ -104,7 +104,7 @@ def fetch_osp_projects(branch: str, filters: dict) -> list:
     return projects
 
 
-@cache
+@cache('path', readable=True)
 def discover_upstream_jobs(path, templates, pipelines):
     return finder.find_jobs(path, templates, pipelines)
 
