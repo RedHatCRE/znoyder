@@ -1,6 +1,8 @@
 *.py[cod]
 /*.egg-info/
 /.tox/
+/AUTHORS
+/ChangeLog
 __pycache__/
 files-upstream/
 files-generated/
