@@ -1,6 +1,6 @@
 # Znoyder
 
-![](https://github.com/rhos-infra/znoyder/workflows/CI/badge.svg)
+![](https://github.com/RedHatCRE/znoyder/workflows/tests/badge.svg)
 
 The goal of this project is to automate preparation of downstream CI jobs
 for Red Hat OpenStack Platform (OSP) releases.
