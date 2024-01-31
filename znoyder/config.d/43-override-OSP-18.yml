@@ -40,6 +40,7 @@ override:
         vars:
           extra_commands:
             - setcap -r /usr/libexec/mysqld
+            - dnf install -y python3-observabilityclient
           tox_envlist: 'py39-mysql'
           tox_environment:
             AODH_TEST_DRIVERS: 'mysql'
