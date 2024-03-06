@@ -2,10 +2,10 @@
 branches:
   'osp-16.1':
     downstream: '^rhos-16.1-trunk-patches$'
-    upstream: 'stable/train'
+    upstream: 'train-eol'
   'osp-16.2':
     downstream: '^rhos-16.2-trunk-patches$'
-    upstream: 'stable/train'
+    upstream: 'train-eol'
   'osp-17.0':
     downstream: '^rhos-17.0-trunk-patches$'
     upstream: 'stable/wallaby'
