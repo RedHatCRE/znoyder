@@ -368,8 +368,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - dnf remove -y python3-dns --noautoremove
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt monasca-statsd
       'osp-tox-pep8':
         vars:
           extra_commands:
