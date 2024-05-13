@@ -318,17 +318,6 @@ override:
           - python-neutron-lib
 
   'nova':
-    'osp-17.0':
-      'osp-rpm-functional-py39':
-        vars:
-          extra_commands:
-            - dnf install -y python3-ddt python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-placement-tests python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
-      'osp-rpm-py39':
-        vars:
-          extra_commands:
-            - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
-            - dnf remove -y libguestfs libvirt-client
     'osp-17.1':
       'osp-rpm-functional-py39':
         vars:
