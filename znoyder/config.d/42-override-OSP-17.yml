@@ -90,14 +90,14 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-oslotest python3-stestr python3-testscenarios
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
             - dnf remove -y libvirt-libs
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-oslotest python3-stestr python3-testscenarios
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt os-win>=3.0.0 requests-aws>=0.1.4 confluent-kafka kazoo
             - dnf remove -y libvirt-libs
 
   'cinder':
@@ -170,13 +170,13 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-hacking python3-monascaclient python3-testscenarios python3-stestr
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-hacking python3-monascaclient python3-testscenarios python3-stestr
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt python-blazarclient python-vitrageclient python-zunclient
 
   'horizon':
     'osp-17.0':
@@ -327,7 +327,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
             - dnf remove -y libguestfs libvirt-client
     'osp-17.1':
       'osp-rpm-functional-py39':
@@ -338,7 +338,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-pycodestyle python3-ddt python3-hacking python3-ironicclient python3-mock python3-oslotest python3-osprofiler python3-requests-mock python3-stestr python3-testresources python3-testscenarios python3-wsgi_intercept
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt pypowervm zVMCloudConnector
             - dnf remove -y libguestfs libvirt-client
 
   'openstack-barbican':
@@ -358,7 +358,7 @@ override:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
             - dnf remove -y python3-dns --noautoremove
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt dnspython monasca-statsd
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt dnspython monasca-statsd
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -368,7 +368,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-kazoo python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt monasca-statsd
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt monasca-statsd
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -1104,13 +1104,13 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-docutils python3-oslo-log python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt sphinx
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt sphinx
     'osp-17.1':
       'osp-rpm-py39':
         vars:
           extra_commands:
             - dnf install -y python3-docutils python3-oslo-log python3-oslotest python3-requests-mock python3-stestr python3-testscenarios
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt sphinx
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt sphinx
 
   'python-oslo-context':
     'osp-17.0':
@@ -1282,7 +1282,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-etcd3gw python3-kazoo python3-pymemcache python3-PyMySQL python3-stestr python3-sysv_ipc
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt etcd3
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt etcd3
       'osp-tox-pep8':
         vars:
           extra_commands:
@@ -1292,7 +1292,7 @@ override:
         vars:
           extra_commands:
             - dnf install -y python3-ddt python3-etcd3gw python3-kazoo python3-pymemcache python3-PyMySQL python3-stestr python3-sysv_ipc
-            - pip install -c https://opendev.org/openstack/requirements/raw/branch/stable/wallaby/upper-constraints.txt etcd3
+            - pip install -c https://opendev.org/openstack/requirements/raw/branch/unmaintained/wallaby/upper-constraints.txt etcd3
       'osp-tox-pep8':
         vars:
           extra_commands:
