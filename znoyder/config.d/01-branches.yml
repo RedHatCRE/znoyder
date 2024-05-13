@@ -8,10 +8,10 @@ branches:
     upstream: 'train-eol'
   'osp-17.0':
     downstream: '^rhos-17.0-trunk-patches$'
-    upstream: 'stable/wallaby'
+    upstream: 'unmaintained/wallaby'
   'osp-17.1':
     downstream: '^rhos-17.1-trunk-patches$'
-    upstream: 'stable/wallaby'
+    upstream: 'unmaintained/wallaby'
   'osp-18.0':
     downstream: '^rhos-18.0-trunk-patches$'
     upstream: 'stable/2023.1'
