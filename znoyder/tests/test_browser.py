@@ -98,13 +98,13 @@ class TestComponents(TestCase):
 
 class TestGetPackages(TestCase):
     def test_no_args(self):
-        project = 'some/project'
+        project = 'project'
 
         packages = [
             {
                 'osp-name': 'pack_1',
                 'osp-project': '',
-                'osp-patches': 'http://localhost:8080/%s' % project
+                'osp-patches': 'http://localhost:8080/some/%s' % project
             }
         ]
 
@@ -222,7 +222,14 @@ class TestGetPackages(TestCase):
             'project': 'project_2',
         }
 
-        packages = [package1, package2]
+        package3 = {
+            'name': 'name_3',
+            'osp-name': 'pack_3',
+            'osp-patches': 'git@gitlab.com:eng/test/repo_name_3.git',
+            'project': 'project_3',
+        }
+
+        packages = [package1, package2, package3]
 
         info_call = znoyder.browser.get_distroinfo = Mock()
 
@@ -233,6 +240,11 @@ class TestGetPackages(TestCase):
         self.assertEqual(
             [package1],
             get_packages(osp_project=package1['osp-project'])
+        )
+
+        self.assertEqual(
+            [package3],
+            get_packages(osp_project='repo_name_3')
         )
 
     def test_search_by_project(self):

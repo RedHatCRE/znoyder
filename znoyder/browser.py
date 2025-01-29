@@ -16,6 +16,8 @@
 #    under the License.
 #
 
+import re
+
 from pprint import PrettyPrinter
 from urllib.parse import urlparse
 
@@ -72,7 +74,10 @@ def get_packages(**kwargs):
                     if kwargs.get('upstream') in str(package.get('upstream'))]
 
     for package in packages:
-        package['osp-project'] = urlparse(package['osp-patches']).path[1:]
+        if package['osp-patches']:
+            repo_name = re.search(r'^(.*)\/(.*)$', package['osp-patches']).group(2)
+            # Remove suffix .git if exist in osp-patches repo
+            package['osp-project'] = re.sub(r'.git$', "", repo_name)
     if kwargs.get('osp_project'):
         packages = [package for package in packages
                     if kwargs.get('osp_project') == package.get('osp-project')]
