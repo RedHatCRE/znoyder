@@ -74,10 +74,11 @@ def get_packages(**kwargs):
                     if kwargs.get('upstream') in str(package.get('upstream'))]
 
     for package in packages:
-        if package['osp-patches']:
-            repo_name = re.search(r'^(.*)\/(.*)$', package['osp-patches']).group(2)
-            # Remove suffix .git if exist in osp-patches repo
-            package['osp-project'] = re.sub(r'.git$', "", repo_name)
+        repo_name = re.search(r'^(.*)\/(.*)$', package['osp-patches']).group(2)
+        if repo_name.endswith('.git'):
+            repo_name = repo_name[:-4]  # drop the suffix
+        package['osp-project'] = repo_name
+
     if kwargs.get('osp_project'):
         packages = [package for package in packages
                     if kwargs.get('osp_project') == package.get('osp-project')]
