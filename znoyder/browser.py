@@ -16,7 +16,7 @@
 #    under the License.
 #
 
-import re
+import os.path
 
 from pprint import PrettyPrinter
 from urllib.parse import urlparse
@@ -74,7 +74,7 @@ def get_packages(**kwargs):
                     if kwargs.get('upstream') in str(package.get('upstream'))]
 
     for package in packages:
-        repo_name = re.search(r'^(.*)\/(.*)$', package['osp-patches']).group(2)
+        repo_name = os.path.basename(package['osp-patches'])
         if repo_name.endswith('.git'):
             repo_name = repo_name[:-4]  # drop the suffix
         package['osp-project'] = repo_name
