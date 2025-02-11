@@ -25,7 +25,7 @@ from distroinfo import info as di
 
 
 INFO_FILE = 'osp.yml'
-RDOINFO_GIT_URL = 'https://code.engineering.redhat.com/gerrit/ospinfo'
+RDOINFO_GIT_URL = 'https://gitlab.cee.redhat.com/eng/openstack/ospinfo'
 
 APP_DESCRIPTION = 'Find OSP packages, repositories, components and releases.'
 
