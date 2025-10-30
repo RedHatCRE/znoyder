@@ -2,6 +2,12 @@
 
 ![](https://github.com/RedHatCRE/znoyder/workflows/tests/badge.svg)
 
+---
+
+**NOTE**: This project is not developed nor used anymore.
+
+---
+
 The goal of this project is to automate preparation of downstream CI jobs
 for Red Hat OpenStack Platform (OSP) releases.
 
