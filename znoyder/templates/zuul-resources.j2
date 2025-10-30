@@ -3,11 +3,11 @@ resources:
    tenants:
       osp-internal:
          description: OSP Internal tenant – hosting Component CI jobs
-         url: https://sf.hosted.upshift.rdu2.redhat.com/manage
-         default-connection: code.engineering.redhat.com
+         url: https://sf.endpoint.example.com
+         default-connection: repo.example.com
          tenant-options:
             zuul/max-job-timeout: 21600
-            zuul/web-root: https://sf.hosted.upshift.rdu2.redhat.com/zuul/t/osp-internal/
+            zuul/web-root: https://sf.endpoint.example.com/zuul/t/TENANT/
             zuul/report-build-page: true
 
    projects:
